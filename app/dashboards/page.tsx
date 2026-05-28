@@ -9,6 +9,12 @@ export const metadata: Metadata = {
 
 const dashboards = [
   {
+    tool: 'Next.js + PostgreSQL',
+    title: 'Gym Tracker',
+    description: 'Personal training log with volume analytics, split tracking, exercise PRs, and an AI coaching assistant.',
+    href: '/dashboards/gym',
+  },
+  {
     tool: 'Tableau',
     title: 'ALS Patient Outcomes',
     description: 'Tracks patient progression metrics and outcome distributions across clinical trial cohorts.',
