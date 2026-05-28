@@ -22,6 +22,7 @@ export default function DashboardsPage() {
       <PageHeader
         title="Dashboards"
         lead="A collection of data visualizations and analytics dashboards built across tools and domains."
+        rule={false}
       />
       <div className={styles.list}>
         {dashboards.map((d) => (
