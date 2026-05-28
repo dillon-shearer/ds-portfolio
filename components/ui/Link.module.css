@@ -1,0 +1,42 @@
+/* Inline body link */
+.inline {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.inline:hover {
+  color: var(--color-accent-hover);
+}
+
+/* Nav link */
+.nav {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  line-height: var(--leading-snug);
+  color: var(--color-ink);
+  text-decoration: none;
+  position: relative;
+  padding-bottom: var(--space-1);
+}
+
+.nav::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: var(--rule-medium);
+  background-color: var(--color-ink);
+  transition: width var(--duration-fast) var(--ease-out);
+}
+
+.nav:hover::after,
+.nav[aria-current='page']::after {
+  width: 100%;
+}
