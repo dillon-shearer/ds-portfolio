@@ -99,7 +99,7 @@ export async function submitContactForm(formData: FormData): Promise<FormResult>
           <p><strong>Name:</strong> ${name}</p>
           <p><strong>Email:</strong> ${email}</p>
           <p><strong>Message:</strong></p>
-          <div style="background:#f5f5f5;padding:15px;margin:10px 0;">
+          <div style="padding:15px;margin:10px 0;border-left:3px solid lightgrey;">
             ${message.replace(/\n/g, '<br>')}
           </div>
           <hr>

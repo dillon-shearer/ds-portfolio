@@ -6,7 +6,6 @@
   letter-spacing: var(--tracking-wide);
   line-height: var(--leading-snug);
   padding: var(--space-3) var(--space-5);
-  border-radius: 0;
   cursor: pointer;
   display: inline-block;
   text-decoration: none;
