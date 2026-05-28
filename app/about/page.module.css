@@ -1,0 +1,39 @@
+.prose {
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  line-height: var(--leading-loose);
+  color: var(--color-ink);
+  max-width: 65ch;
+}
+
+.prose p + p {
+  margin-top: var(--space-5);
+}
+
+.section {
+  margin-top: var(--space-8);
+}
+
+.sectionTitle {
+  font-family: var(--font-serif);
+  font-size: var(--text-3xl);
+  font-weight: 400;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-ink);
+  margin-bottom: var(--space-3);
+}
+
+.sectionIntro {
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  line-height: var(--leading-loose);
+  color: var(--color-ink-2);
+  margin-bottom: var(--space-6);
+  max-width: 60ch;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+}
