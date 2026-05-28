@@ -1,0 +1,17 @@
+.prose {
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  line-height: var(--leading-loose);
+  color: var(--color-ink);
+  max-width: 65ch;
+}
+
+.prose p + p {
+  margin-top: var(--space-5);
+}
+
+.readers {
+  margin-top: var(--space-6);
+  display: flex;
+  flex-direction: column;
+}
