@@ -150,30 +150,27 @@ const buildMarkdownComponents = (): Components => ({
   ),
   strong: ({ ...props }) => <strong className={styles.mdStrong} {...props} />,
   em: ({ ...props }) => <em className={styles.mdEm} {...props} />,
-  code: ({ children, ...props }: React.HTMLAttributes<HTMLElement> & { inline?: boolean }) =>
-    props.inline ? (
-      <code className={styles.mdCodeInline} {...props}>
-        {children}
-      </code>
+  code: ({ children, className, ...props }: React.ComponentPropsWithoutRef<'code'> & { inline?: boolean }) => {
+    const isBlock = !!className || String(children).includes('\n')
+    return isBlock ? (
+      <pre className={styles.mdPre}><code className={className} {...props}>{children}</code></pre>
     ) : (
-      <pre className={styles.mdPre}>
-        <code {...props}>{children}</code>
-      </pre>
-    ),
+      <code className={styles.mdCodeInline} {...props}>{children}</code>
+    )
+  },
   blockquote: ({ ...props }) => (
     <blockquote className={styles.mdBlockquote} {...props} />
   ),
-  a: ({ children, href = '', ...props }) => (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className={styles.mdLink}
-      {...props}
-    >
-      {children}
-    </a>
-  ),
+  a: ({ children, href = '', ...props }: React.ComponentPropsWithoutRef<'a'>) => {
+    const safeHref = href.startsWith('http://') || href.startsWith('https://') || href.startsWith('#')
+      ? href
+      : '#'
+    return (
+      <a href={safeHref} target="_blank" rel="noreferrer" className={styles.mdLink} {...props}>
+        {children}
+      </a>
+    )
+  },
   table: ({ ...props }) => (
     <div className={styles.mdTableWrapper}>
       <table className={styles.mdTable} {...props} />
@@ -345,6 +342,11 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
   const lastAssistantMessageIdRef = useRef<string | null>(null)
   const inputRef = useRef('')
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const abortControllerRef = useRef<AbortController | null>(null)
+
+  useEffect(() => {
+    return () => { abortControllerRef.current?.abort() }
+  }, [])
 
   useEffect(() => {
     inputRef.current = input
@@ -443,6 +445,7 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
       let effectiveRequestId: string | undefined
       try {
         const controller = new AbortController()
+        abortControllerRef.current = controller
         const timeoutMs = 60000
         const headers: Record<string, string> = {
           'content-type': 'application/json',
