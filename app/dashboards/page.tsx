@@ -12,7 +12,7 @@ const dashboards = [
     tool: 'Tableau',
     title: 'ALS Patient Outcomes',
     description: 'Tracks patient progression metrics and outcome distributions across clinical trial cohorts.',
-    href: '#',
+    href: '/dashboards/coming-soon',
   },
 ]
 
