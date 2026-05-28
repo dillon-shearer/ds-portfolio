@@ -1,0 +1,37 @@
+.widget {
+  border-top: var(--rule-medium) solid var(--color-ink);
+  border-bottom: var(--rule-hairline) solid var(--color-rule);
+  padding: var(--space-4) 0;
+}
+
+.label {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+  margin-bottom: var(--space-2);
+}
+
+.value {
+  font-family: var(--font-serif);
+  font-size: var(--text-3xl);
+  font-weight: 400;
+  line-height: var(--leading-tight);
+  color: var(--color-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.accent {
+  color: var(--color-accent);
+}
+
+.sub {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+  margin-top: var(--space-1);
+}
