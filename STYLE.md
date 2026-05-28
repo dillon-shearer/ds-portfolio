@@ -33,7 +33,8 @@ Eight primitives in `components/ui/`. No others without updating this file first
 | Input | Input.tsx | input, textarea | Contact form only | none |
 | Badge | Badge.tsx | none | Skill tags, status | More than 3 per card |
 | Rule | Rule.tsx | hairline, medium | Section dividers | Decorative |
-| PageHeader | PageHeader.tsx | none | Every page top | Mid-page headings |
+| PageHeader | PageHeader.tsx | rule={false} | Every page top | Mid-page headings |
+| DashboardCard | DashboardCard.tsx | none | Dashboard list entries | Nested cards |
 | Table | Table.tsx | none | Tabular data | Layout |
 | CodeBlock | CodeBlock.tsx | none | Code samples | Long prose |
 
@@ -57,6 +58,16 @@ No other breakpoints without updating this file.
 - Use commas, colons, or rephrase the sentence instead
 - Hyphens in compound modifiers are fine (e.g. "data-centric", "life-science")
 - Interpuncts (·) are allowed for eyebrow separators only
+
+## CSS Precedence (Next.js 15)
+
+Next.js 15 sorts stylesheets by `data-precedence` value alphabetically, not by `<link>` order. Page-level CSS modules (`app/...`) load before the root bundle (`[root-of-the-server]`) because `a` < `[`. This means a page-level rule cannot override a component rule by source order alone — the component's rule always wins.
+
+**Consequences:**
+- Never try to suppress a component's border/style from a page-level CSS module using equal-specificity rules. It will silently lose.
+- If a page needs a component to behave differently (e.g. no `border-top` on first item, no `<hr>` in `PageHeader`), expose a prop on the component instead.
+
+**Pattern:** When a page needs to opt out of a default visual, add a boolean prop to the component (`rule={false}`, `topBorder={false}`, etc.) rather than overriding from the page stylesheet.
 
 ## Hard Rules
 
