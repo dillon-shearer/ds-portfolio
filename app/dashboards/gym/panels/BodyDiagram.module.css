@@ -1,0 +1,7 @@
+.container {
+  position: relative;
+  width: 100%;
+  min-height: 300px;
+  background: var(--color-paper-2);
+  border: var(--rule-hairline) solid var(--color-rule-soft);
+}

@@ -1,0 +1,54 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  height: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.total {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  flex: 1;
+  align-content: flex-start;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  border: var(--rule-hairline) solid var(--color-rule);
+  padding: var(--space-1) var(--space-3);
+}
+
+.chipLabel {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--color-ink-2);
+}
+
+.chipCount {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.empty {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--color-ink-3);
+}
