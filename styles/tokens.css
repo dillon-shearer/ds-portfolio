@@ -23,6 +23,27 @@
   --color-positive:     #4A6B3A;
   --color-warn:         #B8893B;
 
+  /* ---------- Chart palette ---------- */
+  /* Body part colors — earthy, distinguishable, portfolio-consistent */
+  --chart-bp-chest:      #7A2E2E;
+  --chart-bp-back:       #4A4239;
+  --chart-bp-shoulders:  #B8893B;
+  --chart-bp-biceps:     #4A6B3A;
+  --chart-bp-triceps:    #8A7F71;
+  --chart-bp-quads:      #5C3A1A;
+  --chart-bp-hamstrings: #1A4A3A;
+  --chart-bp-core:       #3A1A4A;
+  --chart-bp-glutes:     #9A5A3A;
+  --chart-bp-calves:     #3A6B5A;
+  --chart-bp-forearms:   #6B6B3A;
+  --chart-bp-hips:       #5A3A6B;
+
+  /* Generic chart series (for non-body-part charts) */
+  --chart-primary:   #7A2E2E;
+  --chart-secondary: #4A4239;
+  --chart-muted:     #D8CFC2;
+  --chart-na:        #EBE3D5;
+
   /* ---------- Typography ---------- */
   /* next/font injects these variables on <html>; tokens.css maps them. */
   --font-serif: var(--next-font-serif), Georgia, "Times New Roman", serif;

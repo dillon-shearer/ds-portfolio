@@ -64,3 +64,16 @@ button {
     padding-right: var(--space-7);
   }
 }
+
+.page-wrapper--wide {
+  max-width: var(--content-width-wide);
+  margin: 0 auto;
+  padding: var(--space-8) var(--gutter);
+}
+
+@media (min-width: 720px) {
+  .page-wrapper--wide {
+    padding-left: var(--space-7);
+    padding-right: var(--space-7);
+  }
+}
