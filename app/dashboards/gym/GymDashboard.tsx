@@ -17,6 +17,7 @@ import VolumeHeatmap from './panels/VolumeHeatmapWrapper'
 import RecentSessions from './panels/RecentSessions'
 import DailyView from './panels/DailyView'
 import FloatingChatWidget from '@/components/dashboard/FloatingChatWidget'
+import WorkoutForm from './form/WorkoutForm'
 import styles from './GymDashboard.module.css'
 
 type RangeMode = 'day' | 'week' | 'month' | 'year'
@@ -471,9 +472,7 @@ export default function GymDashboard({ lifts }: Props) {
 
           {active === 'log' && (
             <PasswordGate>
-              <p style={{ color: 'var(--color-ink-3)', fontSize: 'var(--text-sm)' }}>
-                WorkoutForm coming in Task 20
-              </p>
+              <WorkoutForm />
             </PasswordGate>
           )}
 
