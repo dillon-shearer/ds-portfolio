@@ -720,13 +720,13 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
                 <div className={styles.startScreen}>
                   <p className={styles.startTitle}>Gym Chat</p>
                   <p className={styles.startSub}>Ask anything about your training data</p>
-                  <div className={styles.startQuestions}>
+                  <div className={styles.suggestions}>
                     {SUGGESTED_QUESTIONS.map(q => (
                       <button
                         key={q}
                         type="button"
                         onClick={() => handleSuggestedQuestion(q)}
-                        className={styles.startQuestionBtn}
+                        className={styles.suggestionBtn}
                       >
                         {q}
                       </button>
