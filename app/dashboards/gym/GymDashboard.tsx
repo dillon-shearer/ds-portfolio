@@ -16,6 +16,7 @@ import ExercisePRsTable from './panels/ExercisePRsTable'
 import VolumeHeatmap from './panels/VolumeHeatmapWrapper'
 import RecentSessions from './panels/RecentSessions'
 import DailyView from './panels/DailyView'
+import FloatingChatWidget from '@/components/dashboard/FloatingChatWidget'
 import styles from './GymDashboard.module.css'
 
 type RangeMode = 'day' | 'week' | 'month' | 'year'
@@ -462,6 +463,10 @@ export default function GymDashboard({ lifts }: Props) {
                 </>
               )}
             </>
+          )}
+
+          {active === 'dashboard' && (
+            <FloatingChatWidget apiEndpoint="/api/gym-chat" />
           )}
 
           {active === 'log' && (
