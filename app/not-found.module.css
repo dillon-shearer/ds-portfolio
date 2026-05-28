@@ -1,0 +1,33 @@
+.wrapper {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: var(--space-9) var(--gutter);
+}
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-ink-3);
+  margin-bottom: var(--space-3);
+}
+
+.heading {
+  font-family: var(--font-serif);
+  font-size: var(--text-3xl);
+  font-weight: 400;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-ink);
+  margin-bottom: var(--space-5);
+}
+
+.message {
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  line-height: var(--leading-loose);
+  color: var(--color-ink-2);
+  margin-bottom: var(--space-6);
+}
