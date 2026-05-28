@@ -1,0 +1,81 @@
+/* ==========================================================
+   Design Tokens — single source of truth
+   All colors, fonts, spacing, and motion live here.
+   No hex/rgb values anywhere else in the codebase.
+   ========================================================== */
+
+:root {
+  /* ---------- Paper & ink ---------- */
+  --color-paper:        #F7F3EC;
+  --color-paper-2:      #FAF6EF;
+  --color-ink:          #1B1814;
+  --color-ink-2:        #4A4239;
+  --color-ink-3:        #8A7F71;
+  --color-rule:         #D8CFC2;
+  --color-rule-soft:    #EBE3D5;
+
+  /* ---------- Accent (oxblood) ---------- */
+  --color-accent:       #7A2E2E;
+  --color-accent-hover: #5C2020;
+  --color-accent-soft:  #F1E4E1;
+
+  /* ---------- Status ---------- */
+  --color-positive:     #4A6B3A;
+  --color-warn:         #B8893B;
+
+  /* ---------- Typography ---------- */
+  /* next/font injects these variables on <html>; tokens.css maps them. */
+  --font-serif: var(--next-font-serif), Georgia, "Times New Roman", serif;
+  --font-sans:  var(--next-font-sans), system-ui, -apple-system, sans-serif;
+  --font-mono:  var(--next-font-mono), ui-monospace, "Menlo", monospace;
+
+  /* Type scale */
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-md:   1.125rem;
+  --text-lg:   1.25rem;
+  --text-xl:   1.5rem;
+  --text-2xl:  1.875rem;
+  --text-3xl:  2.25rem;
+  --text-4xl:  3rem;
+
+  /* Leading */
+  --leading-tight:  1.2;
+  --leading-snug:   1.35;
+  --leading-normal: 1.55;
+  --leading-loose:  1.75;
+
+  /* Tracking */
+  --tracking-tight: -0.01em;
+  --tracking-wide:   0.08em;
+
+  /* ---------- Spacing (4px scale) ---------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* ---------- Layout ---------- */
+  --content-width:      680px;
+  --content-width-wide: 1080px;
+  --gutter:             var(--space-5);
+
+  /* ---------- Radii ---------- */
+  --radius-sm: 2px;
+  --radius-md: 2px;
+
+  /* ---------- Border weights ---------- */
+  --rule-hairline: 1px;
+  --rule-medium:   2px;
+
+  /* ---------- Motion ---------- */
+  --ease-out:      cubic-bezier(0.2, 0.7, 0.2, 1);
+  --duration-fast: 120ms;
+  --duration:      180ms;
+}
