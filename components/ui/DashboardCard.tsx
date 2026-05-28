@@ -13,11 +13,11 @@ export function DashboardCard({ tool, title, description, href }: DashboardCardP
     <div className={styles.card}>
       <div className={styles.thumb} aria-hidden="true">
         <div className={styles.chart}>
-          <div className={styles.bar} style={{ height: 14 }} />
-          <div className={styles.bar} style={{ height: 22 }} />
-          <div className={styles.bar} style={{ height: 10 }} />
-          <div className={styles.bar} style={{ height: 18 }} />
-          <div className={styles.bar} style={{ height: 26 }} />
+          <div className={styles.bar} style={{ height: '14px' }} />
+          <div className={styles.bar} style={{ height: '22px' }} />
+          <div className={styles.bar} style={{ height: '10px' }} />
+          <div className={styles.bar} style={{ height: '18px' }} />
+          <div className={styles.bar} style={{ height: '26px' }} />
         </div>
       </div>
       <div className={styles.content}>
