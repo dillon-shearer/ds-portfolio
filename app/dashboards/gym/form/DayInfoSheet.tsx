@@ -52,8 +52,9 @@ export default function DayInfoSheet({
           }}
         >
           <div className={styles.field}>
-            <label className={styles.label}>Date *</label>
+            <label htmlFor="day-info-date" className={styles.label}>Date *</label>
             <input
+              id="day-info-date"
               type="date"
               value={date}
               onChange={(e) => onDateChange(e.target.value)}

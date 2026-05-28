@@ -48,8 +48,9 @@ export default function EditSetModal({
 
         <div className={styles.body}>
           <div className={styles.field}>
-            <label className={styles.label}>Date</label>
+            <label htmlFor="edit-set-date" className={styles.label}>Date</label>
             <input
+              id="edit-set-date"
               type="date"
               value={lift.date}
               onChange={(e) => onChange({ ...lift, date: e.target.value })}
@@ -58,8 +59,9 @@ export default function EditSetModal({
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label}>Exercise</label>
+            <label htmlFor="edit-set-exercise" className={styles.label}>Exercise</label>
             <select
+              id="edit-set-exercise"
               value={lift.exercise}
               onChange={(e) => onChange({ ...lift, exercise: e.target.value })}
               className={styles.select}
@@ -71,8 +73,9 @@ export default function EditSetModal({
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label}>Equipment</label>
+            <label htmlFor="edit-set-equipment" className={styles.label}>Equipment</label>
             <select
+              id="edit-set-equipment"
               value={lift.equipment ?? ''}
               onChange={(e) => onChange({ ...lift, equipment: (e.target.value || null) })}
               className={styles.select}
@@ -99,8 +102,9 @@ export default function EditSetModal({
 
           <div className={styles.grid2}>
             <div className={styles.field}>
-              <label className={styles.label}>Weight (lbs)</label>
+              <label htmlFor="edit-set-weight" className={styles.label}>Weight (lbs)</label>
               <input
+                id="edit-set-weight"
                 type="number"
                 value={lift.weight}
                 onChange={(e) => onChange({ ...lift, weight: parseInt(e.target.value, 10) || 0 })}
@@ -112,8 +116,9 @@ export default function EditSetModal({
               />
             </div>
             <div className={styles.field}>
-              <label className={styles.label}>Reps</label>
+              <label htmlFor="edit-set-reps" className={styles.label}>Reps</label>
               <input
+                id="edit-set-reps"
                 type="number"
                 value={lift.reps}
                 onChange={(e) => onChange({ ...lift, reps: parseInt(e.target.value, 10) || 0 })}
@@ -124,8 +129,9 @@ export default function EditSetModal({
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label}>Set Number</label>
+            <label htmlFor="edit-set-set-number" className={styles.label}>Set Number</label>
             <input
+              id="edit-set-set-number"
               type="number"
               value={lift.setNumber}
               onChange={(e) => onChange({ ...lift, setNumber: parseInt(e.target.value, 10) || 1 })}
@@ -135,8 +141,9 @@ export default function EditSetModal({
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label}>Day Tag</label>
+            <label htmlFor="edit-set-day-tag" className={styles.label}>Day Tag</label>
             <input
+              id="edit-set-day-tag"
               type="text"
               value={lift.dayTag ?? ''}
               onChange={(e) => onChange({ ...lift, dayTag: e.target.value })}

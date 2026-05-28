@@ -228,6 +228,11 @@ function ManageExerciseRow({
   const [name, setName] = useState(row.name)
   const [bp, setBp] = useState<BodyPart>((row.bodyPartKey as BodyPart) ?? 'chest')
 
+  useEffect(() => {
+    setName(row.name)
+    setBp((row.bodyPartKey as BodyPart) ?? 'chest')
+  }, [row.id, row.name, row.bodyPartKey])
+
   return (
     <div className={styles.rowCard}>
       <div className={styles.editGrid}>
