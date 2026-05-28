@@ -54,6 +54,7 @@ type Props = {
 export default function DailyView({ lifts, date, onChangeDate }: Props) {
   const dayLifts = useMemo(() => lifts.filter(l => l.date === date), [lifts, date])
 
+  // Volume = weight × reps per set (unilateral sets record one side; no doubling applied)
   const totalVolume = useMemo(() => dayLifts.reduce((s, l) => s + l.weight * l.reps, 0), [dayLifts])
   const totalSets = dayLifts.length
   const totalReps = useMemo(() => dayLifts.reduce((s, l) => s + l.reps, 0), [dayLifts])
@@ -77,6 +78,7 @@ export default function DailyView({ lifts, date, onChangeDate }: Props) {
     for (const l of dayLifts) {
       const bp = bodyPartForExercise(l.exercise)
       if (bp === 'other') continue
+      // Volume = weight × reps per set (unilateral sets record one side; no doubling applied)
       vols.set(bp, (vols.get(bp) || 0) + l.weight * l.reps)
     }
     if (vols.size === 0) return 'None'

@@ -91,6 +91,7 @@ export default function CumulativeVolumeChart({ dayLifts }: Props) {
 
     let cum = 0
     const series = seq.map((l, i) => {
+      // Volume = weight × reps per set (unilateral sets record one side; no doubling applied)
       cum += l.weight * l.reps
       const bp = bodyPartForExercise(l.exercise)
       return { idx: i + 1, cumVol: cum, bp, ex: l.exercise }

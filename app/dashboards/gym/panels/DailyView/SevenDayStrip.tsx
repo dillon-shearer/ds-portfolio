@@ -25,6 +25,7 @@ export default function SevenDayStrip({ lifts, date, onChangeDate }: Props) {
     const now = new Date()
     const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
     const volMap = new Map<string, number>()
+    // Volume = weight × reps per set (unilateral sets record one side; no doubling applied)
     for (const l of lifts) volMap.set(l.date, (volMap.get(l.date) || 0) + l.weight * l.reps)
 
     return Array.from({ length: 7 }, (_, offset) => {

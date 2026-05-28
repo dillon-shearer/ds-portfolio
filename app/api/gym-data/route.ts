@@ -63,6 +63,7 @@ function enrich(lifts: GymLift[]): OutRow[] {
     })()
     const month = l.date.slice(0, 7)
     const year = parseInt(l.date.slice(0, 4), 10)
+    // Volume = weight × reps per set (unilateral sets record one side; no doubling applied)
     const volume = l.weight * l.reps
     const oneRM_est = Math.round(l.weight * (1 + l.reps / 30))
     return { ...l, volume, oneRM_est, day_of_week: dow, iso_week: iso, month, year }

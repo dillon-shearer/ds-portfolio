@@ -84,6 +84,7 @@ export default function MuscleVolumeDonut({ dayLifts }: Props) {
     for (const l of dayLifts) {
       const bp = bodyPartForExercise(l.exercise)
       if (bp === 'other') continue
+      // Volume = weight × reps per set (unilateral sets record one side; no doubling applied)
       vols.set(bp, (vols.get(bp) || 0) + l.weight * l.reps)
       sets.set(bp, (sets.get(bp) || 0) + 1)
     }

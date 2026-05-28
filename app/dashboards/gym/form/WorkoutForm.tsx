@@ -313,12 +313,14 @@ export default function WorkoutForm() {
           return ta - tb
         })
         const latestTs = Date.parse(setsChrono[setsChrono.length - 1]?.timestamp ?? '')
+        // Volume = weight × reps per set (unilateral sets record one side; no doubling applied)
         const exerciseVolume = sets.reduce((sum, s) => sum + s.weight * s.reps, 0)
         return { exercise, sets: setsChrono, latestTs, exerciseVolume }
       })
       .sort((a, b) => b.latestTs - a.latestTs)
   }, [liftsByExerciseForSelectedDate])
 
+  // Volume = weight × reps per set (unilateral sets record one side; no doubling applied)
   const totalVolumeForSelectedDate = liftsForSelectedDate.reduce((sum, lift) => sum + (lift.weight * lift.reps), 0)
   const dayTagForSelectedDate = (formData.dayTag || '').trim()
   const exerciseCount = Object.keys(liftsByExerciseForSelectedDate).length
