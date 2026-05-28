@@ -15,7 +15,6 @@ export function Footer() {
                 { href: '/', label: 'Home' },
                 { href: '/about', label: 'About' },
                 { href: '/contact', label: 'Contact' },
-                { href: '/rss', label: 'RSS' },
               ].map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className={styles.columnLink}>

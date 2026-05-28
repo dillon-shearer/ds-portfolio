@@ -11,7 +11,6 @@ const NAV_ITEMS = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
-  { href: '/rss', label: 'RSS' },
 ]
 
 export function Header() {
