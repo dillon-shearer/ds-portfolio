@@ -26,7 +26,7 @@ export default function DashboardsPage() {
       <div className={styles.list}>
         {dashboards.map((d) => (
           <DashboardCard
-            key={d.title}
+            key={`${d.tool}-${d.title}`}
             tool={d.tool}
             title={d.title}
             description={d.description}

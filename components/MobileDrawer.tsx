@@ -7,6 +7,7 @@ import styles from './MobileDrawer.module.css'
 const NAV_ITEMS = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
+  { href: '/dashboards', label: 'Dashboards' },
   { href: '/contact', label: 'Contact' },
 ]
 
