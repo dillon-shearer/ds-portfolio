@@ -121,3 +121,93 @@ Home · About · Contact
 ### Current state
 
 `npm run build` passes clean. All 5 acceptance grep checks still return zero matches. `.env.local` is present with `RESEND_API_KEY` and `NEXT_PUBLIC_SITE_URL`.
+
+---
+
+## Session 3 — 2026-05-28: Gym dashboard complete
+
+### What was built
+
+All 23 tasks from `docs/superpowers/plans/2026-05-28-gym-dashboard.md` executed. The gym dashboard is fully implemented at `/dashboards/gym`.
+
+**New routes:**
+
+| Path | Status |
+|---|---|
+| `/dashboards/gym` | Gym tracker — aggregate view, day view, log workout tab, AI chat |
+| `/api/gym-chat` | Streaming AI chat endpoint (OpenAI via lib/gym-chat) |
+| `/api/gym-data` | JSON data download with date range + column exclude |
+| `/api/gym-data.csv` | CSV data download with date range + column exclude |
+
+**New directories:**
+
+| Directory | Contents |
+|---|---|
+| `components/dashboard/` | 8 framework primitives (DashboardShell, DashboardPanel, StatWidget, ChartWrapper, TimeRangeSelector, PasswordGate, FloatingChatWidget, Pager) |
+| `app/dashboards/gym/` | page, GymDashboard orchestrator, actions, catalog |
+| `app/dashboards/gym/panels/` | VolumeChart, SplitFrequency, BodyPartFrequency, BodyDiagram (+Client), ExercisePRsTable, VolumeHeatmap (+Wrapper), RecentSessions |
+| `app/dashboards/gym/panels/DailyView/` | index, SevenDayStrip, CumulativeVolumeChart, MuscleVolumeDonut, ExerciseTable |
+| `app/dashboards/gym/form/` | WorkoutForm, DayInfoSheet, BodyPartsSheet, ExerciseManagerModal, EditSetModal |
+| `lib/gym-chat/` | 12 AI chat modules copied from source |
+| `types/` | gym-chat.ts |
+
+### Dashboard features
+
+**Aggregate view (7d / 30d / YTD / year nav):**
+- 3 KPI stats: Total Volume, Gym Days, Exercise Variety
+- Daily Volume chart (Recharts BarChart)
+- Split Frequency (Push / Pull / Legs day counts)
+- Body Part Frequency (paginated chips)
+- Muscles Trained (Three.js body diagram, SSR-safe dynamic import)
+- Exercise PRs table (sortable, paginated)
+- Volume Heatmap (portfolio oxblood color scale)
+- Recent Sessions (3-per-page session cards, click to jump to day view)
+- Download modal (CSV / JSON, current filter or all time)
+
+**Day view:**
+- 7-day strip navigation
+- 4 KPIs: Total Volume, Exercises/Sets/Reps, Top Body Part, Near-Max Sets
+- Cumulative Volume by Body Part (gradient area chart)
+- Muscle Volume donut chart
+- Sets table grouped by exercise with Est 1RM and % of lifetime PR
+
+**Log Workout tab (password-gated):**
+- Full workout logging form: date, day tag, body parts multi-select, exercise, equipment, weight, reps, unilateral toggle
+- Live set history with edit / delete
+- ExerciseManager modal (add / rename / soft-delete exercises)
+- EditSet modal (edit any field on a logged set)
+- DayInfo sheet, BodyParts sheet (slide-up on mobile)
+
+**Floating AI chat:**
+- Fixed bottom-right chat button
+- Streams responses from `/api/gym-chat` (OpenAI)
+- Markdown rendering, follow-up suggestions, query detail collapsible, inline charts
+- AbortController cleanup on unmount, XSS-safe link renderer
+
+### Key decisions made
+
+| Decision | Choice |
+|---|---|
+| Unilateral volume | `weight × reps` per set (one side only, no doubling). Documented at every calculation site. |
+| BodyDiagram colors | Hardcoded hex in TSX only (Three.js can't use CSS vars). Matching `--chart-bp-*` tokens in tokens.css. |
+| react-markdown inline code | Detect block vs inline via `!!className \|\| String(children).includes('\n')` (v10 compat) |
+| StatWidget border override | Use `className` prop on StatWidget (not page-level CSS) — Next.js 15 CSS precedence |
+| FloatingChatWidget button | Square (no border-radius) to match site aesthetic |
+
+### Env vars needed (not in repo)
+
+```
+DATABASE_URL=<Neon pooled>
+DATABASE_URL_UNPOOLED=<Neon direct>
+GYM_CHAT_DATABASE_URL_READONLY=<Neon readonly>
+OPENAI_API_KEY=<key>
+LIFT_PASSWORD=<password>
+```
+
+Copy from `/Users/dillon/Desktop/projects/dillon-shearer-website/.env.local`.
+
+### Current state
+
+`npm run build` passes clean. Zero STYLE.md violations (no raw hex in CSS, no box-shadow, no border-radius > 2px, no em/en dashes). All 23 plan tasks complete. `.env.local` present with all required vars.
+
+The database schema is unchanged (read-only constraint respected throughout).
