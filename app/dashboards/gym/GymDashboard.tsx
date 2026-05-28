@@ -15,6 +15,7 @@ import BodyDiagramClient from './panels/BodyDiagramClient'
 import ExercisePRsTable from './panels/ExercisePRsTable'
 import VolumeHeatmap from './panels/VolumeHeatmapWrapper'
 import RecentSessions from './panels/RecentSessions'
+import DailyView from './panels/DailyView'
 import styles from './GymDashboard.module.css'
 
 type RangeMode = 'day' | 'week' | 'month' | 'year'
@@ -385,9 +386,7 @@ export default function GymDashboard({ lifts }: Props) {
               </div>
 
               {mode === 'day' ? (
-                <p style={{ color: 'var(--color-ink-3)', fontSize: 'var(--text-sm)' }}>
-                  Day view for {formatLongDate(dayDate)} -- DailyView coming in next task
-                </p>
+                <DailyView lifts={lifts} date={dayDate} onChangeDate={(d) => { setDayDate(d); if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' }) }} />
               ) : (
                 <>
                   {/* KPI row */}

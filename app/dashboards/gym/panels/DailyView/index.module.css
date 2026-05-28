@@ -1,0 +1,46 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.kpiRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: var(--rule-medium) solid var(--color-ink);
+  border-bottom: var(--rule-hairline) solid var(--color-rule);
+  margin-bottom: var(--space-3);
+}
+
+.kpiRow > * {
+  border-top: none;
+  border-bottom: none;
+  padding-right: var(--space-5);
+}
+
+.kpiRow > * + * {
+  padding-left: var(--space-5);
+  border-left: var(--rule-hairline) solid var(--color-rule);
+}
+
+@media (max-width: 720px) {
+  .kpiRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.chartRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-5);
+}
+
+@media (max-width: 720px) {
+  .chartRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chartLarge {}
+.chartSmall {}
