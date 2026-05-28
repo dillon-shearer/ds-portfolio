@@ -34,6 +34,12 @@
 
 Ask, don't invent. Match an existing pattern before creating a new one.
 
+## Known gotchas
+
+- Nav changes require updating BOTH `components/Header.tsx` AND `components/MobileDrawer.tsx` — they have separate `NAV_ITEMS` arrays
+- No test framework — verify correctness with `npm run build`
+- CSS precedence: page-level module CSS loads before the root bundle in Next.js 15; page overrides silently lose to component rules. See STYLE.md "CSS Precedence" section.
+
 ## Out of scope without explicit instruction
 
 - Rewriting copy
