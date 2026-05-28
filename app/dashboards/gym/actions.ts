@@ -1,0 +1,416 @@
+'use server'
+
+import { sql } from '@vercel/postgres'
+import { revalidatePath } from 'next/cache'
+// Pull in your existing catalog action to avoid duplicating SQL
+import { listExercises } from './catalog'
+
+export interface GymLift {
+  id: string
+  date: string
+  exercise: string
+  weight: number
+  reps: number
+  setNumber: number
+  timestamp: string
+  dayTag?: string | null
+  isUnilateral?: boolean | null
+  equipment?: string | null
+}
+
+// --- Secure password check (server-side only) ---
+export async function verifyLiftPassword(input: string): Promise<boolean> {
+  'use server'
+  const secret = process.env.LIFT_PASSWORD || ''
+  return input === secret
+}
+
+export interface GymDayMeta {
+  date: string
+  dayTag: string | null
+  bodyParts: string[] | null
+  updatedAt: string
+}
+
+/** Server-side canonical defaults for recognized day tags. */
+const DAYTAG_DEFAULTS_SERVER: Record<string, string[]> = {
+  'push day': ['chest', 'biceps', 'shoulders'],
+  'pull day': ['back', 'triceps', 'core'],
+  'leg day':  ['quads', 'hamstrings', 'hips', 'glutes', 'calves'],
+}
+
+const DASHBOARD_PATH = '/dashboards/gym'
+
+/** Postgres text[] literal from string[], or null */
+function toPgTextArrayLiteral(arr: string[] | null | undefined): string | null {
+  if (!arr || arr.length === 0) return null
+  const cleaned = arr.map(s => s.trim().toLowerCase().replace(/[{}"]/g, '')).filter(Boolean)
+  if (cleaned.length === 0) return null
+  return `{${cleaned.join(',')}}`
+}
+
+/** Re-sequence set numbers for a calendar date, per exercise (contiguous 1..N across the day). */
+async function resequenceSetsForDate(dateISO: string) {
+  await sql/* sql */`
+    WITH ordered AS (
+      SELECT
+        id,
+        ROW_NUMBER() OVER (
+          PARTITION BY (date::date), exercise
+          ORDER BY (timestamp::timestamptz) ASC, id ASC
+        ) AS rn
+      FROM gym_lifts
+      WHERE (date::date) = ${dateISO}::date
+    )
+    UPDATE gym_lifts g
+    SET set_number = o.rn
+    FROM ordered o
+    WHERE g.id = o.id
+  `
+}
+
+/** Fetch all lifts — order by real time; cast date defensively. */
+export async function getGymLifts(): Promise<GymLift[]> {
+  const { rows } = await sql/* sql */`
+    SELECT
+      id,
+      date,
+      exercise,
+      weight,
+      reps,
+      set_number AS "setNumber",
+      timestamp,
+      day_tag AS "dayTag",
+      is_unilateral AS "isUnilateral",
+      equipment
+    FROM gym_lifts
+    ORDER BY (date::date) ASC, (timestamp::timestamptz) ASC, id ASC
+  `
+  return rows as GymLift[]
+}
+
+/** Distinct day tags */
+export async function getDayTags(): Promise<string[]> {
+  const { rows } = await sql/* sql */`
+    SELECT DISTINCT day_tag AS "dayTag"
+    FROM gym_lifts
+    WHERE day_tag IS NOT NULL AND day_tag <> ''
+    ORDER BY "dayTag" ASC
+  `
+  return rows.map(r => r.dayTag as string)
+}
+
+/** Get day tag for a date */
+export async function getDayTagForDate(date: string): Promise<string | null> {
+  const meta = await sql/* sql */`
+    SELECT day_tag AS "dayTag"
+    FROM gym_day_meta
+    WHERE date = ${date}::date
+    LIMIT 1
+  `
+  if (meta.rows[0]?.dayTag) return meta.rows[0].dayTag as string
+
+  const { rows } = await sql/* sql */`
+    SELECT day_tag AS "dayTag"
+    FROM gym_lifts
+    WHERE (date::date) = ${date}::date AND day_tag IS NOT NULL AND day_tag <> ''
+    LIMIT 1
+  `
+  return (rows[0]?.dayTag as string | undefined) ?? null
+}
+
+/** Get body parts for a date */
+export async function getBodyPartsForDate(date: string): Promise<string[]> {
+  const { rows } = await sql/* sql */`
+    SELECT body_parts AS "bodyParts"
+    FROM gym_day_meta
+    WHERE date = ${date}::date
+    LIMIT 1
+  `
+  const val = rows[0]?.bodyParts as unknown
+  if (!val) return []
+  if (Array.isArray(val)) return val.map(String)
+  if (typeof val === 'string') {
+    const s = val.trim()
+    if (!s) return []
+    if (s.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(s)
+        return Array.isArray(parsed) ? parsed.map(String) : []
+      } catch { return [] }
+    }
+    const inner = s.startsWith('{') && s.endsWith('}') ? s.slice(1, -1) : s
+    return inner ? inner.split(',').map(x => x.trim()).filter(Boolean) : []
+  }
+  return []
+}
+
+/** Set body parts for a date */
+export async function setBodyPartsForDate(date: string, parts: string[] | null) {
+  const lit = toPgTextArrayLiteral(parts)
+  if (lit) {
+    await sql/* sql */`
+      INSERT INTO gym_day_meta (date, body_parts, updated_at)
+      VALUES (${date}::date, ${lit}::text[], NOW())
+      ON CONFLICT (date) DO UPDATE SET
+        body_parts = ${lit}::text[],
+        updated_at = NOW()
+    `
+  } else {
+    await sql/* sql */`
+      INSERT INTO gym_day_meta (date, body_parts, updated_at)
+      VALUES (${date}::date, NULL, NOW())
+      ON CONFLICT (date) DO UPDATE SET
+        body_parts = NULL,
+        updated_at = NOW()
+    `
+  }
+  revalidatePath(DASHBOARD_PATH)
+  return { success: true }
+}
+
+/** Set/replace day tag for a date and optionally backfill defaults */
+export async function setDayTagForDate(date: string, tag: string | null) {
+  const normalized = (tag ?? '').trim().toLowerCase()
+  const defaults = normalized && DAYTAG_DEFAULTS_SERVER[normalized] ? DAYTAG_DEFAULTS_SERVER[normalized] : null
+
+  await sql/* sql */`
+    INSERT INTO gym_day_meta (date, day_tag, updated_at)
+    VALUES (${date}::date, ${tag}, NOW())
+    ON CONFLICT (date) DO UPDATE SET
+      day_tag = ${tag},
+      updated_at = NOW()
+  `
+
+  if (defaults && defaults.length) {
+    const existing = await sql/* sql */`
+      SELECT body_parts
+      FROM gym_day_meta
+      WHERE date = ${date}::date
+      LIMIT 1
+    `
+    const hasBodyParts = !!existing.rows[0]?.body_parts
+    if (!hasBodyParts) {
+      const lit = toPgTextArrayLiteral(defaults)!
+      await sql/* sql */`
+        UPDATE gym_day_meta
+        SET body_parts = ${lit}::text[]
+        WHERE date = ${date}::date
+      `
+    }
+  }
+
+  await sql/* sql */`
+    UPDATE gym_lifts
+    SET day_tag = ${tag}
+    WHERE (date::date) = ${date}::date
+  `
+
+  revalidatePath(DASHBOARD_PATH)
+  return { success: true }
+}
+
+/** Insert a new lift (then re-sequence for the date) */
+export async function addGymLift(lift: Omit<GymLift, 'id' | 'timestamp'>) {
+  const id = `lift_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`
+  const timestamp = new Date().toISOString()
+
+  // Coerce & sanitize
+  const date = String(lift.date)
+  const exercise = String(lift.exercise).trim()
+  const weight = Number(lift.weight)
+  const reps = Number(lift.reps)
+  const setNumber = Number(lift.setNumber)
+  const isUnilateral = lift.isUnilateral === undefined ? null : Boolean(lift.isUnilateral)
+  const equipment = (lift.equipment ?? '').trim() || null
+  let tagToUse = (lift.dayTag ?? '').trim()
+
+  if (!tagToUse) {
+    const inherited = await getDayTagForDate(date)
+    if (inherited) tagToUse = inherited
+  }
+
+  // Ensure meta row / defaults as before
+  if (tagToUse) {
+    const normalized = tagToUse.trim().toLowerCase()
+    const defaults = DAYTAG_DEFAULTS_SERVER[normalized] ?? null
+
+    await sql/* sql */`
+      INSERT INTO gym_day_meta (date, day_tag, updated_at)
+      VALUES (${date}::date, ${tagToUse}, NOW())
+      ON CONFLICT (date) DO UPDATE SET
+        day_tag = COALESCE(EXCLUDED.day_tag, gym_day_meta.day_tag),
+        updated_at = NOW()
+    `
+
+    if (defaults && defaults.length) {
+      const meta = await sql/* sql */`
+        SELECT body_parts
+        FROM gym_day_meta
+        WHERE date = ${date}::date
+        LIMIT 1
+      `
+      const hasBodyParts = !!meta.rows[0]?.body_parts
+      if (!hasBodyParts) {
+        const lit = toPgTextArrayLiteral(defaults)!
+        await sql/* sql */`
+          UPDATE gym_day_meta
+          SET body_parts = ${lit}::text[]
+          WHERE date = ${date}::date
+        `
+      }
+    }
+  }
+
+  await sql/* sql */`
+    INSERT INTO gym_lifts (
+      id, date, exercise, weight, reps, set_number, timestamp, day_tag, is_unilateral, equipment
+    )
+    VALUES (
+      ${id},
+      ${date},
+      ${exercise},
+      ${weight}::numeric,
+      ${reps}::int,
+      ${setNumber}::int,
+      ${timestamp},
+      ${tagToUse || null},
+      ${isUnilateral}::boolean,
+      ${equipment}
+    )
+  `
+
+  // Normalize numbering per (date, exercise)
+  await resequenceSetsForDate(date)
+
+  revalidatePath(DASHBOARD_PATH)
+  return {
+    success: true,
+    data: {
+      id, date, exercise, weight, reps, setNumber,
+      timestamp, dayTag: tagToUse || null, isUnilateral, equipment
+    } as GymLift
+  }
+}
+
+/**
+ * Update a lift. If the exercise or date changes, push to end-of-day so it appends.
+ * Then resequence affected dates.
+ */
+export async function updateGymLift(
+  id: string,
+  updated: Omit<GymLift, 'id' | 'timestamp'>
+) {
+  const before = await sql/* sql */`
+    SELECT date, exercise
+    FROM gym_lifts
+    WHERE id = ${id}
+    LIMIT 1
+  `
+  const previousDate: string | undefined = before.rows[0]?.date
+  const previousExercise: string | undefined = before.rows[0]?.exercise
+
+  const weight = Number(updated.weight)
+  const reps = Number(updated.reps)
+  const setNumber = Number(updated.setNumber)
+  const isUnilateral = updated.isUnilateral === undefined ? null : Boolean(updated.isUnilateral)
+  const equipment = (updated.equipment ?? '').trim() || null
+
+  const exerciseChanged = previousExercise !== updated.exercise
+  const dateChanged = previousDate !== updated.date
+
+  const isoEndOfDay = `${updated.date}T23:59:59.999Z`
+
+  if (exerciseChanged || dateChanged) {
+    await sql/* sql */`
+      UPDATE gym_lifts
+      SET
+        date = ${updated.date},
+        exercise = ${updated.exercise},
+        weight = ${weight}::numeric,
+        reps = ${reps}::int,
+        set_number = ${setNumber}::int,
+        day_tag = ${updated.dayTag ?? null},
+        is_unilateral = ${isUnilateral}::boolean,
+        equipment = ${equipment},
+        timestamp = ${isoEndOfDay}
+      WHERE id = ${id}
+    `
+  } else {
+    await sql/* sql */`
+      UPDATE gym_lifts
+      SET
+        date = ${updated.date},
+        exercise = ${updated.exercise},
+        weight = ${weight}::numeric,
+        reps = ${reps}::int,
+        set_number = ${setNumber}::int,
+        day_tag = ${updated.dayTag ?? null},
+        is_unilateral = ${isUnilateral}::boolean,
+        equipment = ${equipment}
+      WHERE id = ${id}
+    `
+  }
+
+  if (previousDate && previousDate !== updated.date) {
+    await resequenceSetsForDate(previousDate)
+  }
+  await resequenceSetsForDate(updated.date)
+
+  revalidatePath(DASHBOARD_PATH)
+  return { success: true }
+}
+
+/** Delete a lift (then re-sequence for that date) */
+export async function deleteGymLift(id: string) {
+  const prev = await sql/* sql */`SELECT date FROM gym_lifts WHERE id = ${id} LIMIT 1`
+  const prevDate: string | undefined = prev.rows[0]?.date
+
+  await sql/* sql */`DELETE FROM gym_lifts WHERE id = ${id}`
+
+  if (prevDate) await resequenceSetsForDate(prevDate)
+
+  revalidatePath(DASHBOARD_PATH)
+  return { success: true }
+}
+
+/** Recent lifts — cast date defensively for ordering */
+export async function getRecentLifts(limit: number = 10): Promise<GymLift[]> {
+  const { rows } = await sql/* sql */`
+    SELECT
+      id,
+      date,
+      exercise,
+      weight,
+      reps,
+      set_number AS "setNumber",
+      timestamp,
+      day_tag AS "dayTag",
+      is_unilateral AS "isUnilateral",
+      equipment
+    FROM gym_lifts
+    ORDER BY (date::date) DESC, (timestamp::timestamptz) DESC, id DESC
+    LIMIT ${limit}
+  `
+  return rows as GymLift[]
+}
+
+/* ========================= ONE-POST BOOTSTRAP ========================= */
+
+export async function getBootstrapData(date: string): Promise<{
+  lifts: GymLift[]
+  tags: string[]
+  dayTag: string | null
+  bodyParts: string[]
+  allExercises: Awaited<ReturnType<typeof listExercises>>
+}> {
+  const [lifts, tags, dayTag, bodyParts, allExercises] = await Promise.all([
+    getGymLifts(),
+    getDayTags(),
+    getDayTagForDate(date),
+    getBodyPartsForDate(date),
+    listExercises(),
+  ])
+
+  return { lifts, tags, dayTag, bodyParts, allExercises }
+}
