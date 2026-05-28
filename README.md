@@ -31,8 +31,8 @@ NEXT_PUBLIC_SITE_URL=https://datawithdillon.com
 
 - Tokens: `styles/tokens.css`
 - Components: `components/ui/`
-- Rules: `STYLE.md`
-- Agent guidance: `AGENTS.md`
+- Rules: `.claude/STYLE.md`
+- Agent guidance: `.claude/AGENTS.md`
 
 ## Routes
 

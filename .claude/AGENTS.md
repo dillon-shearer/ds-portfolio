@@ -2,12 +2,12 @@
 
 ## Read order (required before every task)
 
-1. `STYLE.md` (design system)
-2. `AGENTS.md` (this file)
+1. `.claude/STYLE.md` (design system)
+2. `.claude/AGENTS.md` (this file)
 3. The specific component(s) your task touches
 4. The task description
 
-## Forbidden without updating STYLE.md first
+## Forbidden without updating .claude/STYLE.md first
 
 - New colors (beyond tokens.css)
 - New fonts
@@ -38,7 +38,7 @@ Ask, don't invent. Match an existing pattern before creating a new one.
 
 - Nav changes require updating BOTH `components/Header.tsx` AND `components/MobileDrawer.tsx` — they have separate `NAV_ITEMS` arrays
 - No test framework — verify correctness with `npm run build`
-- CSS precedence: page-level module CSS loads before the root bundle in Next.js 15; page overrides silently lose to component rules. See STYLE.md "CSS Precedence" section.
+- CSS precedence: page-level module CSS loads before the root bundle in Next.js 15; page overrides silently lose to component rules. See `.claude/STYLE.md` "CSS Precedence" section.
 
 ## Out of scope without explicit instruction
 
