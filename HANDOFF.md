@@ -70,3 +70,54 @@ Create `.env.local` in `ds-portfolio/` with these values before testing the cont
 ## Done when
 
 All 22 tasks are complete, `npm run build` succeeds with no errors, and the acceptance checklist in Task 22 passes (all five grep checks return zero matches).
+
+---
+
+## Session 2 — 2026-05-27: Build complete + post-build fixes
+
+### What was built
+
+All 22 plan tasks executed. The site is fully scaffolded and builds clean. Routes:
+
+| Path | Status |
+|---|---|
+| `/` | Home — hero, capabilities cards, Currently |
+| `/about` | Bio, 2 resume cards, certifications |
+| `/contact` | Server Action form + Elsewhere widgets |
+| `/rss` | Human-readable RSS page (not in nav) |
+| `/rss/feed` | RSS 2.0 XML feed |
+| `/*` | 404 |
+
+### Key deviations from the plan
+
+- `create-next-app` installed v16 by default; pinned to `create-next-app@15` to get Next.js 15
+- Scaffold failed on non-empty directory; HANDOFF.md, docs/, .claude/ were temporarily moved out and restored after
+- `Button.module.css` had `border-radius: 0` (caught by acceptance grep); removed (browser default)
+- Email HTML body had `#f5f5f5` hex (caught by acceptance grep); replaced with named CSS color
+
+### Post-build fixes applied
+
+1. **Rule overuse** — removed explicit `<Rule>` from inside About page sections. Sections now use hairline `border-top` + `padding-top` on `.section`. Card's own `border-top: medium` serves as the visual section opener. Eliminates double-line stacking.
+
+2. **Comprehensive resume removed** — About page now has 2 resume cards (Data Engineer, Data Analyst). Both link to the same PDF until role-specific files are ready.
+
+3. **No em/en dashes** — all em (—) and en (–) dashes removed from `app/`, `components/`, `STYLE.md`, `AGENTS.md`, `README.md`. Rule added to STYLE.md Punctuation section and AGENTS.md Forbidden list. Use commas or colons instead. Hyphens in compound modifiers (e.g. "data-centric") are fine.
+
+4. **Contact Elsewhere widgets** — replaced plain inline links with a labeled 3-column grid. Each contact method has an uppercase sans label ("Email", "LinkedIn", "GitHub") and a serif accent-colored link. Stacks to 1 column on mobile.
+
+5. **RSS routing fix** — `/rss` is now the human-readable page (`app/rss/page.tsx`). XML feed moved to `/rss/feed` (`app/rss/feed/route.ts`). Eliminated the issue of the nav link serving raw XML.
+
+6. **RSS removed from nav** — RSS tab removed from Header, MobileDrawer, and Footer. `/rss` and `/rss/feed` still exist and are reachable by direct URL.
+
+### Current nav (3 items)
+
+Home · About · Contact
+
+### Updated hard constraints
+
+- No em dashes (—) or en dashes (–) anywhere in site copy
+- Nav has exactly 3 items (RSS removed)
+
+### Current state
+
+`npm run build` passes clean. All 5 acceptance grep checks still return zero matches. `.env.local` is present with `RESEND_API_KEY` and `NEXT_PUBLIC_SITE_URL`.
