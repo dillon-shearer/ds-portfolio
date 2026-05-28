@@ -14,7 +14,7 @@ export function GET() {
     <description>${SITE_DESCRIPTION}</description>
     <language>en-us</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-    <atom:link href="${SITE_URL}/rss" rel="self" type="application/rss+xml" />
+    <atom:link href="${SITE_URL}/rss/feed" rel="self" type="application/rss+xml" />
     <item>
       <title>Site launched</title>
       <link>${SITE_URL}</link>

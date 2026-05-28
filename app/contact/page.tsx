@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { PageHeader, Rule } from '@/components/ui'
+import { PageHeader } from '@/components/ui'
 import { ContactForm } from './ContactForm'
 import styles from './page.module.css'
 
@@ -20,28 +20,38 @@ export default function ContactPage() {
 
       <ContactForm />
 
-      <Rule />
-
-      <div className={styles.altLinks} style={{ marginTop: 'var(--space-6)' }}>
-        <a href="mailto:dillon@datawithdillon.com" className={styles.altLink}>
-          dillon@datawithdillon.com
-        </a>
-        <a
-          href="https://www.linkedin.com/in/dillonshearer/"
-          className={styles.altLink}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          LinkedIn
-        </a>
-        <a
-          href="https://github.com/dillon-shearer"
-          className={styles.altLink}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          GitHub
-        </a>
+      <div className={styles.elsewhere}>
+        <p className={styles.elsewhereTitle}>Elsewhere</p>
+        <div className={styles.contactGrid}>
+          <div className={styles.contactItem}>
+            <p className={styles.contactLabel}>Email</p>
+            <a href="mailto:dillon@datawithdillon.com" className={styles.contactValue}>
+              dillon@datawithdillon.com
+            </a>
+          </div>
+          <div className={styles.contactItem}>
+            <p className={styles.contactLabel}>LinkedIn</p>
+            <a
+              href="https://www.linkedin.com/in/dillonshearer/"
+              className={styles.contactValue}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              /in/dillonshearer
+            </a>
+          </div>
+          <div className={styles.contactItem}>
+            <p className={styles.contactLabel}>GitHub</p>
+            <a
+              href="https://github.com/dillon-shearer"
+              className={styles.contactValue}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              /dillon-shearer
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   )

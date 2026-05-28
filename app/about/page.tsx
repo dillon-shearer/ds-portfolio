@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { PageHeader, Rule, Card, Button } from '@/components/ui'
+import { PageHeader, Card, Button } from '@/components/ui'
 import styles from './page.module.css'
 
 export const metadata: Metadata = {
@@ -19,12 +19,6 @@ const resumes = [
     eyebrow: 'Resume · Data Analyst',
     title: 'Data Analyst',
     description: 'Analytics, dashboards, and business intelligence.',
-    file: '/resumes/Dillon_Shearer_Resume.pdf',
-  },
-  {
-    eyebrow: 'Resume · Comprehensive',
-    title: 'Comprehensive Resume',
-    description: 'The complete picture: every skill, project, and experience.',
     file: '/resumes/Dillon_Shearer_Resume.pdf',
   },
 ]
@@ -70,56 +64,50 @@ export default function AboutPage() {
         <p>
           I believe the best data work happens when you combine technical rigor
           with genuine curiosity about the problems you're solving. I'm always learning
-          something new — whether that's mastering a new tool, diving deeper into a domain,
+          something new, whether that's mastering a new tool, diving deeper into a domain,
           or finding better ways to communicate complex insights to diverse stakeholders.
         </p>
       </div>
 
       {/* Resumes */}
       <section className={styles.section}>
-        <Rule weight="medium" />
-        <div style={{ marginTop: 'var(--space-7)' }}>
-          <h2 className={styles.sectionTitle}>Resumes</h2>
-          <p className={styles.sectionIntro}>
-            Role-specific resumes available for download. Each is tailored to a different
-            position type.
-          </p>
-          <div className={styles.cards}>
-            {resumes.map((r) => (
-              <Card
-                key={r.title}
-                eyebrow={r.eyebrow}
-                title={r.title}
-                description={r.description}
-                action={
-                  <Button href={r.file} variant="outline" download>
-                    Download PDF
-                  </Button>
-                }
-              />
-            ))}
-          </div>
+        <h2 className={styles.sectionTitle}>Resumes</h2>
+        <p className={styles.sectionIntro}>
+          Role-specific resumes available for download. Each is tailored to a different
+          position type.
+        </p>
+        <div className={styles.cards}>
+          {resumes.map((r) => (
+            <Card
+              key={r.title}
+              eyebrow={r.eyebrow}
+              title={r.title}
+              description={r.description}
+              action={
+                <Button href={r.file} variant="outline" download>
+                  Download PDF
+                </Button>
+              }
+            />
+          ))}
         </div>
       </section>
 
       {/* Certifications */}
       <section className={styles.section}>
-        <Rule weight="medium" />
-        <div style={{ marginTop: 'var(--space-7)' }}>
-          <h2 className={styles.sectionTitle}>Certifications</h2>
-          <p className={styles.sectionIntro}>
-            Completed certifications and training programs.
-          </p>
-          <div className={styles.cards}>
-            {certifications.map((c) => (
-              <Card
-                key={c.title}
-                eyebrow={c.eyebrow}
-                title={c.title}
-                description={c.description}
-              />
-            ))}
-          </div>
+        <h2 className={styles.sectionTitle}>Certifications</h2>
+        <p className={styles.sectionIntro}>
+          Completed certifications and training programs.
+        </p>
+        <div className={styles.cards}>
+          {certifications.map((c) => (
+            <Card
+              key={c.title}
+              eyebrow={c.eyebrow}
+              title={c.title}
+              description={c.description}
+            />
+          ))}
         </div>
       </section>
     </div>

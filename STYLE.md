@@ -1,4 +1,4 @@
-# Style Guide — Data With Dillon
+# Style Guide: Data With Dillon
 
 Single source of truth for design decisions. Any agent or engineer adding UI must read this first.
 
@@ -29,27 +29,34 @@ Eight primitives in `components/ui/`. No others without updating this file first
 |---|---|---|---|---|
 | Button | Button.tsx | primary, outline, ghost | CTAs and actions | Navigation |
 | Link | Link.tsx | inline, nav | Body links, nav links | Buttons |
-| Card | Card.tsx | — | Certs, resumes, capabilities | Cards within cards |
-| Input | Input.tsx | input, textarea | Contact form only | — |
-| Badge | Badge.tsx | — | Skill tags, status | More than 3 per card |
+| Card | Card.tsx | none | Certs, resumes, capabilities | Cards within cards |
+| Input | Input.tsx | input, textarea | Contact form only | none |
+| Badge | Badge.tsx | none | Skill tags, status | More than 3 per card |
 | Rule | Rule.tsx | hairline, medium | Section dividers | Decorative |
-| PageHeader | PageHeader.tsx | — | Every page top | Mid-page headings |
-| Table | Table.tsx | — | Tabular data | Layout |
-| CodeBlock | CodeBlock.tsx | — | Code samples | Long prose |
+| PageHeader | PageHeader.tsx | none | Every page top | Mid-page headings |
+| Table | Table.tsx | none | Tabular data | Layout |
+| CodeBlock | CodeBlock.tsx | none | Code samples | Long prose |
 
 ## Layout
 
 - Prose pages: `max-width: var(--content-width)` (680px)
-- Horizontal padding: `var(--gutter)` mobile → `var(--space-7)` at ≥720px
+- Horizontal padding: `var(--gutter)` mobile, `var(--space-7)` at >=720px
 - Use `.page-wrapper` class from `globals.css`
 
 ## Breakpoints
 
-- `<720px` — mobile (default)
-- `≥720px` — tablet (header nav expands)
-- `≥1080px` — desktop (max widths apply)
+- `<720px`: mobile (default)
+- `>=720px`: tablet (header nav expands)
+- `>=1080px`: desktop (max widths apply)
 
 No other breakpoints without updating this file.
+
+## Punctuation
+
+- No em dashes (—) or en dashes (–) anywhere in the site copy
+- Use commas, colons, or rephrase the sentence instead
+- Hyphens in compound modifiers are fine (e.g. "data-centric", "life-science")
+- Interpuncts (·) are allowed for eyebrow separators only
 
 ## Hard Rules
 

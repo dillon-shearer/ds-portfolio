@@ -11,7 +11,9 @@
 }
 
 .section {
-  margin-top: var(--space-8);
+  margin-top: var(--space-9);
+  border-top: var(--rule-hairline) solid var(--color-rule);
+  padding-top: var(--space-7);
 }
 
 .sectionTitle {

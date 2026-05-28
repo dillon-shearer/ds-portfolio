@@ -1,9 +1,9 @@
-# AGENTS.md — Working in This Codebase
+# AGENTS.md: Working in This Codebase
 
 ## Read order (required before every task)
 
-1. `STYLE.md` — design system
-2. `AGENTS.md` — this file
+1. `STYLE.md` (design system)
+2. `AGENTS.md` (this file)
 3. The specific component(s) your task touches
 4. The task description
 
@@ -16,6 +16,7 @@
 - New breakpoints
 - New component variants
 - New layout primitives
+- Em dashes (—) or en dashes (–) in copy: use commas or colons instead
 
 ## Forbidden without explicit user approval
 
@@ -26,7 +27,7 @@
 ## Required for every PR
 
 - Screenshot at 360px and 1440px for every page touched
-- Confirm all colors, fonts, and spacing reference `var(--*)` — no hardcoded values
+- Confirm all colors, fonts, and spacing reference `var(--*)` (no hardcoded values)
 - Confirm no `border-radius` > 2px, no `box-shadow`, no gradient backgrounds
 
 ## When in doubt

@@ -1,4 +1,4 @@
-# Data With Dillon — Portfolio
+# Data With Dillon: Portfolio
 
 Personal portfolio for Dillon Shearer. Deployed at [datawithdillon.com](https://datawithdillon.com).
 

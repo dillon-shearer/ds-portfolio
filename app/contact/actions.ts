@@ -49,7 +49,7 @@ export async function submitContactForm(formData: FormData): Promise<FormResult>
   const origin = headerList.get('origin')
   const referer = headerList.get('referer')
 
-  // Honeypot — bots fill this hidden field
+  // Honeypot: bots fill this hidden field
   const honeypot = formData.get('company') as string | null
   if (honeypot && honeypot.trim().length > 0) {
     return { error: 'spam' }

@@ -13,7 +13,7 @@ const readers = [
   { title: 'Reeder', description: 'Mac and iOS, polished reading experience.', href: 'https://reederapp.com' },
 ]
 
-export default function RssAboutPage() {
+export default function RssPage() {
   return (
     <div className="page-wrapper">
       <PageHeader
@@ -25,15 +25,15 @@ export default function RssAboutPage() {
       <div className={styles.prose}>
         <p>
           RSS is an open format that lets you subscribe to websites and read their
-          updates in one place — your RSS reader — without visiting each site individually
+          updates in one place, in your RSS reader, without visiting each site individually
           and without any algorithm deciding what you see.
         </p>
         <p>
           To subscribe, copy the feed URL below and paste it into your RSS reader:
         </p>
         <p>
-          <InlineLink href="https://datawithdillon.com/rss">
-            https://datawithdillon.com/rss
+          <InlineLink href="https://datawithdillon.com/rss/feed">
+            https://datawithdillon.com/rss/feed
           </InlineLink>
         </p>
         <p>

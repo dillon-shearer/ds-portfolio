@@ -22,7 +22,7 @@ export function Header() {
     <>
       <header className={styles.header}>
         <div className={styles.inner}>
-          <Link href="/" className={styles.wordmark} aria-label="Data With Dillon — home">
+          <Link href="/" className={styles.wordmark} aria-label="Data With Dillon, home">
             Data With Dillon
           </Link>
 
