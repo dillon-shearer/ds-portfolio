@@ -16,12 +16,23 @@ RESEND_API_KEY=re_...
 NEXT_PUBLIC_SITE_URL=https://datawithdillon.com
 ```
 
+## Required env vars (gym dashboard)
+
+```
+DATABASE_URL=<Neon pooled connection>
+DATABASE_URL_UNPOOLED=<Neon direct connection>
+GYM_CHAT_DATABASE_URL_READONLY=<Neon readonly>
+OPENAI_API_KEY=<OpenAI key for gym chat>
+LIFT_PASSWORD=<password for Log Workout tab>
+```
+
 ## Key files
 
 - `.claude/STYLE.md`   — design system rules (read before any UI work)
 - `.claude/AGENTS.md`  — agent-specific rules and gotchas (read before any task)
 - `styles/tokens.css`  — all design tokens (colors, spacing, type scale)
 - `components/ui/`     — UI primitives (no new ones without updating .claude/STYLE.md)
+- `components/dashboard/` — dashboard framework primitives (see .claude/STYLE.md)
 
 ## Architecture
 
@@ -42,6 +53,7 @@ styles/          tokens.css only — all other styles are CSS Modules co-located
 | `/contact` | Contact form (Resend API) |
 | `/dashboards` | Dashboard list |
 | `/dashboards/coming-soon` | Placeholder for unhosted dashboards |
+| `/dashboards/gym` | Gym tracker dashboard (analytics, log workout, AI chat) |
 | `/rss` | RSS feed |
 
 ## Gotchas

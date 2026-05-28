@@ -69,6 +69,25 @@ Next.js 15 sorts stylesheets by `data-precedence` value alphabetically, not by `
 
 **Pattern:** When a page needs to opt out of a default visual, add a boolean prop to the component (`rule={false}`, `topBorder={false}`, etc.) rather than overriding from the page stylesheet.
 
+## Dashboard Components
+
+Eight framework primitives in `components/dashboard/`. Use these for any dashboard feature.
+
+| Name | File | Use when |
+|---|---|---|
+| DashboardShell | DashboardShell.tsx | Tab navigation wrapper for dashboard pages |
+| DashboardPanel | DashboardPanel.tsx | Section container with optional eyebrow label |
+| StatWidget | StatWidget.tsx | Single KPI stat with label, value, optional sub |
+| ChartWrapper | ChartWrapper.tsx | Recharts ResponsiveContainer with empty state |
+| TimeRangeSelector | TimeRangeSelector.tsx | Time range button group (Day / 7d / 30d / YTD) |
+| PasswordGate | PasswordGate.tsx | Client-side gate backed by server action auth |
+| FloatingChatWidget | FloatingChatWidget.tsx | Fixed bottom-right AI chat panel |
+| Pager | Pager.tsx | Prev / Next pagination controls |
+
+Dashboard pages use `.page-wrapper--wide` from `globals.css` (max-width: `--content-width-wide`).
+
+Chart colors use `--chart-bp-*` and `--chart-primary/secondary/muted` tokens from `tokens.css`. Three.js / SVG elements that cannot use CSS variables may use the matching hardcoded hex values defined in `tokens.css` comments.
+
 ## Hard Rules
 
 - No `border-radius` > 2px
