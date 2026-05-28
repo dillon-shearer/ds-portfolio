@@ -13,13 +13,13 @@
   margin-bottom: var(--space-3);
 }
 
-.kpiRow > * {
+.kpiItem {
   border-top: none;
   border-bottom: none;
   padding-right: var(--space-5);
 }
 
-.kpiRow > * + * {
+.kpiItem + .kpiItem {
   padding-left: var(--space-5);
   border-left: var(--rule-hairline) solid var(--color-rule);
 }

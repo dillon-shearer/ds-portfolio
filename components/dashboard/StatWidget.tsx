@@ -5,11 +5,12 @@ type Props = {
   value: string | number
   sub?: string
   accent?: boolean
+  className?: string
 }
 
-export default function StatWidget({ label, value, sub, accent }: Props) {
+export default function StatWidget({ label, value, sub, accent, className }: Props) {
   return (
-    <div className={styles.widget}>
+    <div className={[styles.widget, className].filter(Boolean).join(' ')}>
       <p className={styles.label}>{label}</p>
       <p className={[styles.value, accent ? styles.accent : ''].join(' ')}>
         {typeof value === 'number' ? value.toLocaleString() : value}

@@ -48,7 +48,9 @@
   border-bottom: var(--rule-hairline) solid var(--color-rule-soft);
 }
 
-.rowLast {}
+.rowLast {
+  border-bottom: none;
+}
 
 .td {
   padding: var(--space-2) var(--space-3) var(--space-2) 0;

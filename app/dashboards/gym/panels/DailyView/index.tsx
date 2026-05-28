@@ -27,7 +27,7 @@ const EXERCISES_BY_BODY_PART: Record<BodyPart, string[]> = {
 }
 
 const normalize = (s: string) =>
-  s.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim().replace(/s\b/, '')
+  s.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim().replace(/s\b/g, '')
 
 const EX_TO_BP = (() => {
   const m = new Map<string, BodyPart>()
@@ -89,10 +89,10 @@ export default function DailyView({ lifts, date, onChangeDate }: Props) {
         <SevenDayStrip lifts={lifts} date={date} onChangeDate={onChangeDate} />
       </DashboardPanel>
       <div className={styles.kpiRow}>
-        <StatWidget label="Total Volume" value={totalVolume} sub="lbs" />
-        <StatWidget label="Exercises / Sets / Reps" value={`${exerciseCount} / ${totalSets} / ${totalReps}`} />
-        <StatWidget label="Top Body Part" value={topBodyPart} />
-        <StatWidget label="Near-Max Sets" value={nearMaxSets} sub=">= 90% lifetime 1RM" />
+        <StatWidget label="Total Volume" value={totalVolume} sub="lbs" className={styles.kpiItem} />
+        <StatWidget label="Exercises / Sets / Reps" value={`${exerciseCount} / ${totalSets} / ${totalReps}`} className={styles.kpiItem} />
+        <StatWidget label="Top Body Part" value={topBodyPart} className={styles.kpiItem} />
+        <StatWidget label="Near-Max Sets" value={nearMaxSets} sub=">= 90% lifetime 1RM" className={styles.kpiItem} />
       </div>
       <div className={styles.chartRow}>
         <DashboardPanel eyebrow="Cumulative Volume by Body Part" className={styles.chartLarge}>
