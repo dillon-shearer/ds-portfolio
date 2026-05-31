@@ -1,0 +1,133 @@
+/* app/koreader-remote/SetupModal.module.css */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--color-ink) 92%, transparent);
+  padding: var(--space-4);
+}
+
+.card {
+  width: min(420px, 100%);
+  background: var(--color-ink);
+  border: var(--rule-hairline) solid
+    color-mix(in srgb, var(--color-paper) 22%, transparent);
+  border-radius: var(--radius-sm);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  color: var(--color-paper);
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  margin: 0;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: color-mix(in srgb, var(--color-paper) 70%, transparent);
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+}
+
+.closeButton:focus-visible {
+  outline: var(--rule-medium) solid var(--color-paper);
+  outline-offset: var(--space-1);
+}
+
+.intro {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: color-mix(in srgb, var(--color-paper) 75%, transparent);
+  margin: 0;
+}
+
+.fieldLabel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: color-mix(in srgb, var(--color-paper) 70%, transparent);
+}
+
+.input {
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  color: var(--color-paper);
+  background: transparent;
+  border: none;
+  border-bottom: var(--rule-hairline) solid
+    color-mix(in srgb, var(--color-paper) 35%, transparent);
+  padding: var(--space-2) 0;
+}
+
+.input:focus {
+  outline: none;
+  border-bottom-color: var(--color-paper);
+}
+
+.input::placeholder {
+  color: color-mix(in srgb, var(--color-paper) 30%, transparent);
+}
+
+.errorText {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--color-accent);
+  margin: 0;
+}
+
+.savedText {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: color-mix(in srgb, var(--color-paper) 55%, transparent);
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+.saveButton {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  background: var(--color-accent);
+  color: var(--color-paper);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-5);
+  cursor: pointer;
+}
+
+.saveButton:hover {
+  background: var(--color-accent-hover);
+}
+
+.saveButton:disabled {
+  cursor: not-allowed;
+  background: color-mix(in srgb, var(--color-accent) 50%, transparent);
+}
+
+.saveButton:focus-visible {
+  outline: var(--rule-medium) solid var(--color-paper);
+  outline-offset: var(--space-1);
+}
