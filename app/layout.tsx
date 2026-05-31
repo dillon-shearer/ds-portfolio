@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Source_Serif_4, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google'
-import { Header } from '@/components/Header'
-import { Footer } from '@/components/Footer'
+import { SiteChrome } from '@/components/SiteChrome'
 import '@/styles/tokens.css'
 import './globals.css'
 
@@ -45,9 +44,7 @@ export default function RootLayout({
       className={`${sourceSerif.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable}`}
     >
       <body>
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   )
