@@ -41,21 +41,59 @@ const SEMANTIC_MAPPINGS = [
     sql: "day_tag ILIKE 'push%' / 'pull%' / 'leg%'",
   },
   {
-    phrase: 'body parts',
-    sql: "Use gym_day_meta.body_parts (text array). Filter with EXISTS (SELECT 1 FROM unnest(body_parts) AS bp WHERE bp ILIKE $1) or body_parts @> ARRAY[$1::text]. For top body part, use UNNEST(body_parts) AS body_part and COUNT(*) grouped by body_part.",
+    phrase: 'session-intent body parts (planned muscles for a day)',
+    sql:
+      "Use gym_day_meta.body_parts (text array). Filter with EXISTS (SELECT 1 FROM unnest(body_parts) AS bp WHERE bp ILIKE $1) or body_parts @> ARRAY[$1::text]. For top planned body part, use UNNEST(body_parts) AS body_part and COUNT(*) grouped by body_part. This is INTENT only; for actually-logged muscles, use gym_lifts_v.body_part_key.",
   },
   {
-    phrase: 'body part exercises',
-    sql: "Use a sets CTE (normalized dates). Join gym_day_meta gm ON gm.date = sets.session_date. Use EXISTS (SELECT 1 FROM unnest(gm.body_parts) AS bp WHERE bp ILIKE $1) to filter gm rows. Then GROUP BY exercise to sum volume (weight*reps) for the requested body_part.",
+    phrase: 'exercises for a body part / bicep exercises / chest exercises / exercises by muscle',
+    sql:
+      "Query gym_lifts_v with body_part_key. canonical_name and body_part_key are pre-resolved via exercises + exercise_aliases. Example:\n" +
+      "WITH sets AS (SELECT canonical_name, body_part_key, weight, reps, COALESCE(date::date, timestamp::date) AS session_date FROM gym_lifts_v)\n" +
+      "SELECT canonical_name AS exercise, SUM(weight * reps) AS volume\n" +
+      "FROM sets\n" +
+      "WHERE session_date >= CURRENT_DATE - ($1)::interval\n" +
+      "  AND body_part_key = $2\n" +
+      "GROUP BY canonical_name\n" +
+      "ORDER BY volume DESC\n" +
+      "params: ['1 month', 'quads']. Use the body_part_key values listed under Available Body Part Values. Do NOT hand-list exercise names or use ILIKE OR; the view does the classification.",
   },
   {
     phrase: 'top sets by body part',
-    sql: "Use a sets CTE. Join gym_day_meta gm ON gm.date = sets.session_date, UNNEST(gm.body_parts) AS body_part, then rank sets by weight with ROW_NUMBER() OVER (PARTITION BY body_part ORDER BY weight DESC). Filter to row_number = 1 per body_part, then ORDER BY weight DESC LIMIT N.",
+    sql:
+      "Use a sets CTE against gym_lifts_v. Rank by weight with ROW_NUMBER() OVER (PARTITION BY body_part_key ORDER BY weight DESC). Filter to row_number = 1 per body_part_key, then ORDER BY weight DESC LIMIT N. Example:\n" +
+      "WITH sets AS (SELECT canonical_name, body_part_key, weight, reps, COALESCE(date::date, timestamp::date) AS session_date FROM gym_lifts_v WHERE body_part_key IS NOT NULL),\n" +
+      "ranked AS (SELECT *, ROW_NUMBER() OVER (PARTITION BY body_part_key ORDER BY weight DESC) AS rn FROM sets WHERE session_date >= CURRENT_DATE - ($1)::interval)\n" +
+      "SELECT body_part_key, canonical_name, weight, reps, session_date FROM ranked WHERE rn = 1 ORDER BY weight DESC LIMIT $2",
   },
   {
     phrase: 'weekly muscle group volume comparison',
     sql:
-      "WITH sets AS (SELECT exercise, weight, reps, COALESCE(date::date, timestamp::date) AS session_date, COALESCE(timestamp::timestamptz, date::timestamptz) AS performed_at FROM gym_lifts), base AS (SELECT DATE_TRUNC('week', performed_at)::date AS week_start, UNNEST(gm.body_parts) AS body_part, SUM(weight * reps) AS volume FROM sets JOIN gym_day_meta gm ON gm.date = sets.session_date WHERE performed_at >= CURRENT_DATE - ($1)::interval GROUP BY week_start, body_part), recent AS (SELECT body_part, AVG(volume) AS avg_recent FROM base WHERE week_start >= CURRENT_DATE - ($2)::interval GROUP BY body_part), prior AS (SELECT body_part, AVG(volume) AS avg_prior FROM base WHERE week_start < CURRENT_DATE - ($2)::interval AND week_start >= CURRENT_DATE - ($3)::interval GROUP BY body_part) SELECT COALESCE(recent.body_part, prior.body_part) AS body_part, avg_recent, avg_prior, CASE WHEN avg_prior IS NULL OR avg_prior = 0 THEN NULL ELSE (avg_recent - avg_prior) / avg_prior END AS pct_change, CASE WHEN avg_prior IS NULL OR avg_prior = 0 THEN false ELSE ABS((avg_recent - avg_prior) / avg_prior) >= 0.15 END AS flagged FROM recent FULL JOIN prior ON recent.body_part = prior.body_part ORDER BY pct_change DESC NULLS LAST.",
+      "Use gym_lifts_v.body_part_key (actually logged muscles), not gym_day_meta.body_parts (planned intent). Example:\n" +
+      "WITH sets AS (SELECT body_part_key, weight, reps, COALESCE(date::date, timestamp::date) AS session_date, COALESCE(timestamp::timestamptz, date::timestamptz) AS performed_at FROM gym_lifts_v WHERE body_part_key IS NOT NULL),\n" +
+      "base AS (SELECT DATE_TRUNC('week', performed_at)::date AS week_start, body_part_key, SUM(weight * reps) AS volume FROM sets WHERE performed_at >= CURRENT_DATE - ($1)::interval GROUP BY week_start, body_part_key),\n" +
+      "recent AS (SELECT body_part_key, AVG(volume) AS avg_recent FROM base WHERE week_start >= CURRENT_DATE - ($2)::interval GROUP BY body_part_key),\n" +
+      "prior AS (SELECT body_part_key, AVG(volume) AS avg_prior FROM base WHERE week_start < CURRENT_DATE - ($2)::interval AND week_start >= CURRENT_DATE - ($3)::interval GROUP BY body_part_key)\n" +
+      "SELECT COALESCE(recent.body_part_key, prior.body_part_key) AS body_part_key, avg_recent, avg_prior, CASE WHEN avg_prior IS NULL OR avg_prior = 0 THEN NULL ELSE (avg_recent - avg_prior) / avg_prior END AS pct_change, CASE WHEN avg_prior IS NULL OR avg_prior = 0 THEN false ELSE ABS((avg_recent - avg_prior) / avg_prior) >= 0.15 END AS flagged\n" +
+      "FROM recent FULL JOIN prior ON recent.body_part_key = prior.body_part_key ORDER BY pct_change DESC NULLS LAST",
+  },
+  {
+    phrase: 'session intent vs logged (planned muscles vs actually trained)',
+    sql:
+      "Compare gym_day_meta.body_parts (planned) to distinct gym_lifts_v.body_part_key per session_date (actually logged). Surfaces gaps like 'push day with no shoulder work.' Example:\n" +
+      "WITH sets AS (SELECT body_part_key, COALESCE(date::date, timestamp::date) AS session_date FROM gym_lifts_v WHERE body_part_key IS NOT NULL),\n" +
+      "logged AS (SELECT session_date, ARRAY_AGG(DISTINCT body_part_key ORDER BY body_part_key) AS logged_parts FROM sets WHERE session_date >= CURRENT_DATE - ($1)::interval GROUP BY session_date)\n" +
+      "SELECT gm.date, gm.day_tag, gm.body_parts AS planned_parts, COALESCE(l.logged_parts, ARRAY[]::text[]) AS logged_parts, (SELECT ARRAY_AGG(p) FROM unnest(gm.body_parts) p WHERE p <> ALL(COALESCE(l.logged_parts, ARRAY[]::text[]))) AS planned_not_logged, (SELECT ARRAY_AGG(p) FROM unnest(COALESCE(l.logged_parts, ARRAY[]::text[])) p WHERE p <> ALL(gm.body_parts)) AS logged_not_planned\n" +
+      "FROM gym_day_meta gm LEFT JOIN logged l ON l.session_date = gm.date\n" +
+      "WHERE gm.date >= CURRENT_DATE - ($1)::interval\n" +
+      "ORDER BY gm.date DESC",
+  },
+  {
+    phrase: 'day_tag defaults (what is supposed to be on a push/pull/leg day)',
+    sql:
+      "Query daytag_defaults directly. Example:\n" +
+      "SELECT day_tag, body_parts FROM daytag_defaults WHERE day_tag ILIKE $1\n" +
+      "params: ['push%']",
   },
   {
     phrase: 'progressive overload streak',
@@ -64,11 +102,11 @@ const SEMANTIC_MAPPINGS = [
   },
   {
     phrase: 'overall progress / general summary',
-    sql: "Run multiple queries: (1) SELECT COUNT(DISTINCT date::date) AS session_count FROM gym_lifts; (2) SELECT COUNT(*) AS total_sets, SUM(weight * reps) AS total_volume FROM gym_lifts; (3) SELECT exercise, COUNT(*) AS set_count FROM gym_lifts GROUP BY exercise ORDER BY set_count DESC LIMIT 5. Present these as a holistic training snapshot.",
+    sql: "Run multiple queries: (1) WITH sets AS (SELECT COALESCE(date::date, timestamp::date) AS session_date FROM gym_lifts) SELECT COUNT(DISTINCT session_date) AS session_count FROM sets; (2) SELECT COUNT(*) AS total_sets, SUM(weight * reps) AS total_volume FROM gym_lifts; (3) SELECT exercise, COUNT(*) AS set_count FROM gym_lifts GROUP BY exercise ORDER BY set_count DESC LIMIT 5. Note: queries (2) and (3) access gym_lifts directly only because they do not reference session_date or performed_at aliases — direct gym_lifts access is only valid when no date column alias is needed. Present these as a holistic training snapshot.",
   },
   {
     phrase: 'exercise name lookup / fuzzy search',
-    sql: "SELECT DISTINCT exercise FROM gym_lifts WHERE exercise ILIKE $1. Use broad wildcards (e.g., '%bench%') to find exercises when the exact name returns no results.",
+    sql: "Query the canonical catalog first: SELECT name FROM exercises WHERE name ILIKE $1. Fall back to aliases: SELECT e.name FROM exercise_aliases a JOIN exercises e ON e.id = a.exercise_id WHERE a.alias ILIKE $1. Use broad wildcards (e.g., '%bench%').",
   },
 ] as const
 
