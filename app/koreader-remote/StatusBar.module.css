@@ -1,0 +1,37 @@
+/* app/koreader-remote/StatusBar.module.css */
+.bar {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-top: var(--rule-hairline) solid
+    color-mix(in srgb, var(--color-paper) 22%, transparent);
+  color: var(--color-paper);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+
+.glyph {
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  flex-shrink: 0;
+}
+
+.toneIdle    { color: var(--color-paper); }
+.tonePending { color: var(--color-warn); }
+.toneSuccess { color: var(--color-positive); }
+.toneError   { color: var(--color-accent); }
+
+.message {
+  color: var(--color-paper);
+}
+
+.detail {
+  color: color-mix(in srgb, var(--color-paper) 55%, transparent);
+}
+
+.divider {
+  color: color-mix(in srgb, var(--color-paper) 35%, transparent);
+  padding: 0 var(--space-1);
+}
