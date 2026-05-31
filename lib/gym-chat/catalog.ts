@@ -451,19 +451,20 @@ export const getExerciseContext = (): string => {
 // Body-parts pre-fetch — loads distinct body_part values from gym_day_meta
 // so the model knows the exact strings to use in WHERE clauses.
 
-let cachedBodyParts: string[] = []
+type BodyPartEntry = { key: string; label: string }
+let cachedBodyParts: BodyPartEntry[] = []
 let bodyPartsCacheExpiresAt = 0
-let bodyPartsLoadingPromise: Promise<string[]> | null = null
+let bodyPartsLoadingPromise: Promise<BodyPartEntry[]> | null = null
 
-async function fetchBodyPartsFromDatabase(): Promise<string[]> {
+async function fetchBodyPartsFromDatabase(): Promise<BodyPartEntry[]> {
   const connectionString = resolveConnectionString()
   if (!connectionString) return []
 
-  const rows = await runCatalogQuery<{ bp: string }>(
+  const rows = await runCatalogQuery<{ key: string; label: string }>(
     connectionString,
-    `SELECT DISTINCT UNNEST(body_parts) AS bp FROM gym_day_meta WHERE body_parts IS NOT NULL ORDER BY bp`,
+    `SELECT key, label FROM body_parts ORDER BY key`,
   )
-  return rows.map(r => r.bp).filter(Boolean)
+  return rows.map(r => ({ key: r.key, label: r.label })).filter(e => e.key)
 }
 
 export async function loadBodyParts(options?: { force?: boolean }) {
@@ -498,5 +499,6 @@ export async function loadBodyParts(options?: { force?: boolean }) {
 
 export const getBodyPartsContext = (): string => {
   if (!cachedBodyParts.length) return ''
-  return `Exact body_part values in gym_day_meta (use these verbatim in WHERE/EXISTS filters — do not invent values like "legs"):\n${cachedBodyParts.join(', ')}`
+  const formatted = cachedBodyParts.map(p => `${p.key} (${p.label})`).join(', ')
+  return `Valid body_part_key values (use these verbatim in WHERE/EXISTS filters and gym_lifts_v.body_part_key comparisons):\n${formatted}`
 }
