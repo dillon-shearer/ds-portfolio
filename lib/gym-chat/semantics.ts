@@ -83,7 +83,7 @@ const SEMANTIC_MAPPINGS = [
       "Compare gym_day_meta.body_parts (planned) to distinct gym_lifts_v.body_part_key per session_date (actually logged). Surfaces gaps like 'push day with no shoulder work.' Example:\n" +
       "WITH sets AS (SELECT body_part_key, COALESCE(date::date, timestamp::date) AS session_date FROM gym_lifts_v WHERE body_part_key IS NOT NULL),\n" +
       "logged AS (SELECT session_date, ARRAY_AGG(DISTINCT body_part_key ORDER BY body_part_key) AS logged_parts FROM sets WHERE session_date >= CURRENT_DATE - ($1)::interval GROUP BY session_date)\n" +
-      "SELECT gm.date, gm.day_tag, gm.body_parts AS planned_parts, COALESCE(l.logged_parts, ARRAY[]::text[]) AS logged_parts, (SELECT ARRAY_AGG(p) FROM unnest(gm.body_parts) p WHERE p <> ALL(COALESCE(l.logged_parts, ARRAY[]::text[]))) AS planned_not_logged, (SELECT ARRAY_AGG(p) FROM unnest(COALESCE(l.logged_parts, ARRAY[]::text[])) p WHERE p <> ALL(gm.body_parts)) AS logged_not_planned\n" +
+      "SELECT gm.date, gm.day_tag, gm.body_parts AS planned_parts, COALESCE(l.logged_parts, ARRAY[]::text[]) AS logged_parts, (SELECT ARRAY_AGG(p) FROM unnest(gm.body_parts) p WHERE NOT EXISTS (SELECT 1 FROM unnest(COALESCE(l.logged_parts, ARRAY[]::text[])) AS lp WHERE lp = p)) AS planned_not_logged, (SELECT ARRAY_AGG(p) FROM unnest(COALESCE(l.logged_parts, ARRAY[]::text[])) p WHERE NOT EXISTS (SELECT 1 FROM unnest(gm.body_parts) AS pp WHERE pp = p)) AS logged_not_planned\n" +
       "FROM gym_day_meta gm LEFT JOIN logged l ON l.session_date = gm.date\n" +
       "WHERE gm.date >= CURRENT_DATE - ($1)::interval\n" +
       "ORDER BY gm.date DESC",
