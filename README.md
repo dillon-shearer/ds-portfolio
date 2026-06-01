@@ -1,6 +1,6 @@
 # Data With Dillon: Portfolio
 
-Personal portfolio and project surface for Dillon Shearer. Deployed at [datawithdillon.com](https://datawithdillon.com).
+Personal portfolio and project hub for Dillon Shearer. Deployed at [datawithdillon.com](https://datawithdillon.com).
 
 ## Stack
 
