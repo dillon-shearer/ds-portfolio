@@ -54,11 +54,14 @@ styles/          tokens.css only — all other styles are CSS Modules co-located
 | `/dashboards` | Dashboard list |
 | `/dashboards/coming-soon` | Placeholder for unhosted dashboards |
 | `/dashboards/gym` | Gym tracker dashboard (analytics, log workout, AI chat) |
+| `/koreader-remote` | Hidden full-bleed dark utility (KOReader page-turn remote). Not linked anywhere; reachable to anyone with the URL. See the hidden-route pattern in Gotchas. |
 | `/rss` | RSS feed |
 
 ## Gotchas
 
 - **Nav changes:** update BOTH `components/Header.tsx` AND `components/MobileDrawer.tsx` — they have separate `NAV_ITEMS` arrays
+- **Hidden-route pattern:** noindex via per-route `export const metadata = { robots: { index: false, follow: false } }` PLUS an `X-Robots-Tag: noindex, nofollow` entry in `next.config.ts` `headers()`. Deliberately NO `app/robots.ts` entry — listing the path there would advertise it. Add the route to `NAKED_PATHS` in `components/SiteChrome.tsx` to suppress Header and Footer for full-bleed pages. Do not add the route to nav, footer, dashboards list, or RSS.
+- **Root `app/layout.tsx` does NOT render `<Header />` or `<Footer />` directly** — they live inside `components/SiteChrome.tsx`, which conditionally renders them based on pathname (`NAKED_PATHS` array). Don't move them back into the root layout; that re-introduces the chrome on `/koreader-remote` and any future naked routes.
 - **CSS precedence:** page-level CSS modules load before the root bundle in Next.js 15 — page-level overrides silently lose to component rules. Use component props or inline styles instead. See `.claude/STYLE.md`.
 - No `border-radius` > 2px, no `box-shadow`, no gradients — see `.claude/STYLE.md`
 - No em dashes or en dashes anywhere in copy
@@ -77,7 +80,14 @@ styles/          tokens.css only — all other styles are CSS Modules co-located
 - **Gym chat SQL policy — `= ANY()` and `<> ALL()` are broken:** `pgsql-ast-parser` in `lib/gym-chat/sql-policy.ts` mangles `= ANY($1::text[])` into `= "any"($1::text[])` and `p <> ALL(arr)` into `p != "all"(arr)` (both invalid — Postgres errors with `function any/all(...) does not exist`). Never use array params with `= ANY()` or `<> ALL()`. For ANY: use individual `ILIKE` params with OR: `(exercise ILIKE $1 OR exercise ILIKE $2 OR exercise ILIKE $3)`. For ALL: use `NOT EXISTS (SELECT 1 FROM unnest(arr) AS x WHERE x = p)` instead.
 - **Gym chat — `gym_lifts_v` is the muscle-aware view:** Created in `db/migrations/2026-05-31-gym-data-unification.sql`. Pre-resolves `canonical_name` and `body_part_key` via `exercises` + `exercise_aliases`. All muscle-aware SQL patterns query the view; raw `gym_lifts` is for anatomy-irrelevant queries only. `gym_day_meta.body_parts` is session INTENT (planned), distinct from `gym_lifts_v.body_part_key` (actually logged) — both are useful for different questions.
 - **FloatingChatWidget panel height:** `.panel` uses `height: min(560px, calc(100dvh - 100px))` — explicit `height` (not `max-height`) is required for `.messagesOuter` (`flex: 1`) to expand. The 100px reserves space for the trigger button (44px) + gap (12px) + bottom offset (24px) + buffer below the panel; `80dvh` alone can push the input row off the bottom of the viewport.
+- **FloatingChatWidget — ReactMarkdown wraps message content in `<p class="mdP">` with built-in `margin-bottom`:** plain user/assistant text rendered through `<MarkdownContent>` inherits `.mdP { margin: 0 0 var(--space-2) }`, producing visibly asymmetric padding inside `.messageUser`/`.messageAssistant` bubbles. The override `.message > :last-child.mdP { margin-bottom: 0 }` (specificity 0,3,0) beats `.mdP` (0,1,0) and trims the trailing margin. Same applies to `.mdUl`/`.mdOl`.
+- **Turbopack CSS Module HMR is stale-prone:** new CSS rules (especially `position: absolute`, new classes, new selectors) often don't apply after edits even though TSX hot-reloads. Symptom: new elements appear in the DOM with default browser styling (e.g. an absolutely-positioned button rendering at top-left of its container instead of where CSS says). Fix: full `npm run dev` restart. `npm run build` is not affected.
 - **Gym dashboard mobile:** responsive breakpoints implemented at 720px (phone) and 1080px (tablet). See `docs/superpowers/specs/2026-05-28-gym-dashboard-mobile-design.md` before touching responsive layout.
+- **Specs and plans live under `docs/superpowers/`:** designs in `docs/superpowers/specs/YYYY-MM-DD-feature-name.md`, execution plans in `docs/superpowers/plans/YYYY-MM-DD-feature-name.md`. The `superpowers:subagent-driven-development` skill is the standard flow for executing a plan task-by-task.
+
+## DB migrations
+
+No migration framework. Pattern: commit one-shot SQL in `db/migrations/YYYY-MM-DD-name.sql`, run via a throwaway `run-migration.mjs` that loads `.env.local` and picks `DATABASE_URL_UNPOOLED` (owner role) — see `db/migrations/2026-05-31-gym-data-unification.sql` for the latest example and `docs/superpowers/plans/2026-05-31-gym-data-unification.md` Task 1 for the runner script. Use `GYM_CHAT_DATABASE_URL_READONLY` (the `gym_chat_ro` role) when verifying grants. Delete the runner after use; only the SQL file gets committed.
 
 ## Gym Chat
 

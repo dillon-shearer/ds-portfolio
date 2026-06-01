@@ -1,6 +1,6 @@
 .panel {
-  border-top: var(--rule-hairline) solid var(--color-rule);
-  padding: var(--space-5) 0;
+  background: var(--color-rule-soft);
+  padding: var(--space-5);
 }
 
 .eyebrow {
@@ -10,5 +10,5 @@
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
   color: var(--color-ink-3);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-3);
 }

@@ -1,7 +1,7 @@
 .footer {
   border-top: var(--rule-hairline) solid var(--color-rule);
   padding: var(--space-7) 0;
-  margin-top: var(--space-9);
+  margin-top: var(--space-5);
 }
 
 .inner {

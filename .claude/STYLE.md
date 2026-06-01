@@ -88,6 +88,20 @@ Dashboard pages use `.page-wrapper--wide` from `globals.css` (max-width: `--cont
 
 Chart colors use `--chart-bp-*` and `--chart-primary/secondary/muted` tokens from `tokens.css`. Three.js / SVG elements that cannot use CSS variables may use the matching hardcoded hex values defined in `tokens.css` comments.
 
+## Dashboard Panel System
+
+Every widget, visualization, and model sits in a panel. Panels are the only visual containers on dashboards — no borders, no rules, just background color.
+
+- **Background:** `var(--color-rule-soft)` (`#EBE3D5`) — warm earthy beige, clearly distinct from the page background (`--color-paper` = `#F7F3EC`)
+- **Padding:** `var(--space-5)` on all sides
+- **Gap between panels:** `var(--space-4)` everywhere (grid/flex gap, not margin)
+- **Cards inside a panel** (e.g. session cards): use `var(--color-paper)` background to appear "lifted" against the panel
+- **KPI stat row:** each StatWidget is its own panel box via `.kpiRow > * { background: var(--color-rule-soft); padding: var(--space-5) }` — no shared panel wrapper, no separator lines between stats
+- **No separating lines anywhere** — `border-top`, `border-bottom`, `border-left` between sections are forbidden; depth comes from background color and spacing only
+- **Accent indicators within panels** (e.g. SplitFrequency tiles): use a `3px left border`, not a top rule
+- **Tab navigation active state:** background fill (`var(--color-rule-soft)`), not an underline border
+- **Pager component:** no `border-top` — sits flush within its panel's padding
+
 ## Hard Rules
 
 - No `border-radius` > 2px
@@ -95,4 +109,4 @@ Chart colors use `--chart-bp-*` and `--chart-primary/secondary/muted` tokens fro
 - No gradient backgrounds
 - No emoji in nav, headers, or buttons
 - One accent color: `--color-accent` (oxblood)
-- Depth via rules and whitespace, never shadows
+- Depth via panel background color and spacing, never shadows or rules

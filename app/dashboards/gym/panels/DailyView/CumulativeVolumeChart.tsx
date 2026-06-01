@@ -64,17 +64,21 @@ function ChartTooltip({ active, payload }: any) {
   const p = payload[0]?.payload
   return (
     <div style={{
-      background: 'var(--color-paper)',
-      border: '1px solid var(--color-rule)',
-      padding: '4px 8px',
+      background: 'var(--color-ink)',
+      color: 'var(--color-paper)',
+      padding: 'var(--space-2) var(--space-3)',
       fontFamily: 'var(--font-sans)',
-      fontSize: '11px',
+      fontSize: 'var(--text-xs)',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '2px',
+      whiteSpace: 'nowrap',
     }}>
-      <div style={{ color: 'var(--color-ink)' }}>{p.ex}</div>
-      <div style={{ color: 'var(--color-ink-3)' }}>{p.bp !== 'other' ? p.bp : ''}</div>
-      <div style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-mono)' }}>
+      <span style={{ fontWeight: '500', letterSpacing: 'var(--tracking-wide)', textTransform: 'uppercase' }}>{p.ex}</span>
+      {p.bp !== 'other' && <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-rule)', textTransform: 'capitalize' }}>{p.bp}</span>}
+      <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-rule)' }}>
         {Number(p.cumVol).toLocaleString()} lbs cumulative
-      </div>
+      </span>
     </div>
   )
 }

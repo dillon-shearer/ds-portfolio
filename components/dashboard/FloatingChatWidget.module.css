@@ -36,13 +36,46 @@
 
 /* ------- Chat panel ------- */
 .panel {
+  position: relative;
   width: min(420px, calc(100vw - var(--space-6)));
-  max-height: 600px;
+  height: min(560px, calc(100dvh - 100px));
   background: var(--color-paper-2);
   border: var(--rule-hairline) solid var(--color-rule);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+/* ------- Resize handles ------- */
+.resizeHandleTop {
+  position: absolute;
+  top: -3px;
+  left: 8px;
+  right: 8px;
+  height: 8px;
+  cursor: ns-resize;
+  z-index: 3;
+  touch-action: none;
+}
+.resizeHandleLeft {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: -3px;
+  width: 8px;
+  cursor: ew-resize;
+  z-index: 3;
+  touch-action: none;
+}
+.resizeHandleCorner {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 14px;
+  height: 14px;
+  cursor: nwse-resize;
+  z-index: 4;
+  touch-action: none;
 }
 
 .panelHeader {
@@ -128,31 +161,88 @@
 .msgRowUser {
   display: flex;
   justify-content: flex-end;
+  align-items: flex-end;
+  gap: var(--space-2);
 }
 
 .msgRowAssistant {
   display: flex;
   justify-content: flex-start;
+  align-items: flex-end;
+  gap: var(--space-2);
 }
 
 .message {
+  position: relative;
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   line-height: var(--leading-normal);
   color: var(--color-ink);
 }
 
+.message > :first-child,
+.message > :first-child.mdH1,
+.message > :first-child.mdH2,
+.message > :first-child.mdH3 {
+  margin-top: 0;
+}
+.message > :last-child,
+.message > :last-child.mdP,
+.message > :last-child.mdUl,
+.message > :last-child.mdOl {
+  margin-bottom: 0;
+}
+
+/* ------- Per-message copy button ------- */
+.copyBtn {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: transparent;
+  border: none;
+  color: var(--color-ink-3);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out);
+  z-index: 1;
+}
+.msgRowUser:hover .copyBtn,
+.msgRowAssistant:hover .copyBtn,
+.copyBtn:focus-visible {
+  opacity: 0.55;
+  pointer-events: auto;
+}
+.copyBtn:hover {
+  opacity: 0.9;
+  color: var(--color-ink);
+}
+.copyBtnCopied,
+.msgRowUser:hover .copyBtnCopied,
+.msgRowAssistant:hover .copyBtnCopied {
+  color: var(--color-ink);
+  opacity: 0.9;
+  pointer-events: auto;
+}
+
 .messageUser {
   align-self: flex-end;
   background: var(--color-paper);
   border: var(--rule-hairline) solid var(--color-rule);
-  padding: var(--space-2) var(--space-3);
+  padding: 9px var(--space-5) 5px var(--space-3);
   max-width: 80%;
 }
 
 .messageAssistant {
   align-self: flex-start;
   max-width: 100%;
+  padding-right: var(--space-5);
 }
 
 /* ------- Assistant extras (charts, queries, follow-ups) ------- */
@@ -346,6 +436,7 @@
   outline: none;
   resize: none;
   overflow: hidden;
+  min-height: var(--space-7);
 }
 
 .input::placeholder {

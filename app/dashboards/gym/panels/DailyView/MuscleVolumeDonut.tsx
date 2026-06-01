@@ -64,15 +64,20 @@ function ChartTooltip({ active, payload }: any) {
   const pct = Math.round((v / total) * 100)
   return (
     <div style={{
-      background: 'var(--color-paper)',
-      border: '1px solid var(--color-rule)',
-      padding: '4px 8px',
+      background: 'var(--color-ink)',
+      color: 'var(--color-paper)',
+      padding: 'var(--space-2) var(--space-3)',
       fontFamily: 'var(--font-sans)',
-      fontSize: '11px',
-      color: 'var(--color-ink)',
+      fontSize: 'var(--text-xs)',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '2px',
+      whiteSpace: 'nowrap',
     }}>
-      <div style={{ textTransform: 'capitalize' }}>{p.name}: {v.toLocaleString()} lbs ({pct}%)</div>
-      <div style={{ color: 'var(--color-ink-3)' }}>{datum.sets ?? 0} sets</div>
+      <span style={{ fontWeight: '500', letterSpacing: 'var(--tracking-wide)', textTransform: 'uppercase' }}>
+        {p.name}: {v.toLocaleString()} lbs ({pct}%)
+      </span>
+      <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-rule)' }}>{datum.sets ?? 0} sets</span>
     </div>
   )
 }

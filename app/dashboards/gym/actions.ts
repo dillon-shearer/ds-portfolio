@@ -1,6 +1,6 @@
 'use server'
 
-import { sql } from '@vercel/postgres'
+import { sql } from '@/lib/gym-db'
 import { revalidatePath } from 'next/cache'
 // Pull in your existing catalog action to avoid duplicating SQL
 import { listExercises } from './catalog'

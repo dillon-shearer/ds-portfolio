@@ -18,20 +18,29 @@ const LEGEND = [
 export default function VolumeHeatmap({ mode, data }: Props) {
   return (
     <div className={styles.wrapper}>
-      <VolumeHeatmapInner
-        mode={mode}
-        data={data}
-        fillParent
-        naColor="#EBE3D5"
-      />
+      <div style={{ flex: 1, minHeight: 0 }}>
+        <VolumeHeatmapInner
+          mode={mode}
+          data={data}
+          fillParent
+          naColor="#EBE3D5"
+        />
+      </div>
       <div className={styles.legend}>
-        <span className={styles.legendLabel}>Less</span>
+        <span className={styles.legendLabel}>Volume</span>
         <div className={styles.legendScale}>
-          {LEGEND.map(({ color }) => (
-            <div key={color} className={styles.legendSwatch} style={{ background: color }} />
+          {LEGEND.map(({ color }, i) => (
+            <div
+              key={color}
+              className={styles.legendSwatch}
+              style={{
+                background: color,
+                height: `${6 + i * 3}px`,
+                alignSelf: 'flex-end',
+              }}
+            />
           ))}
         </div>
-        <span className={styles.legendLabel}>More</span>
       </div>
     </div>
   )

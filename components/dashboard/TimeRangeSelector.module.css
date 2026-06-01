@@ -11,7 +11,7 @@
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
   color: var(--color-ink-3);
-  background: var(--color-paper-2);
+  background: var(--color-rule-soft);
   border: none;
   border-right: var(--rule-hairline) solid var(--color-rule);
   padding: var(--space-2) var(--space-4);
@@ -37,4 +37,16 @@
 .active:hover {
   background: var(--color-ink);
   color: var(--color-paper);
+}
+
+@media (max-width: 720px) {
+  .group {
+    display: flex;
+    width: 100%;
+  }
+
+  .btn {
+    flex: 1;
+    text-align: center;
+  }
 }

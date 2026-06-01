@@ -30,9 +30,6 @@ function titleCaseTag(tag: string) {
 export default function RecentSessions({ rows, page, totalPages, onPrev, onNext, onJumpToDay }: Props) {
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <Pager page={page} totalPages={totalPages} onPrev={onPrev} onNext={onNext} />
-      </div>
       <div className={styles.grid}>
         {rows.map((s) => (
           <button
@@ -41,7 +38,6 @@ export default function RecentSessions({ rows, page, totalPages, onPrev, onNext,
             onClick={() => onJumpToDay(s.date)}
             className={styles.card}
             aria-label={`View ${formatLongDate(s.date)}`}
-            title="Click to view day breakdown"
           >
             <p className={styles.date}>{formatLongDate(s.date)}</p>
             {s.dayTag && (
@@ -53,7 +49,7 @@ export default function RecentSessions({ rows, page, totalPages, onPrev, onNext,
           </button>
         ))}
       </div>
-      <p className={styles.hint}>Click any session to view day breakdown</p>
+      <Pager page={page} totalPages={totalPages} onPrev={onPrev} onNext={onNext} />
     </div>
   )
 }

@@ -211,14 +211,6 @@ export default function GymDashboard({ lifts }: Props) {
       .sort((a, b) => (b.sets - a.sets) || (b.volume - a.volume))
   }, [bodyStats])
 
-  const [bpPage, setBpPage] = useState(1)
-  const bpPageSize = 6
-  const bodyPartsPaged = useMemo(() => {
-    const totalPages = Math.max(1, Math.ceil(bodyPartsList.length / bpPageSize))
-    const page = Math.max(1, Math.min(bpPage, totalPages))
-    const start = (page - 1) * bpPageSize
-    return { rows: bodyPartsList.slice(start, start + bpPageSize), totalPages, page, total: bodyPartsList.length }
-  }, [bodyPartsList, bpPage])
 
   const prsAll = useMemo(() => {
     const byEx = groupBy(filtered, (l) => l.exercise)
@@ -390,7 +382,7 @@ export default function GymDashboard({ lifts }: Props) {
               {mode === 'day' ? (
                 <DailyView lifts={lifts} date={dayDate} onChangeDate={(d) => { setDayDate(d); if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' }) }} />
               ) : (
-                <>
+                <div className={styles.panelStack}>
                   {/* KPI row */}
                   <div className={styles.kpiRow}>
                     <StatWidget label="Total Volume" value={totalVolume} sub="lbs" />
@@ -413,14 +405,7 @@ export default function GymDashboard({ lifts }: Props) {
                           />
                         </DashboardPanel>
                         <DashboardPanel eyebrow="Body Part Frequency">
-                          <BodyPartFrequency
-                            rows={bodyPartsPaged.rows}
-                            page={bodyPartsPaged.page}
-                            totalPages={bodyPartsPaged.totalPages}
-                            total={bodyPartsPaged.total}
-                            onPrev={() => setBpPage(p => Math.max(1, p - 1))}
-                            onNext={() => setBpPage(p => Math.min(bodyPartsPaged.totalPages, p + 1))}
-                          />
+                          <BodyPartFrequency rows={bodyPartsList} />
                         </DashboardPanel>
                       </div>
                     </div>
@@ -461,7 +446,7 @@ export default function GymDashboard({ lifts }: Props) {
                       onJumpToDay={jumpToDay}
                     />
                   </DashboardPanel>
-                </>
+                </div>
               )}
             </>
           )}

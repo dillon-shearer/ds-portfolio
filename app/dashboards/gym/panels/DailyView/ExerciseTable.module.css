@@ -64,6 +64,10 @@
   text-align: right;
 }
 
+.td:first-child {
+  text-align: left;
+}
+
 .muted {
   color: var(--color-ink-3);
 }

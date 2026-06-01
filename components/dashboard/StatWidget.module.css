@@ -1,7 +1,5 @@
 .widget {
-  border-top: var(--rule-medium) solid var(--color-ink);
-  border-bottom: var(--rule-hairline) solid var(--color-rule);
-  padding: var(--space-4) 0;
+  padding: var(--space-2) 0;
 }
 
 .label {
@@ -34,4 +32,10 @@
   text-transform: uppercase;
   color: var(--color-ink-3);
   margin-top: var(--space-1);
+}
+
+@media (max-width: 720px) {
+  .value {
+    font-size: var(--text-2xl);
+  }
 }

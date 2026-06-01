@@ -13,12 +13,9 @@ const dashboards = [
     title: 'Gym Tracker',
     description: 'Personal training log with volume analytics, split tracking, exercise PRs, and an AI coaching assistant.',
     href: '/dashboards/gym',
-  },
-  {
-    tool: 'Tableau',
-    title: 'ALS Patient Outcomes',
-    description: 'Tracks patient progression metrics and outcome distributions across clinical trial cohorts.',
-    href: '/dashboards/coming-soon',
+    longDescription:
+      'A personal training dashboard built on top of every workout I log. It tracks weekly volume, splits, body part frequency, exercise PRs, and an interactive 3D body diagram, plus an AI coach that can answer questions directly against the lift database.',
+    tech: ['Next.js', 'PostgreSQL', 'Recharts', 'React Three Fiber', 'OpenAI'],
   },
 ]
 
@@ -38,6 +35,8 @@ export default function DashboardsPage() {
             title={d.title}
             description={d.description}
             href={d.href}
+            longDescription={d.longDescription}
+            tech={d.tech}
           />
         ))}
       </div>

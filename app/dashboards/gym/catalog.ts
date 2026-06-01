@@ -1,7 +1,7 @@
 // app/dashboards/gym/catalog.ts
 'use server'
 
-import { sql } from '@vercel/postgres'
+import { sql } from '@/lib/gym-db'
 
 export type BodyPartKey =
   | 'biceps' | 'chest' | 'shoulders' | 'back' | 'triceps'

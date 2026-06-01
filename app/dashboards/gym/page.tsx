@@ -14,7 +14,7 @@ export default async function GymTrackerPage() {
   const lifts = await getGymLifts()
 
   return (
-    <div className="page-wrapper--wide">
+    <div className="page-wrapper--wide" style={{ paddingBottom: '32px' }}>
       <PageHeader
         eyebrow="Dashboards"
         title="Gym Tracker"

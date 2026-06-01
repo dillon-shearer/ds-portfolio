@@ -1,27 +1,18 @@
 .root {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: var(--space-4);
 }
 
 .kpiRow {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-  border-top: var(--rule-medium) solid var(--color-ink);
-  border-bottom: var(--rule-hairline) solid var(--color-rule);
-  margin-bottom: var(--space-3);
+  gap: var(--space-4);
 }
 
 .kpiItem {
-  border-top: none;
-  border-bottom: none;
-  padding-right: var(--space-5);
-}
-
-.kpiItem + .kpiItem {
-  padding-left: var(--space-5);
-  border-left: var(--rule-hairline) solid var(--color-rule);
+  background: var(--color-rule-soft);
+  padding: var(--space-5);
 }
 
 @media (max-width: 720px) {
@@ -33,7 +24,7 @@
 .chartRow {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: var(--space-5);
+  gap: var(--space-4);
 }
 
 @media (max-width: 720px) {

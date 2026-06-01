@@ -3,6 +3,7 @@
   flex-direction: column;
   flex: 1;
   min-height: 160px;
+  height: 220px;
 }
 
 .legend {
@@ -23,10 +24,9 @@
 .legendScale {
   display: flex;
   gap: var(--space-1);
-  align-items: center;
+  align-items: flex-end;
 }
 
 .legendSwatch {
   width: 10px;
-  height: 10px;
 }

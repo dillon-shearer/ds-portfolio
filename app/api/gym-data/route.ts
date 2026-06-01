@@ -83,17 +83,6 @@ export async function GET(req: Request) {
     .map(s => s.trim())
     .filter(Boolean)
 
-  const password = process.env.LIFT_PASSWORD
-  if (!password) {
-    console.error('LIFT_PASSWORD is not defined')
-    return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 })
-  }
-
-  const token = extractToken(req, searchParams)
-  if (token !== password) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
   const ip = getClientIp(req)
   if (!checkRateLimit(ip)) {
     return NextResponse.json({ error: 'Too many requests' }, { status: 429 })

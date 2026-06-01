@@ -4,9 +4,8 @@
 
 .tabBar {
   display: flex;
-  gap: 0;
-  border-bottom: var(--rule-hairline) solid var(--color-rule);
-  margin-bottom: var(--space-6);
+  gap: var(--space-1);
+  margin-bottom: var(--space-5);
 }
 
 .tab {
@@ -16,24 +15,37 @@
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
   color: var(--color-ink-3);
-  background: none;
+  background: var(--color-rule-soft);
   border: none;
-  border-bottom: var(--rule-medium) solid transparent;
-  padding: var(--space-3) var(--space-4);
-  margin-bottom: -1px;
+  padding: var(--space-2) var(--space-4);
   cursor: pointer;
-  transition: color var(--duration-fast) var(--ease-out);
+  transition: color var(--duration-fast) var(--ease-out),
+              background var(--duration-fast) var(--ease-out);
 }
 
 .tab:hover {
   color: var(--color-ink-2);
+  background: var(--color-rule-soft);
 }
 
 .tabActive {
   color: var(--color-ink);
-  border-bottom-color: var(--color-accent);
+  background: var(--color-rule-soft);
 }
 
 .content {
   width: 100%;
+}
+
+@media (max-width: 720px) {
+  .tabBar {
+    width: 100%;
+    gap: 0;
+  }
+
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: var(--space-3) var(--space-2);
+  }
 }

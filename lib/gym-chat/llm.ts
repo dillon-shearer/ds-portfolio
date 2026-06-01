@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 import type { GymChatChartSpec, GymChatCitation, GymChatQuery } from '@/types/gym-chat'
+import { interpretSqlError } from './sql-errors'
 
 export type OpenAIToolCall = {
   id: string
@@ -38,7 +39,7 @@ export type GymChatLlmResult = {
 
 const resolveApiKey = () => process.env.OPENAI_API_KEY || process.env.GYM_CHAT_OPENAI_API_KEY || ''
 const resolveApiBase = () => process.env.OPENAI_API_BASE_URL || 'https://api.openai.com/v1'
-const resolveModel = () => process.env.GYM_CHAT_MODEL || process.env.OPENAI_MODEL || 'gpt-4o-mini'
+const resolveModel = () => process.env.GYM_CHAT_MODEL || process.env.OPENAI_MODEL || 'gpt-4o'
 
 export type LlmRequestError = Error & {
   isLlmError: true
@@ -307,16 +308,23 @@ const callOpenAIChat = async (
 }
 
 const buildToolResultPayload = (queries: GymChatQuery[]) => ({
-  queries: queries.map(query => ({
-    id: query.id,
-    purpose: query.purpose,
-    rowCount: query.rowCount,
-    rows: query.previewRows,
-    error: query.error,
-    ...(query.exerciseSuggestions?.length
-      ? { exerciseSuggestions: query.exerciseSuggestions }
-      : {}),
-  })),
+  queries: queries.map(query => {
+    let error: string | null = query.error ?? null
+    if (error) {
+      const { diagnosis, suggestion } = interpretSqlError(error)
+      error = `${diagnosis} Fix: ${suggestion}`
+    }
+    return {
+      id: query.id,
+      purpose: query.purpose,
+      rowCount: query.rowCount,
+      rows: query.previewRows,
+      error,
+      ...(query.exerciseSuggestions?.length
+        ? { exerciseSuggestions: query.exerciseSuggestions }
+        : {}),
+    }
+  }),
 })
 
 const extractCitations = (text: string, queries: GymChatQuery[]): GymChatCitation[] => {
@@ -336,6 +344,76 @@ const extractCitations = (text: string, queries: GymChatQuery[]): GymChatCitatio
     }
   }
   return citations
+}
+
+const CHART_SPEC_SCHEMA = z.object({
+  charts: z
+    .array(
+      z.object({
+        type: z.enum(['line', 'bar']),
+        queryId: z.string(),
+        x: z.string(),
+        y: z.string(),
+        title: z.string().optional(),
+      }),
+    )
+    .max(2),
+})
+
+const CHART_SPEC_SYSTEM = `You decide when workout query results should be visualized as a chart.
+
+Always respond with this JSON format — never wrap it in another key:
+{"charts":[{"type":"bar","queryId":"q1","x":"exercise","y":"volume","title":"Volume by exercise"}]}
+When nothing is chartable: {"charts":[]}
+
+When to generate a chart (REQUIRED if any of these apply):
+- Query has 3+ rows, one field is a category (exercise names, body parts, muscle groups, splits), another is numeric (volume, count, weight, reps) → type "bar"
+- Query has 3+ rows, one field is a date/week/month, another is numeric → type "line"
+
+Rules:
+- queryId: exact id string from the provided queries array (e.g. "q1") — do not invent ids
+- x: the categorical or time field (exact name from that query's fields list)
+- y: the numeric field (exact name from that query's fields list; "27570.0" string format still counts as numeric)
+- title: 3-6 words, sentence case, no trailing period
+- Maximum 2 charts total`
+
+async function generateChartSpecs(
+  queries: GymChatQuery[],
+  options?: LlmRequestOptions,
+): Promise<GymChatChartSpec[] | undefined> {
+  const chartable = queries.filter(q => !q.error && q.previewRows.length >= 3)
+  if (!chartable.length) return undefined
+
+  // Skip if the request budget is running low — chart generation is non-critical
+  if (options?.budget && options.budget.remainingMs() < 10000) return undefined
+
+  const queryContext = chartable.map(q => ({
+    id: q.id,
+    fields: Object.keys(q.previewRows[0] ?? {}),
+    sampleRows: q.previewRows.slice(0, 3),
+  }))
+
+  const messages: OpenAIMessage[] = [
+    { role: 'system', content: CHART_SPEC_SYSTEM },
+    { role: 'user', content: JSON.stringify({ queries: queryContext }) },
+  ]
+
+  try {
+    const raw = await callOpenAIJson(z.unknown(), messages, 0, {
+      ...(options ?? {}),
+      maxAttempts: 1,
+      timeoutMs: 8000,
+    })
+    const parsed = CHART_SPEC_SCHEMA.safeParse(raw)
+    if (!parsed.success) {
+      console.error('generateChartSpecs: schema mismatch:', parsed.error.message, JSON.stringify(raw))
+      return undefined
+    }
+    return parsed.data.charts.length ? parsed.data.charts : undefined
+  } catch (err) {
+    console.error('generateChartSpecs failed:', err instanceof Error ? err.message : err)
+    return undefined
+  }
 }
 
 const FOLLOW_UP_SECTION_REGEX = /\n*\*\*Follow-up questions?:\*\*\s*[\s\S]*$/i
@@ -420,7 +498,14 @@ export async function runGymChatConversation(input: {
         const queries = Array.isArray(parsedArgs.queries) ? parsedArgs.queries : []
         input.onStatus?.('query', 'Running database queries...')
         const result = await input.executeQueries(queries)
-        executedQueries.push(...result.queries)
+        for (const query of result.queries) {
+          const idx = executedQueries.findIndex(q => q.id === query.id)
+          if (idx !== -1) {
+            executedQueries[idx] = query
+          } else {
+            executedQueries.push(query)
+          }
+        }
         messages.push({
           role: 'tool',
           tool_call_id: toolCall.id,
@@ -443,11 +528,14 @@ export async function runGymChatConversation(input: {
   const followUps = extractFollowUps(assistantMessage)
   const cleanedMessage = followUps ? stripFollowUpSection(assistantMessage) : assistantMessage
 
+  const chartSpecs = await generateChartSpecs(executedQueries, input.options)
+  if (chartSpecs) input.onStatus?.('charting', 'Generating charts...')
+
   return {
     assistantMessage: cleanedMessage,
     queries: executedQueries,
     citations,
-    chartSpecs: undefined,
+    chartSpecs,
     followUps,
   }
 }

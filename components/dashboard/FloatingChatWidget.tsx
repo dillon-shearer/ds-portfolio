@@ -234,6 +234,31 @@ const renderPreviewTable = (rows: Record<string, unknown>[]) => {
   )
 }
 
+function ChatChartTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: unknown }>; label?: unknown }) {
+  if (!active || !payload?.length) return null
+  const raw = payload[0]?.value
+  const value = typeof raw === 'number' ? raw.toLocaleString() : String(raw ?? '')
+  const labelStr = label != null ? String(label) : ''
+  return (
+    <div style={{
+      background: 'var(--color-ink)',
+      color: 'var(--color-paper)',
+      padding: 'var(--space-2) var(--space-3)',
+      fontFamily: 'var(--font-sans)',
+      fontSize: 'var(--text-xs)',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '2px',
+      whiteSpace: 'nowrap',
+    }}>
+      {labelStr && <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-rule)' }}>{labelStr}</span>}
+      <span style={{ fontWeight: 500, letterSpacing: 'var(--tracking-wide)', textTransform: 'uppercase' }}>{value}</span>
+    </div>
+  )
+}
+
+const AXIS_TICK = { fill: 'var(--color-ink-3)', fontSize: 10, fontFamily: 'var(--font-sans)' }
+
 const renderCharts = (chartSpecs: GymChatChartSpec[] | undefined, queries: GymChatQuery[] | undefined) => {
   if (!chartSpecs?.length || !queries?.length) return null
   const queryById = new Map(queries.map(q => [q.id, q]))
@@ -258,29 +283,19 @@ const renderCharts = (chartSpecs: GymChatChartSpec[] | undefined, queries: GymCh
               <ResponsiveContainer width="100%" height="100%" minWidth={180} minHeight={150}>
                 {spec.type === 'bar' ? (
                   <BarChart data={data}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-rule)" />
-                    <XAxis dataKey="x" tick={{ fill: 'var(--color-ink-3)', fontSize: 10 }} />
-                    <YAxis tick={{ fill: 'var(--color-ink-3)', fontSize: 10 }} />
-                    <Tooltip
-                      contentStyle={{
-                        background: 'var(--color-paper-2)',
-                        border: '1px solid var(--color-rule)',
-                      }}
-                    />
-                    <Bar dataKey="y" fill="var(--color-accent)" />
+                    <CartesianGrid stroke="var(--color-rule-soft)" strokeOpacity={0.5} />
+                    <XAxis dataKey="x" tick={AXIS_TICK} stroke="var(--color-rule)" tickLine={false} />
+                    <YAxis tick={AXIS_TICK} stroke="var(--color-rule)" />
+                    <Tooltip content={<ChatChartTooltip />} cursor={{ fill: 'var(--color-rule-soft)' }} />
+                    <Bar dataKey="y" fill="var(--chart-primary)" />
                   </BarChart>
                 ) : (
                   <LineChart data={data}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-rule)" />
-                    <XAxis dataKey="x" tick={{ fill: 'var(--color-ink-3)', fontSize: 10 }} />
-                    <YAxis tick={{ fill: 'var(--color-ink-3)', fontSize: 10 }} />
-                    <Tooltip
-                      contentStyle={{
-                        background: 'var(--color-paper-2)',
-                        border: '1px solid var(--color-rule)',
-                      }}
-                    />
-                    <Line type="monotone" dataKey="y" stroke="var(--color-accent)" strokeWidth={2} dot={false} />
+                    <CartesianGrid stroke="var(--color-rule-soft)" strokeOpacity={0.5} />
+                    <XAxis dataKey="x" tick={AXIS_TICK} stroke="var(--color-rule)" tickLine={false} />
+                    <YAxis tick={AXIS_TICK} stroke="var(--color-rule)" />
+                    <Tooltip content={<ChatChartTooltip />} cursor={{ stroke: 'var(--color-accent)', strokeOpacity: 0.3 }} />
+                    <Line type="monotone" dataKey="y" stroke="var(--chart-primary)" strokeWidth={2} dot={false} />
                   </LineChart>
                 )}
               </ResponsiveContainer>
@@ -336,16 +351,87 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [scrollPosition, setScrollPosition] = useState<'top' | 'middle' | 'bottom'>('bottom')
-  const [usedFollowUps, setUsedFollowUps] = useState<Set<string>>(() => new Set())
   const [conversationState, setConversationState] = useState<GymChatConversationState>({})
+  const [panelSize, setPanelSize] = useState<{ width: number; height: number } | null>(null)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
   const scrollContainerRef = useRef<HTMLDivElement | null>(null)
   const lastAssistantMessageIdRef = useRef<string | null>(null)
   const inputRef = useRef('')
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const abortControllerRef = useRef<AbortController | null>(null)
+  const copyResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     return () => { abortControllerRef.current?.abort() }
+  }, [])
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem('gym-chat-panel-size')
+      if (!saved) return
+      const parsed = JSON.parse(saved) as { width?: unknown; height?: unknown }
+      if (typeof parsed.width === 'number' && typeof parsed.height === 'number') {
+        setPanelSize({ width: parsed.width, height: parsed.height })
+      }
+    } catch {}
+  }, [])
+
+  useEffect(() => {
+    if (!panelSize) return
+    try {
+      window.localStorage.setItem('gym-chat-panel-size', JSON.stringify(panelSize))
+    } catch {}
+  }, [panelSize])
+
+  const startResize = (direction: 'top' | 'left' | 'corner') => (e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const startX = e.clientX
+    const startY = e.clientY
+    const panel = e.currentTarget.parentElement as HTMLElement | null
+    if (!panel) return
+    const startW = panel.offsetWidth
+    const startH = panel.offsetHeight
+
+    const onMove = (ev: PointerEvent) => {
+      let nextW = startW
+      let nextH = startH
+      if (direction === 'left' || direction === 'corner') {
+        nextW = startW + (startX - ev.clientX)
+      }
+      if (direction === 'top' || direction === 'corner') {
+        nextH = startH + (startY - ev.clientY)
+      }
+      const maxW = Math.max(320, window.innerWidth - 48)
+      const maxH = Math.max(360, window.innerHeight - 80)
+      setPanelSize({
+        width: Math.max(320, Math.min(maxW, nextW)),
+        height: Math.max(360, Math.min(maxH, nextH)),
+      })
+    }
+    const onUp = () => {
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerup', onUp)
+    }
+    window.addEventListener('pointermove', onMove)
+    window.addEventListener('pointerup', onUp)
+  }
+
+  const handleCopyMessage = async (id: string, content: string) => {
+    try {
+      await navigator.clipboard.writeText(content)
+      setCopiedId(id)
+      if (copyResetTimerRef.current) clearTimeout(copyResetTimerRef.current)
+      copyResetTimerRef.current = setTimeout(() => {
+        setCopiedId(current => (current === id ? null : current))
+      }, 1500)
+    } catch {}
+  }
+
+  useEffect(() => {
+    return () => {
+      if (copyResetTimerRef.current) clearTimeout(copyResetTimerRef.current)
+    }
   }, [])
 
   useEffect(() => {
@@ -560,17 +646,8 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
   }
 
   const handleSuggestedQuestion = useCallback(
-    (question: string, sourceId?: string) => {
+    (question: string) => {
       if (isLoading) return
-      if (sourceId) {
-        const followUpKey = `${sourceId}::${question}`
-        setUsedFollowUps(current => {
-          if (current.has(followUpKey)) return current
-          const next = new Set(current)
-          next.add(followUpKey)
-          return next
-        })
-      }
       void handleSubmit(question)
     },
     [handleSubmit, isLoading],
@@ -587,10 +664,33 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
         message.role === 'assistant' &&
         !message.queries?.length &&
         !message.chartSpecs?.length &&
-        !message.followUps?.length &&
         !message.retryPayload &&
         message.content.trim().length === 0
       if (isStatusMessage) return null
+      const copyButton = message.content.trim().length > 0 ? (
+        <button
+          type="button"
+          className={[
+            styles.copyBtn,
+            copiedId === message.id ? styles.copyBtnCopied : '',
+          ].join(' ').trim()}
+          onClick={() => void handleCopyMessage(message.id, message.content)}
+          aria-label={copiedId === message.id ? 'Copied' : 'Copy message'}
+          title={copiedId === message.id ? 'Copied' : 'Copy'}
+        >
+          {copiedId === message.id ? (
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 10l4 4 6-8" />
+            </svg>
+          ) : (
+            <svg width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <rect x="7" y="3" width="10" height="12" rx="1" />
+              <path d="M13 17H5a1 1 0 0 1-1-1V6" />
+            </svg>
+          )}
+        </button>
+      ) : null
+
       return (
         <div
           key={message.id}
@@ -629,46 +729,40 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
                     </div>
                   </div>
                 ) : null}
-                {message.followUps?.length ? (
-                  <div className={styles.followUpsBox}>
-                    <div className={styles.followUpsLabel}>Follow-up ideas</div>
-                    <div className={styles.followUpsRow}>
-                      {message.followUps.map(followUp => {
-                        const followUpKey = `${message.id}::${followUp}`
-                        const isUsed = usedFollowUps.has(followUpKey)
-                        return (
-                          <button
-                            key={followUp}
-                            type="button"
-                            onClick={() => handleSuggestedQuestion(followUp, message.id)}
-                            disabled={isUsed}
-                            aria-disabled={isUsed}
-                            className={[
-                              styles.followUpBtn,
-                              isUsed ? styles.followUpBtnUsed : '',
-                            ].join(' ')}
-                          >
-                            {followUp}
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </div>
-                ) : null}
               </div>
             )}
+            {copyButton}
           </div>
         </div>
       )
     })
-  }, [messages, handleSuggestedQuestion, handleSubmit, isLoading, usedFollowUps])
+  }, [messages, handleSuggestedQuestion, handleSubmit, isLoading])
 
   const showStart = messages.length === 0
 
   return (
     <div className={styles.bubble}>
       {isOpen && (
-        <div className={styles.panel}>
+        <div
+          className={styles.panel}
+          style={panelSize ? { width: panelSize.width, height: panelSize.height } : undefined}
+        >
+          {/* Resize handles */}
+          <div
+            className={styles.resizeHandleTop}
+            onPointerDown={startResize('top')}
+            aria-hidden="true"
+          />
+          <div
+            className={styles.resizeHandleLeft}
+            onPointerDown={startResize('left')}
+            aria-hidden="true"
+          />
+          <div
+            className={styles.resizeHandleCorner}
+            onPointerDown={startResize('corner')}
+            aria-hidden="true"
+          />
           {/* Panel header */}
           <div className={styles.panelHeader}>
             <span className={styles.panelTitle}>Gym Chat</span>

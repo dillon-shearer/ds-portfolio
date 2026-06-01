@@ -2,6 +2,11 @@
 
 import { useLayoutEffect, useRef, useState } from 'react'
 
+function fmtDate(dateStr: string) {
+  const d = new Date(dateStr + 'T00:00:00')
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
 type Mode = 'week' | 'month' | 'year'
 type Cell = { date: string; volume: number; label?: string }
 
@@ -33,6 +38,8 @@ export default function VolumeHeatmap({
   const containerRef = useRef<HTMLDivElement>(null)
   const [w, setW] = useState<number>(0)
   const [h, setH] = useState<number>(0)
+  const [hoveredCell, setHoveredCell] = useState<Cell | null>(null)
+  const [tipPos, setTipPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
 
   useLayoutEffect(() => {
     const el = containerRef.current
@@ -141,7 +148,16 @@ export default function VolumeHeatmap({
   const rx = Math.min(2, Math.min(segW, segH) / 4)
 
   return (
-    <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative' }}>
+    <div
+      ref={containerRef}
+      style={{ width: '100%', height: '100%', position: 'relative' }}
+      onMouseMove={(e) => {
+        const rect = containerRef.current?.getBoundingClientRect()
+        if (!rect) return
+        setTipPos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+      }}
+      onMouseLeave={() => setHoveredCell(null)}
+    >
       <svg
         width={width}
         height={computedHeight}
@@ -155,6 +171,7 @@ export default function VolumeHeatmap({
           const c = i % cols
           const x = padding + c * (segW + gap)
           const y = padding + r * (segH + gap)
+          const isReal = !d.date.startsWith('na-')
           return (
             <rect
               key={`${d.date}-${i}`}
@@ -165,10 +182,37 @@ export default function VolumeHeatmap({
               rx={rx}
               ry={rx}
               fill={colorFor(d)}
+              onMouseEnter={() => isReal ? setHoveredCell(d) : setHoveredCell(null)}
+              style={{ cursor: isReal ? 'default' : 'default' }}
             />
           )
         })}
       </svg>
+      {hoveredCell && (
+        <div style={{
+          position: 'absolute',
+          left: tipPos.x + 10,
+          top: tipPos.y - 48,
+          background: 'var(--color-ink)',
+          color: 'var(--color-paper)',
+          padding: 'var(--space-2) var(--space-3)',
+          fontFamily: 'var(--font-sans)',
+          fontSize: 'var(--text-xs)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '2px',
+          whiteSpace: 'nowrap',
+          pointerEvents: 'none',
+          zIndex: 10,
+        }}>
+          <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-rule)' }}>
+            {fmtDate(hoveredCell.date)}
+          </span>
+          <span style={{ fontWeight: '500', letterSpacing: 'var(--tracking-wide)', textTransform: 'uppercase' }}>
+            {hoveredCell.volume > 0 ? `${hoveredCell.volume.toLocaleString()} lbs` : 'Rest day'}
+          </span>
+        </div>
+      )}
     </div>
   )
 }
