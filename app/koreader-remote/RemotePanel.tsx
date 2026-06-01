@@ -38,7 +38,6 @@ export function RemotePanel() {
   })
   const [activeAction, setActiveAction] = useState<KoreaderActionId | null>(null)
   const [isPanelOpen, setIsPanelOpen] = useState(false)
-  const [isConnected, setIsConnected] = useState(false)
 
   const queueRef = useRef<KoreaderActionId[]>([])
   const processingRef = useRef(false)
@@ -72,7 +71,6 @@ export function RemotePanel() {
         const result = await warmKoreaderEndpoint(endpoint.endpoint)
         if (cancelled) return false
         if (result.ok) {
-          setIsConnected(true)
           setStatus({ tone: 'idle', message: 'Ready', detail })
           return true
         }
@@ -87,7 +85,6 @@ export function RemotePanel() {
         const result = await warmKoreaderEndpoint(endpoint.endpoint)
         if (cancelled) return
         if (result.ok) {
-          setIsConnected(true)
           setStatus({ tone: 'idle', message: 'Ready', detail })
           return
         }
@@ -148,7 +145,6 @@ export function RemotePanel() {
             message: `Unable to send ${action.label}`,
             detail: result.error,
           })
-          setIsConnected(false)
           queueRef.current = []
           break
         }
