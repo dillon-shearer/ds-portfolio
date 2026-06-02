@@ -1,3 +1,6 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import { ResponsiveContainer } from 'recharts'
 import styles from './ChartWrapper.module.css'
 
@@ -14,12 +17,19 @@ export default function ChartWrapper({
   emptyMessage = 'No data in this range',
   children,
 }: Props) {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+
   if (isEmpty) {
     return (
       <div className={styles.empty} style={{ height }}>
         <p className={styles.emptyText}>{emptyMessage}</p>
       </div>
     )
+  }
+
+  if (!mounted) {
+    return <div className={styles.wrapper} style={{ height }} />
   }
 
   return (
