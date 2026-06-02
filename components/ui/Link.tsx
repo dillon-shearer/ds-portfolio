@@ -31,15 +31,17 @@ interface NavLinkProps {
   href: string
   children: React.ReactNode
   currentPath?: string
+  onClick?: () => void
 }
 
-export function NavLink({ href, children, currentPath }: NavLinkProps) {
+export function NavLink({ href, children, currentPath, onClick }: NavLinkProps) {
   const isCurrent = currentPath === href
   return (
     <NextLink
       href={href}
       className={styles.nav}
       aria-current={isCurrent ? 'page' : undefined}
+      onClick={onClick}
     >
       {children}
     </NextLink>

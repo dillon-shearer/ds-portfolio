@@ -107,7 +107,7 @@ export function MobileDrawer({ isOpen, onClose, currentPath }: MobileDrawerProps
         </div>
         <nav className={styles.nav} aria-label="Mobile navigation">
           {NAV_ITEMS.map((item) => (
-            <NavLink key={item.href} href={item.href} currentPath={currentPath}>
+            <NavLink key={item.href} href={item.href} currentPath={currentPath} onClick={onClose}>
               {item.label}
             </NavLink>
           ))}
