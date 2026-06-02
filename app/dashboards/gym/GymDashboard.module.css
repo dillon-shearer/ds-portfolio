@@ -102,6 +102,7 @@
 .kpiRow > * {
   background: var(--color-rule-soft);
   padding: var(--space-5);
+  min-width: 0;
 }
 
 @media (max-width: 720px) {
@@ -153,6 +154,10 @@
   gap: var(--space-4);
 }
 
+.splitRow > * {
+  min-width: 0;
+}
+
 @media (max-width: 720px) {
   .splitRow {
     grid-template-columns: 1fr;
@@ -168,6 +173,10 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
+}
+
+.twoCol > * {
+  min-width: 0;
 }
 
 @media (max-width: 720px) {

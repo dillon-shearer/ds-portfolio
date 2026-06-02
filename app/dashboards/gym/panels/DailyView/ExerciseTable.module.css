@@ -76,3 +76,9 @@
   color: var(--color-accent);
   font-weight: 600;
 }
+
+@media (max-width: 720px) {
+  .hideMobile {
+    display: none;
+  }
+}

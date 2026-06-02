@@ -57,3 +57,9 @@
 .dateCell {
   font-size: calc(var(--text-xs) * 0.95);
 }
+
+@media (max-width: 720px) {
+  .hideMobile {
+    display: none;
+  }
+}

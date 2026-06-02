@@ -40,7 +40,7 @@
 }
 
 .section {
-  padding: var(--space-8) 0;
+  padding: var(--space-4) 0 var(--space-8);
 }
 
 .sectionEyebrow {

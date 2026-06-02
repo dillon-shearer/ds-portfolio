@@ -28,8 +28,8 @@ function SortIndicator({ active, dir }: { active: boolean; dir: 'asc' | 'desc' }
 }
 
 export default function ExercisePRsTable({ rows, page, totalPages, sortKey, sortDir, onSort, onPrev, onNext }: Props) {
-  const col = (key: SortKey, label: string) => (
-    <th className={styles.th} onClick={() => onSort(key)} style={{ cursor: 'pointer' }}>
+  const col = (key: SortKey, label: string, className?: string) => (
+    <th className={[styles.th, className].filter(Boolean).join(' ')} onClick={() => onSort(key)} style={{ cursor: 'pointer' }}>
       {label}<SortIndicator active={sortKey === key} dir={sortDir} />
     </th>
   )
@@ -43,8 +43,8 @@ export default function ExercisePRsTable({ rows, page, totalPages, sortKey, sort
               {col('exercise', 'Exercise')}
               {col('bestWeight', 'Weight')}
               {col('best1RM', 'Est 1RM')}
-              <th className={styles.th}>Best Set</th>
-              {col('bestSetDate', 'Date')}
+              <th className={[styles.th, styles.hideMobile].join(' ')}>Best Set</th>
+              {col('bestSetDate', 'Date', styles.hideMobile)}
             </tr>
           </thead>
           <tbody>
@@ -53,10 +53,10 @@ export default function ExercisePRsTable({ rows, page, totalPages, sortKey, sort
                 <td className={styles.td}>{row.exercise}</td>
                 <td className={[styles.td, styles.num].join(' ')}>{row.bestWeight} lbs</td>
                 <td className={[styles.td, styles.num, styles.accent].join(' ')}>{row.best1RM} lbs</td>
-                <td className={[styles.td, styles.num, styles.muted].join(' ')}>
+                <td className={[styles.td, styles.num, styles.muted, styles.hideMobile].join(' ')}>
                   {row.bestSet ? `${row.bestSet.weight} x ${row.bestSet.reps}` : '-'}
                 </td>
-                <td className={[styles.td, styles.num, styles.muted, styles.dateCell].join(' ')}>
+                <td className={[styles.td, styles.num, styles.muted, styles.dateCell, styles.hideMobile].join(' ')}>
                   {row.bestSetDate}
                 </td>
               </tr>

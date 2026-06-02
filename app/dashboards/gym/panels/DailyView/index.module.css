@@ -18,6 +18,13 @@
 @media (max-width: 720px) {
   .kpiRow {
     grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+}
+
+@media (max-width: 480px) {
+  .kpiRow {
+    grid-template-columns: 1fr;
   }
 }
 

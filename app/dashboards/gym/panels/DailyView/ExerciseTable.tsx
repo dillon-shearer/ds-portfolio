@@ -58,8 +58,8 @@ export default function ExerciseTable({ dayLifts, allLifts }: Props) {
                   <th className={styles.th}>Set</th>
                   <th className={styles.th}>Weight</th>
                   <th className={styles.th}>Reps</th>
-                  <th className={styles.th}>Est 1RM</th>
-                  <th className={styles.th}>% PR</th>
+                  <th className={[styles.th, styles.hideMobile].join(' ')}>Est 1RM</th>
+                  <th className={[styles.th, styles.hideMobile].join(' ')}>% PR</th>
                 </tr>
               </thead>
               <tbody>
@@ -73,8 +73,8 @@ export default function ExerciseTable({ dayLifts, allLifts }: Props) {
                       <td className={[styles.td, styles.num].join(' ')}>{s.setNumber}</td>
                       <td className={[styles.td, styles.num].join(' ')}>{s.weight} lbs</td>
                       <td className={[styles.td, styles.num].join(' ')}>{s.reps}</td>
-                      <td className={[styles.td, styles.num].join(' ')}>{est1rm} lbs</td>
-                      <td className={[styles.td, styles.num, isNearMax ? styles.nearMax : styles.muted].join(' ')}>
+                      <td className={[styles.td, styles.num, styles.hideMobile].join(' ')}>{est1rm} lbs</td>
+                      <td className={[styles.td, styles.num, styles.hideMobile, isNearMax ? styles.nearMax : styles.muted].join(' ')}>
                         {pctPR !== null ? `${pctPR}%` : '-'}
                       </td>
                     </tr>

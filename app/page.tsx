@@ -5,37 +5,37 @@ import styles from './page.module.css'
 export const metadata: Metadata = {
   title: 'Data With Dillon',
   description:
-    'Data engineer and analyst building analytics, pipelines, and AI tooling for healthcare and life-science teams.',
+    'Data engineer and analyst working in healthcare and life science data.',
 }
 
 const capabilities = [
   {
-    eyebrow: 'Core Focus',
-    title: 'Full-Stack Data Engineering',
+    eyebrow: 'Core Work',
+    title: 'Data pipelines',
     description:
-      'I design controlled intake flows and deploy production analytics that ingest daily, surface anomalies, and stay accurate long after the go-live meeting.',
+      'Scheduled ingestion, data quality checks, and the boring reliability that makes everything downstream work. Mostly Python and SQL.',
     badges: ['Python', 'SQL', 'PostgreSQL'],
   },
   {
-    eyebrow: 'Capability',
-    title: 'Automation & AI',
+    eyebrow: 'Process',
+    title: 'Documentation and standards',
     description:
-      'Embed automation and assistant workflows that remove repetitive reporting and give operators answers on demand.',
-    badges: ['ETL', 'Claude API', 'GitHub Actions'],
-  },
-  {
-    eyebrow: 'Specialization',
-    title: 'Healthcare Standards',
-    description:
-      'Maintain vocabularies, mappings, and documentation so downstream models and dashboards always speak the same language.',
+      'Data dictionaries, SOPs, and terminology standards that keep teams on the same page. The work nobody prioritizes until something breaks.',
     badges: ['SNOMED', 'LOINC', 'OMOP'],
   },
   {
-    eyebrow: 'Toolkit',
-    title: 'Technical Stack',
+    eyebrow: 'Analysis',
+    title: 'Analytics and reporting',
     description:
-      'Full-stack capabilities across data engineering, analytics, and web development.',
-    badges: ['Tableau', 'Power BI', 'React'],
+      'Recurring reports and operational dashboards in Tableau and Power BI. Turning pipeline output into something a researcher can actually read.',
+    badges: ['Tableau', 'Power BI', 'Recharts'],
+  },
+  {
+    eyebrow: 'When needed',
+    title: 'Whatever the project needs',
+    description:
+      'Web apps, data quality testing, one-off tooling. Whatever sits between the pipeline and a finished product, I cover it.',
+    badges: ['React', 'Next.js', 'Claude API'],
   },
 ]
 
@@ -44,12 +44,11 @@ export default function HomePage() {
     <div className="page-wrapper">
       {/* Hero */}
       <section className={styles.hero}>
-        <p className={styles.roleLabel}>Data Engineer · Analyst</p>
+        <p className={styles.roleLabel}>Data Analyst · Engineer</p>
         <h1 className={styles.name}>Dillon Shearer</h1>
         <p className={styles.valueProp}>
-          Data-centric software engineer working end to end across the data
-          lifecycle. Currently building analytics, pipelines, and AI tooling for
-          healthcare and life-science teams.
+          I do data work for healthcare and life science teams. Pipelines,
+          analytics, and whatever else it takes to ship something useful.
         </p>
         <div className={styles.ctas}>
           <Button href="/contact" variant="primary">Get in touch</Button>
@@ -57,12 +56,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <Rule weight="medium" />
-
       {/* What I Do */}
       <section className={styles.section}>
-        <p className={styles.sectionEyebrow}>What I Do</p>
-        <h2 className={styles.sectionTitle}>End-to-end data work</h2>
+        <h2 className={styles.sectionTitle}>The work</h2>
         <div className={styles.cards}>
           {capabilities.map((cap) => (
             <Card
@@ -76,12 +72,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <Rule weight="medium" />
-
-      {/* Currently */}
-      <p className={styles.currently}>
-        Currently: Data scientist at Answer ALS, building analytics and pipelines for ALS research.
-      </p>
     </div>
   )
 }

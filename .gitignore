@@ -42,3 +42,6 @@ next-env.d.ts
 
 # superpowers brainstorming
 .superpowers/
+
+.vercel
+.env*.local
