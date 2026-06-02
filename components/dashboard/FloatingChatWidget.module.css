@@ -782,3 +782,23 @@
   color: var(--color-ink-2);
   border-collapse: collapse;
 }
+
+/* ------- Mobile ------- */
+@media (max-width: 720px) {
+  .bubble {
+    bottom: calc(var(--space-5) + env(safe-area-inset-bottom, 0px));
+    right: calc(var(--space-4) + env(safe-area-inset-right, 0px));
+  }
+
+  .panel {
+    width: calc(100vw - var(--space-4) * 2);
+    height: calc(100dvh - 120px);
+  }
+
+  /* Resize handles don't make sense on touch devices */
+  .resizeHandleTop,
+  .resizeHandleLeft,
+  .resizeHandleCorner {
+    display: none;
+  }
+}
