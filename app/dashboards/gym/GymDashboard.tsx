@@ -451,9 +451,7 @@ export default function GymDashboard({ lifts }: Props) {
             </>
           )}
 
-          {active === 'dashboard' && (
-            <FloatingChatWidget apiEndpoint="/api/gym-chat" />
-          )}
+          <FloatingChatWidget apiEndpoint="/api/gym-chat" />
 
           {active === 'log' && (
             <PasswordGate>
