@@ -48,16 +48,33 @@
 .contactGrid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0;
+  gap: var(--space-4);
 }
 
-.contactItem {
-  border-top: var(--rule-hairline) solid var(--color-rule);
-  padding: var(--space-5) 0;
+.contactWidget {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--color-rule-soft);
+  padding: var(--space-5);
+  text-decoration: none;
+  transition: background var(--duration-fast) var(--ease-out);
 }
 
-.contactItem:last-child {
-  border-bottom: var(--rule-hairline) solid var(--color-rule);
+.contactWidget:hover {
+  background: var(--color-rule);
+}
+
+.contactIcon {
+  display: flex;
+  align-items: center;
+  color: var(--color-ink-3);
+  line-height: 1;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.contactWidget:hover .contactIcon {
+  color: var(--color-ink);
 }
 
 .contactLabel {
@@ -67,30 +84,27 @@
   text-transform: uppercase;
   letter-spacing: var(--tracking-wide);
   color: var(--color-ink-3);
-  margin-bottom: var(--space-2);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.contactWidget:hover .contactLabel {
+  color: var(--color-ink);
 }
 
 .contactValue {
   font-family: var(--font-serif);
   font-size: var(--text-md);
   color: var(--color-accent);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 2px;
+  overflow-wrap: break-word;
   transition: color var(--duration-fast) var(--ease-out);
 }
 
-.contactValue:hover {
+.contactWidget:hover .contactValue {
   color: var(--color-accent-hover);
 }
 
 @media (min-width: 720px) {
   .contactGrid {
     grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-6);
-  }
-
-  .contactItem:last-child {
-    border-bottom: none;
   }
 }
