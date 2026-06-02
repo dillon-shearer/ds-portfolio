@@ -42,8 +42,10 @@
 }
 
 .contactItem {
-  border-top: var(--rule-hairline) solid var(--color-rule);
   padding: var(--space-5) 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .contactLabel {
