@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Global Genes Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --teal:       #0b7c88;
+    --teal-deep:  #0a5f69;
+    --teal-bright:#119aa8;
+    --rust:       #c8472b;
+    --ink:        #14313a;
+    --muted:      #647a80;
+    --paper:      #fbf8f3;
+    --bot:        #ffffff;
+    --bot-border: #ece5d8;
+    --line:       #e7ebec;
+    --shadow:     0 18px 44px rgba(12, 49, 58, .22), 0 4px 12px rgba(12, 49, 58, .10);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: "Hanken Grotesk", sans-serif;
+    color: var(--ink);
+    background: #f6f7f5;
+    min-height: 100vh;
+  }
+
+  /* ---- Launcher ---- */
+  #gg-launcher {
+    position: fixed; right: 26px; bottom: 26px; width: 62px; height: 62px; border: none; cursor: pointer;
+    border-radius: 20px; background: linear-gradient(150deg, var(--teal-bright), var(--teal-deep));
+    box-shadow: 0 10px 26px rgba(11, 124, 136, .45); display: grid; place-items: center;
+    transition: transform .18s cubic-bezier(.2,.8,.2,1), box-shadow .18s ease; z-index: 2147483000;
+  }
+  #gg-launcher:hover { transform: translateY(-2px) rotate(-3deg); box-shadow: 0 14px 30px rgba(11, 124, 136, .55); }
+  #gg-launcher:active { transform: translateY(0) scale(.97); }
+  #gg-launcher svg { width: 28px; height: 28px; color: #fff; }
+  #gg-launcher .dot {
+    position: absolute; top: -3px; right: -3px; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--rust); border: 2.5px solid #f1f4f4;
+  }
+  #gg-launcher.open .dot { display: none; }
+
+  /* ---- Panel ---- */
+  #gg-panel {
+    position: fixed; right: 26px; bottom: 100px; width: 392px; max-width: calc(100vw - 28px);
+    height: 600px; max-height: calc(100vh - 130px); background: var(--paper); border-radius: 22px;
+    box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; z-index: 2147483000;
+    opacity: 0; visibility: hidden; transform: translateY(14px) scale(.96); transform-origin: bottom right;
+    transition: opacity .22s ease, transform .24s cubic-bezier(.2,.85,.25,1), visibility .24s;
+  }
+  #gg-panel.open { opacity: 1; visibility: visible; transform: none; }
+
+  /* drag-to-resize grip (top-left corner; grows up + left) */
+  .gg-resize {
+    position: absolute; top: 0; left: 0; width: 26px; height: 26px; cursor: nwse-resize; z-index: 5; touch-action: none;
+  }
+  .gg-resize::after {
+    content: ""; position: absolute; top: 8px; left: 8px; width: 9px; height: 9px;
+    border-top: 2px solid rgba(255,255,255,.7); border-left: 2px solid rgba(255,255,255,.7); border-radius: 2px 0 0 0;
+  }
+
+  .gg-header { position: relative; background: var(--teal); color: #fff; padding: 19px 18px 17px; }
+  .gg-htext h2 { font-family: "Fraunces", serif; font-weight: 600; font-size: 19px; margin: 0; letter-spacing: .1px; }
+  .gg-htext p { margin: 3px 0 0; font-size: 12.5px; opacity: .82; }
+  .gg-actions { position: absolute; top: 15px; right: 14px; display: flex; gap: 6px; }
+  .gg-iconbtn { width: 30px; height: 30px; border: none; border-radius: 9px; background: rgba(255,255,255,.14); color: #fff;
+                cursor: pointer; display: grid; place-items: center; transition: background .15s, transform .15s; }
+  .gg-iconbtn:hover { background: rgba(255,255,255,.3); }
+  .gg-iconbtn:active { transform: scale(.9); }
+  .gg-iconbtn svg { width: 16px; height: 16px; display: block; }
+
+  /* ---- Messages ---- */
+  .gg-messages { flex: 1; overflow-y: auto; padding: 18px 16px 8px; display: flex; flex-direction: column; gap: 14px; }
+  .gg-messages::-webkit-scrollbar { width: 8px; }
+  .gg-messages::-webkit-scrollbar-thumb { background: #d9d2c5; border-radius: 99px; border: 2px solid var(--paper); }
+  .gg-row { display: flex; flex-direction: column; max-width: 88%; animation: ggrise .26s ease both; }
+  .gg-row.user { align-self: flex-end; align-items: flex-end; }
+  .gg-row.bot  { align-self: flex-start; }
+  @keyframes ggrise { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+
+  .gg-bubble { padding: 11px 14px; font-size: 14px; line-height: 1.55; border-radius: 16px; word-wrap: break-word; overflow-wrap: anywhere; }
+  .bot  .gg-bubble { background: var(--bot); border: 1px solid var(--bot-border); border-bottom-left-radius: 5px; box-shadow: 0 1px 2px rgba(20,49,58,.05); }
+  .user .gg-bubble { background: var(--teal); color: #fff; border-bottom-right-radius: 5px; white-space: pre-wrap; }
+
+  /* markdown inside bot bubbles */
+  .gg-bubble p { margin: 0 0 9px; } .gg-bubble > :last-child { margin-bottom: 0; }
+  .gg-bubble p.md-h { font-weight: 700; font-size: 14.5px; margin: 11px 0 4px; }
+  .gg-bubble ul, .gg-bubble ol { margin: 5px 0 9px; padding-left: 20px; }
+  .gg-bubble li { margin: 3px 0; }
+  .gg-bubble li::marker { color: var(--teal-bright); }
+  .gg-bubble strong { font-weight: 700; color: var(--teal-deep); }
+  .gg-bubble em { font-style: italic; }
+  .gg-bubble a { color: var(--teal-deep); text-decoration: underline; text-underline-offset: 2px; }
+  .gg-bubble code { background: #eef1ec; padding: 1px 5px; border-radius: 5px; font-size: 12.5px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+
+  /* per-message copy button (reveals on hover, sits beside the bubble) */
+  .gg-bubble-wrap { display: flex; align-items: flex-end; gap: 5px; max-width: 100%; }
+  .gg-row.user .gg-bubble-wrap { flex-direction: row-reverse; }
+  .gg-bubble-wrap .gg-bubble { min-width: 0; }
+  .gg-copy { width: 26px; height: 26px; flex: none; border: none; background: transparent; color: var(--muted); cursor: pointer; border-radius: 7px; display: grid; place-items: center; margin-bottom: 2px; opacity: 0; transition: opacity .15s, background .15s, color .15s; }
+  .gg-row:hover .gg-copy { opacity: .6; }
+  /* touch has no hover: keep the copy button visible so it stays tappable */
+  @media (pointer: coarse) { .gg-copy { opacity: .55; } .gg-copy:active { opacity: 1; background: rgba(11,124,136,.12); color: var(--teal-deep); } }
+  .gg-copy:hover { opacity: 1; background: rgba(11,124,136,.1); color: var(--teal-deep); }
+  .gg-copy.copied { opacity: 1; color: #2e7d52; }
+  .gg-copy svg { width: 14px; height: 14px; display: block; }
+
+  /* scroll-snap controls (shown only when scrollable + off-edge) */
+  .gg-scroll { position: absolute; right: 14px; bottom: 104px; display: flex; flex-direction: column; gap: 8px; z-index: 4; }
+  .gg-scroll button { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--bot-border); background: rgba(255,255,255,.94); color: var(--teal-deep); box-shadow: 0 3px 10px rgba(20,49,58,.16); cursor: pointer; display: none; place-items: center; transition: transform .15s, background .15s; }
+  .gg-scroll button.show { display: grid; }
+  .gg-scroll button:hover { transform: translateY(-1px); background: #fff; }
+  .gg-scroll button svg { width: 17px; height: 17px; display: block; }
+
+  .gg-sources { margin-top: 9px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .gg-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--teal-deep);
+             background: rgba(11,124,136,.09); border: 1px solid rgba(11,124,136,.2); padding: 3px 9px; border-radius: 99px; max-width: 100%; }
+  .gg-chip svg { width: 12px; height: 12px; flex: none; }
+  .gg-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  a.gg-chip { text-decoration: none; cursor: pointer; transition: background .15s, border-color .15s; }
+  a.gg-chip:hover { background: rgba(11,124,136,.18); border-color: var(--teal); }
+
+  .gg-fb { display: flex; gap: 6px; margin-top: 8px; }
+  .gg-fb button { width: 27px; height: 27px; border: 1px solid var(--bot-border); background: #fff; border-radius: 8px;
+                  cursor: pointer; color: var(--muted); display: grid; place-items: center; transition: border-color .15s, color .15s, background .15s; }
+  .gg-fb button:hover { border-color: var(--teal-bright); color: var(--teal-deep); }
+  .gg-fb button.sel { background: rgba(11,124,136,.12); border-color: var(--teal-bright); color: var(--teal-deep); }
+  .gg-fb.done button:not(.sel) { opacity: .35; pointer-events: none; }
+  .gg-fb button svg { width: 14px; height: 14px; display: block; }
+
+  .gg-typing { align-self: flex-start; display: flex; gap: 5px; padding: 13px 15px; background: var(--bot); border: 1px solid var(--bot-border); border-radius: 16px; border-bottom-left-radius: 5px; }
+  .gg-typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--teal-bright); opacity: .5; animation: ggblink 1.1s infinite; }
+  .gg-typing i:nth-child(2) { animation-delay: .18s; } .gg-typing i:nth-child(3) { animation-delay: .36s; }
+  @keyframes ggblink { 0%,60%,100% { transform: translateY(0); opacity: .45; } 30% { transform: translateY(-5px); opacity: 1; } }
+
+  /* ---- Input ---- */
+  .gg-foot { padding: 12px 14px 6px; border-top: 1px solid var(--line); background: var(--paper); }
+  .gg-input { display: flex; align-items: center; gap: 9px; }
+  .gg-input input {
+    flex: 1; min-width: 0; height: 44px; border: 1.5px solid #dcd5c8; border-radius: 22px; background: #fff;
+    padding: 0 16px; font: inherit; font-size: 14px; color: var(--ink); outline: none; transition: border-color .15s, box-shadow .15s;
+  }
+  .gg-input input::placeholder { color: #9aa6a8; }
+  .gg-input input:focus { border-color: var(--teal-bright); box-shadow: 0 0 0 3px rgba(17,154,168,.15); }
+  .gg-send { width: 44px; height: 44px; flex: none; border: none; border-radius: 50%; cursor: pointer;
+             background: linear-gradient(150deg, var(--teal-bright), var(--teal-deep)); color: #fff; display: grid; place-items: center;
+             transition: transform .15s, box-shadow .15s, opacity .15s; box-shadow: 0 4px 12px rgba(11,124,136,.4); }
+  .gg-send:hover { transform: translateY(-1px); } .gg-send:active { transform: scale(.94); }
+  .gg-send:disabled { opacity: .45; cursor: default; box-shadow: none; transform: none; }
+  .gg-send svg { width: 20px; height: 20px; display: block; }
+  .gg-note { text-align: center; font-size: 10px; color: var(--muted); padding: 7px 10px 4px; line-height: 1.4; }
+
+  /* starter question chips (shown under the greeting until the first message) */
+  .gg-starters { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; margin-top: 4px; animation: ggrise .26s ease both; }
+  .gg-starter { border: 1.5px solid rgba(11,124,136,.35); background: #fff; color: var(--teal-deep);
+                border-radius: 14px; padding: 8px 13px; font: inherit; font-size: 13px; text-align: left;
+                cursor: pointer; transition: background .15s, border-color .15s, transform .15s; }
+  .gg-starter:hover { background: rgba(11,124,136,.08); border-color: var(--teal); transform: translateX(2px); }
+
+  /* nested lists inside bot bubbles */
+  .gg-bubble li > ul, .gg-bubble li > ol { margin: 3px 0 0; }
+
+  /* ---- header + page (focus is the assistant) ---- */
+  .site-header { background: var(--teal); height: 56px; }
+  .page { max-width: 880px; margin: 0 auto; padding: 56px 24px 72px; }
+  .page h1 { font-family: "Fraunces", serif; font-weight: 600; font-size: 34px; color: var(--ink); margin: 0 0 14px; }
+  @media (max-width: 520px) {
+    .page { padding: 36px 22px 56px; } .page h1 { font-size: 27px; }
+  }
+
+  /* ---- feature list ---- */
+  .features { list-style: none; margin: 24px 0 0; padding: 0; max-width: 580px; }
+  .features li { padding: 13px 0; border-top: 1px solid #e6e6e1; font-size: 16px; line-height: 1.5; color: #2f4248; }
+  .features li:first-child { border-top: none; }
+
+  /* mobile: the panel takes over the viewport */
+  @media (max-width: 520px) {
+    /* !important: the drag-to-resize grip persists an inline width/height, which
+       would otherwise beat these rules on a phone */
+    #gg-panel {
+      right: 0; bottom: 0; width: 100vw !important; max-width: 100vw;
+      height: 100dvh !important; max-height: 100dvh; border-radius: 0;
+      transform-origin: bottom center;
+    }
+    .gg-resize { display: none; }
+    #gg-launcher { right: 18px; bottom: 18px; }
+    .gg-input input { font-size: 16px; }   /* < 16px makes iOS zoom the page on focus */
+    .gg-scroll { bottom: 96px; }
+  }
+</style>
+</head>
+<body>
+  <header class="site-header"></header>
+
+  <main class="page">
+    <h1>Rare Disease Assistant</h1>
+    <ul class="features">
+      <li>Refreshed daily with the latest site content</li>
+      <li>Ingests the entire Global Genes website</li>
+      <li>Built on Microsoft Foundry</li>
+      <li>Custom web-chat UI that drops into any existing website</li>
+      <li>Extensive test library for answer accuracy</li>
+    </ul>
+  </main>
+
+  <button id="gg-launcher" aria-label="Open chat">
+    <span class="dot"></span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7A8.38 8.38 0 0 1 4 11.5 8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/>
+    </svg>
+  </button>
+
+  <div id="gg-panel" role="dialog" aria-label="Global Genes Assistant">
+    <div class="gg-resize" id="gg-resize" title="Drag to resize"></div>
+    <div class="gg-header">
+      <div class="gg-htext">
+        <h2>Global Genes Assistant</h2>
+        <p>Answers from Global Genes resources</p>
+      </div>
+      <div class="gg-actions">
+        <button class="gg-iconbtn" id="gg-restart" aria-label="Restart conversation" title="Restart conversation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 4v5h-5"/>
+          </svg>
+        </button>
+        <button class="gg-iconbtn" id="gg-close" aria-label="Close chat" title="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="gg-messages" id="gg-messages"></div>
+
+    <div class="gg-scroll">
+      <button class="up" type="button" aria-label="Scroll to top" title="Scroll to top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
+      <button class="down" type="button" aria-label="Scroll to latest" title="Scroll to latest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+    </div>
+
+    <div class="gg-foot">
+      <div class="gg-input">
+        <input id="gg-text" type="text" autocomplete="off" placeholder="Ask about rare diseases, resources, support..." />
+        <button id="gg-send" class="gg-send" aria-label="Send message">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5M6 11l6-6 6 6"/></svg>
+        </button>
+      </div>
+      <div class="gg-note">Informational only, not medical advice. Consult your healthcare team for personal decisions.</div>
+    </div>
+  </div>
+
+<script>
+(function () {
+  // Point this at your backend, e.g. "https://api.example.com". Empty string = same
+  // origin as this page. REQUIRED when this page is hosted elsewhere (e.g. Vercel) -
+  // and the server's ALLOWED_ORIGINS must then include this page's origin.
+  const BACKEND_URL = "https://gg-chatbot-api.reddune-033dc85c.eastus2.azurecontainerapps.io";
+  const GREETING = "Hi, I'm the Global Genes assistant. Ask me about rare diseases, patient resources, "
+                 + "financial help, advocacy, or anything Global Genes covers.";
+  const STARTERS = [
+    "What is RARE Concierge and how can it help me?",
+    "How can I find financial assistance resources?",
+    "How do I start a foundation for a rare disease?",
+    "What resources are there for newly diagnosed families?",
+  ];
+
+  const launcher = document.getElementById("gg-launcher");
+  const panel = document.getElementById("gg-panel");
+  const messages = document.getElementById("gg-messages");
+  const input = document.getElementById("gg-text");
+  const sendBtn = document.getElementById("gg-send");
+  let conversationId = sessionStorage.getItem("gg-cid") || null;
+  let busy = false;
+  let greeted = false;
+
+  // Touch devices: never auto-focus the input. Programmatic focus pops the on-screen
+  // keyboard (e.g. right after a reply finishes streaming, while the user is reading).
+  const IS_TOUCH = !!(window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
+  function focusInput() { if (!IS_TOUCH) input.focus(); }
+
+  /* ---------- minimal, safe markdown (escapes HTML first) ---------- */
+  function esc(s) { return s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])); }
+  function inlineMd(s) {
+    s = esc(s);
+    s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
+    // URL groups below exclude quotes so a crafted URL can't break out of href="..."
+    // (esc() above only neutralizes < > &, not quotes). Real URLs encode quotes anyway.
+    s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)"']+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+    s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    s = s.replace(/__([^_]+)__/g, "<strong>$1</strong>");
+    s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+    // Auto-link bare URLs the model typed plainly (not already markdown links). Split
+    // on existing <a>/<code> spans so a URL inside an anchor or code is never re-wrapped.
+    s = s.split(/(<a\b[^>]*>.*?<\/a>|<code>.*?<\/code>)/g).map((seg, i) =>
+      i % 2 ? seg : seg.replace(/(https?:\/\/[^\s<>()"']+[^\s<>().,;:!?'"])/g,
+        '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>')
+    ).join("");
+    return s;
+  }
+  function renderMd(src) {
+    // strip Foundry's raw inline citation tokens (CJK-bracket or ASCII-bracket forms);
+    // real source links come from baked Source URLs rendered as markdown. Code points are
+    // built via fromCharCode so this file stays pure ASCII.
+    var _o = String.fromCharCode(0x3010), _c = String.fromCharCode(0x3011), _d = String.fromCharCode(0x2020);
+    src = src
+      .replace(new RegExp(_o + "[^" + _c + "]*" + _c, "g"), "")
+      .replace(new RegExp("\\[\\d+:\\d+" + _d + "source\\]", "g"), "")
+      .replace(/ +([.,;:])/g, "$1");
+    const lines = src.replace(/\r/g, "").split("\n");
+    // Lists are built with a stack so indented items nest properly (the model often
+    // emits "1. ..." with "   - ..." sub-bullets). Each frame holds an open <ul>/<ol>
+    // whose last <li> stays open until we know nothing nests under it.
+    let html = "", para = [];
+    const stack = [];   // [{tag:"ul"|"ol", indent:n, liOpen:bool}]
+    const flushPara = () => { if (para.length) { html += "<p>" + para.join("<br>") + "</p>"; para = []; } };
+    const closeFrame = () => { const f = stack.pop(); if (f.liOpen) html += "</li>"; html += "</" + f.tag + ">"; };
+    const closeAllLists = () => { while (stack.length) closeFrame(); };
+    const matchItem = (l) => {
+      let m;
+      if ((m = l.match(/^(\s*)[-*]\s+(.*)/))) return { tag: "ul", indent: m[1].length, text: m[2], value: null };
+      if ((m = l.match(/^(\s*)(\d+)\.\s+(.*)/))) return { tag: "ol", indent: m[1].length, text: m[3], value: m[2] };
+      return null;
+    };
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].replace(/\s+$/, "");
+      let m;
+      if (!line.trim()) {
+        // keep lists open across blank lines if the next non-empty line is an item
+        let j = i + 1; while (j < lines.length && !lines[j].trim()) j++;
+        if (stack.length && j < lines.length && matchItem(lines[j])) continue;
+        flushPara(); closeAllLists(); continue;
+      }
+      const item = matchItem(line);
+      if (item) {
+        flushPara();
+        // pop frames deeper than this item's indent
+        while (stack.length && item.indent < stack[stack.length - 1].indent) closeFrame();
+        const top = stack[stack.length - 1];
+        if (top && item.indent > top.indent) {
+          // nest a new list inside the open <li>
+          html += "<" + item.tag + ">";
+          stack.push({ tag: item.tag, indent: item.indent, liOpen: false });
+        } else if (top && item.tag !== top.tag) {
+          closeFrame();
+          html += "<" + item.tag + ">";
+          stack.push({ tag: item.tag, indent: item.indent, liOpen: false });
+        } else if (!top) {
+          html += "<" + item.tag + ">";
+          stack.push({ tag: item.tag, indent: item.indent, liOpen: false });
+        }
+        const f = stack[stack.length - 1];
+        if (f.liOpen) html += "</li>";
+        html += item.value !== null ? '<li value="' + item.value + '">' : "<li>";
+        html += inlineMd(item.text);
+        f.liOpen = true;
+        continue;
+      }
+      if ((m = line.match(/^#{1,6}\s+(.*)/))) { flushPara(); closeAllLists(); html += '<p class="md-h">' + inlineMd(m[1]) + "</p>"; continue; }
+      if (stack.length && /^\s+\S/.test(lines[i])) {
+        // indented plain text under an open item = continuation of that item
+        html += "<br>" + inlineMd(line.trim());
+        continue;
+      }
+      closeAllLists(); para.push(inlineMd(line));
+    }
+    flushPara(); closeAllLists();
+    return html;
+  }
+
+  /* ---------- starter question chips ---------- */
+  function removeStarters() { const s = document.getElementById("gg-starters"); if (s) s.remove(); }
+  function addStarters() {
+    removeStarters();
+    const wrap = document.createElement("div");
+    wrap.className = "gg-starters"; wrap.id = "gg-starters";
+    STARTERS.forEach(q => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "gg-starter"; b.textContent = q;
+      b.addEventListener("click", () => { input.value = q; send(); });
+      wrap.appendChild(b);
+    });
+    messages.appendChild(wrap);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  /* ---------- panel open / close / restart ---------- */
+  function togglePanel() {
+    const open = panel.classList.toggle("open");
+    launcher.classList.toggle("open", open);
+    if (open) {
+      focusInput();
+      if (!greeted) { addBot(GREETING); addStarters(); greeted = true; }
+      updateScrollButtons();
+    }
+  }
+  function restart() {
+    messages.innerHTML = "";
+    conversationId = null;
+    sessionStorage.removeItem("gg-cid");
+    addBot(GREETING);
+    addStarters();
+    greeted = true;
+    focusInput();
+  }
+  launcher.addEventListener("click", togglePanel);
+  document.getElementById("gg-close").addEventListener("click", togglePanel);
+  document.getElementById("gg-restart").addEventListener("click", restart);
+
+  /* ---------- messages ---------- */
+  const COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  const CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+
+  const scrollWrap = panel.querySelector(".gg-scroll");
+  const btnUp = scrollWrap.querySelector(".up");
+  const btnDown = scrollWrap.querySelector(".down");
+  function atBottom() { return messages.scrollHeight - messages.scrollTop - messages.clientHeight < 60; }
+  function updateScrollButtons() {
+    const scrollable = messages.scrollHeight > messages.clientHeight + 20;
+    btnUp.classList.toggle("show", scrollable && messages.scrollTop > 120);
+    btnDown.classList.toggle("show", scrollable && !atBottom());
+  }
+  messages.addEventListener("scroll", updateScrollButtons);
+  btnUp.addEventListener("click", () => messages.scrollTo({ top: 0, behavior: "smooth" }));
+  btnDown.addEventListener("click", () => messages.scrollTo({ top: messages.scrollHeight, behavior: "smooth" }));
+
+  function copyText(text) {
+    // The async Clipboard API only works in secure contexts (https / localhost). On a
+    // plain-http LAN test (phone) it is unavailable, so fall back to execCommand.
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+    return new Promise((resolve, reject) => {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text; ta.setAttribute("readonly", "");
+        ta.style.position = "fixed"; ta.style.top = "-1000px"; ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select(); ta.setSelectionRange(0, ta.value.length);
+        const ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        ok ? resolve() : reject(new Error("copy failed"));
+      } catch (err) { reject(err); }
+    });
+  }
+  function makeCopy(getText) {
+    const b = document.createElement("button");
+    b.className = "gg-copy"; b.setAttribute("aria-label", "Copy message"); b.title = "Copy";
+    b.innerHTML = COPY_ICON;
+    b.addEventListener("click", (e) => {
+      e.stopPropagation();
+      copyText(getText() || "").then(() => {
+        b.classList.add("copied"); b.innerHTML = CHECK_ICON;
+        setTimeout(() => { b.classList.remove("copied"); b.innerHTML = COPY_ICON; }, 1400);
+      }).catch(() => {});
+    });
+    return b;
+  }
+
+  function addRow(text, who, force) {
+    const stick = force || atBottom();
+    const row = document.createElement("div");
+    row.className = "gg-row " + who;
+    const wrap = document.createElement("div");
+    wrap.className = "gg-bubble-wrap";
+    const bubble = document.createElement("div");
+    bubble.className = "gg-bubble";
+    if (who === "bot") bubble.innerHTML = renderMd(text); else bubble.textContent = text;
+    wrap.appendChild(bubble);
+    wrap.appendChild(makeCopy(() => bubble.innerText));
+    row.appendChild(wrap);
+    messages.appendChild(row);
+    if (stick) messages.scrollTop = messages.scrollHeight;
+    updateScrollButtons();
+    return row;
+  }
+  const addUser = (t) => addRow(t, "user", true);
+  const addBot = (t) => addRow(t, "bot", false);
+
+  function addSources(row, list) {
+    // Server sends [{title, url}]; render a chip per cited source, clickable when a real
+    // page URL is known (the doc's baked Source URL).
+    if (!list || !list.length) return;
+    const wrap = document.createElement("div");
+    wrap.className = "gg-sources";
+    const seen = new Set();
+    list.slice(0, 6).forEach(s => {
+      const title = (s && s.title) || "";
+      if (!title || seen.has(title)) return;
+      seen.add(title);
+      const url = s.url && /^https?:/i.test(s.url) ? s.url : "";
+      const chip = document.createElement(url ? "a" : "span");
+      chip.className = "gg-chip";
+      if (url) { chip.href = url; chip.target = "_blank"; chip.rel = "noopener noreferrer"; }
+      chip.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg><span>' + esc(title) + "</span>";
+      wrap.appendChild(chip);
+    });
+    if (!wrap.children.length) return;
+    row.appendChild(wrap);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function showTyping() {
+    const el = document.createElement("div");
+    el.className = "gg-typing"; el.id = "gg-typing";
+    el.innerHTML = "<i></i><i></i><i></i>";
+    messages.appendChild(el);
+    messages.scrollTop = messages.scrollHeight;
+  }
+  function hideTyping() { const t = document.getElementById("gg-typing"); if (t) t.remove(); }
+
+  const THUMB_UP = '<path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/>';
+  const THUMB_DOWN = '<path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/>';
+
+  function addFeedback(row, question, answer) {
+    const fb = document.createElement("div");
+    fb.className = "gg-fb";
+    const mk = (rating, path, label) => {
+      const b = document.createElement("button");
+      b.setAttribute("aria-label", label); b.title = label;
+      b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + path + "</svg>";
+      b.addEventListener("click", () => {
+        if (fb.classList.contains("done")) return;
+        b.classList.add("sel"); fb.classList.add("done");
+        fetch(BACKEND_URL + "/api/feedback", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ conversation_id: conversationId, rating, question, answer }),
+        }).catch(() => {});
+      });
+      return b;
+    };
+    fb.appendChild(mk("up", THUMB_UP, "Helpful"));
+    fb.appendChild(mk("down", THUMB_DOWN, "Not helpful"));
+    row.appendChild(fb);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  async function send() {
+    const text = input.value.trim();
+    if (!text || busy) return;
+    busy = true; sendBtn.disabled = true;
+    removeStarters();
+    addUser(text);
+    input.value = "";
+    showTyping();
+    let row = null, bubble = null, raw = "";
+    try {
+      const res = await fetch(BACKEND_URL + "/api/chat/stream", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, conversation_id: conversationId }),
+      });
+      // Pre-flight rejections (rate limit, empty, too long) come back as plain JSON
+      // with the same shape as /api/chat; only real answers are event streams.
+      const ctype = res.headers.get("content-type") || "";
+      if (!res.ok || ctype.indexOf("text/event-stream") < 0) {
+        hideTyping();
+        let msg = "Sorry, something went wrong. Please try again.";
+        try {
+          const j = await res.json();
+          if (j && j.answer) msg = j.answer;
+          if (j && j.conversation_id) {
+            conversationId = j.conversation_id;
+            sessionStorage.setItem("gg-cid", conversationId);
+          }
+        } catch (_) {}
+        addBot(msg);
+        return;
+      }
+      const reader = res.body.getReader();
+      const dec = new TextDecoder();
+      let buf = "";
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        let idx;
+        while ((idx = buf.indexOf("\n\n")) >= 0) {
+          const line = buf.slice(0, idx); buf = buf.slice(idx + 2);
+          if (!line.startsWith("data:")) continue;
+          let data; try { data = JSON.parse(line.slice(5).trim()); } catch (_) { continue; }
+          if (data.type === "delta") {
+            if (!row) { hideTyping(); row = addBot(""); bubble = row.querySelector(".gg-bubble"); }
+            const stick = atBottom();
+            raw += data.text;
+            bubble.innerHTML = renderMd(raw);
+            if (stick) messages.scrollTop = messages.scrollHeight;
+            updateScrollButtons();
+          } else if (data.type === "done") {
+            if (!row) { hideTyping(); row = addBot(raw || "Sorry, I could not generate a response."); }
+            conversationId = data.conversation_id;
+            if (conversationId) sessionStorage.setItem("gg-cid", conversationId);
+            addSources(row, data.sources);
+            if (!data.blocked) addFeedback(row, text, raw);
+          }
+        }
+      }
+    } catch (e) {
+      hideTyping();
+      if (!row) addBot("Sorry, I'm having trouble connecting right now. Please try again.");
+    } finally {
+      busy = false; sendBtn.disabled = false; focusInput();
+    }
+  }
+  sendBtn.addEventListener("click", send);
+  input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); send(); } });
+
+  /* ---------- drag-to-resize (top-left grip grows panel up + left) ---------- */
+  const grip = document.getElementById("gg-resize");
+  const MIN_W = 360, MIN_H = 460;
+  (function restoreSize() {
+    try {
+      const s = JSON.parse(localStorage.getItem("gg-size") || "null");
+      if (s && s.w && s.h) { panel.style.width = s.w + "px"; panel.style.height = s.h + "px"; }
+    } catch (_) {}
+  })();
+  let rs = null;
+  grip.addEventListener("pointerdown", (e) => {
+    rs = { x: e.clientX, y: e.clientY, w: panel.offsetWidth, h: panel.offsetHeight };
+    grip.setPointerCapture(e.pointerId); e.preventDefault();
+  });
+  grip.addEventListener("pointermove", (e) => {
+    if (!rs) return;
+    const maxW = window.innerWidth - 40, maxH = window.innerHeight - 120;
+    const w = Math.max(MIN_W, Math.min(maxW, rs.w + (rs.x - e.clientX)));
+    const h = Math.max(MIN_H, Math.min(maxH, rs.h + (rs.y - e.clientY)));
+    panel.style.width = w + "px"; panel.style.height = h + "px";
+    localStorage.setItem("gg-size", JSON.stringify({ w, h }));
+  });
+  const endResize = (e) => { if (rs) { rs = null; try { grip.releasePointerCapture(e.pointerId); } catch (_) {} } };
+  grip.addEventListener("pointerup", endResize);
+  grip.addEventListener("pointercancel", endResize);
+})();
+</script>
+</body>
+</html>
