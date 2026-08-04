@@ -1,13 +1,20 @@
 export const HERO = {
-  roleLabel: 'Data Analyst / Engineer',
-  name: 'Dillon Shearer',
-  statement:
-    'I do data work for healthcare and life science teams. Pipelines, analytics, and whatever else it takes to ship something useful.',
+  eyebrow: 'DATA ANALYST / ENGINEER',
+  statement: 'I do data work for healthcare and life science teams.',
+  support: 'Pipelines, analytics, and whatever else it takes to ship something useful.',
+  meta: {
+    currently: 'CURRENTLY: DATA SCIENTIST, ANSWER ALS',
+    separator: ' / ',
+    github: 'GITHUB',
+    linkedin: 'LINKEDIN',
+  },
   ctas: {
     primary: { label: 'Get in touch', href: '/contact' },
     secondary: { label: 'About me', href: '/about' },
   },
 }
+
+export const WORK_SECTION_TITLE = 'The work'
 
 export const CAPABILITIES: {
   eyebrow: string
