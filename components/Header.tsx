@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { NavLink } from '@/components/ui'
@@ -10,14 +10,28 @@ import styles from './Header.module.css'
 
 export function Header() {
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const menuButtonRef = useRef<HTMLButtonElement>(null)
+  const restoreMenuFocusRef = useRef(false)
   const pathname = usePathname()
+
+  useEffect(() => {
+    if (!drawerOpen && restoreMenuFocusRef.current) {
+      menuButtonRef.current?.focus()
+      restoreMenuFocusRef.current = false
+    }
+  }, [drawerOpen])
+
+  function closeDrawer() {
+    restoreMenuFocusRef.current = true
+    setDrawerOpen(false)
+  }
 
   return (
     <>
       <header className={styles.header}>
         <div className={styles.inner}>
           <Link href="/" className={styles.wordmark} aria-label="Data With Dillon, home">
-            Data With Dillon
+            DATA WITH DILLON
           </Link>
 
           <nav className={styles.desktopNav} aria-label="Primary navigation">
@@ -29,6 +43,7 @@ export function Header() {
           </nav>
 
           <button
+            ref={menuButtonRef}
             className={styles.hamburger}
             onClick={() => setDrawerOpen(true)}
             aria-label="Open navigation menu"
@@ -43,7 +58,7 @@ export function Header() {
 
       <MobileDrawer
         isOpen={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
+        onClose={closeDrawer}
         currentPath={pathname}
       />
     </>

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { FOOTER_NAV, SOCIALS } from '@/content/site'
+import { NAV_ITEMS, SOCIALS } from '@/content/site'
 import styles from './Footer.module.css'
 
 export function Footer() {
@@ -10,9 +10,9 @@ export function Footer() {
       <div className={styles.inner}>
         <div className={styles.columns}>
           <div>
-            <p className={styles.columnTitle}>Navigate</p>
+            <p className={styles.columnTitle}>NAVIGATE</p>
             <ul className={styles.columnLinks}>
-              {FOOTER_NAV.map((item) => (
+              {NAV_ITEMS.map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className={styles.columnLink}>
                     {item.label}
@@ -23,7 +23,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className={styles.columnTitle}>Elsewhere</p>
+            <p className={styles.columnTitle}>ELSEWHERE</p>
             <ul className={styles.columnLinks}>
               <li>
                 <a
@@ -59,7 +59,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className={styles.columnTitle}>Connect</p>
+            <p className={styles.columnTitle}>CONNECT</p>
             <ul className={styles.columnLinks}>
               <li>
                 <a href={`mailto:${SOCIALS.email}`} className={styles.columnLink}>
@@ -71,7 +71,8 @@ export function Footer() {
         </div>
 
         <div className={styles.meta}>
-          <span>&copy; {year} Dillon Shearer</span>
+          <span>(c) {year} Dillon Shearer</span>
+          <span aria-hidden="true">/</span>
           <a
             href={SOCIALS.sourceRepo}
             className={styles.columnLink}
@@ -80,6 +81,7 @@ export function Footer() {
           >
             View source
           </a>
+          <span aria-hidden="true">/</span>
           <span>Built with Next.js</span>
         </div>
       </div>

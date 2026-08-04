@@ -17,13 +17,6 @@ export const NAV_ITEMS: NavItem[] = [
   { href: '/contact', label: 'Contact' },
 ]
 
-// ponytail: Footer deliberately omits Dashboards - chrome redesign ticket decides whether to unify
-export const FOOTER_NAV: NavItem[] = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
-]
-
 export const SOCIALS = {
   github: 'https://github.com/dillon-shearer',
   linkedin: 'https://www.linkedin.com/in/dillonshearer/',

@@ -37,12 +37,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: calc(var(--space-5) + var(--space-5));
+  min-height: calc(var(--space-5) + var(--space-5));
 }
 
 .nav {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
+}
+
+.nav a {
+  font-size: var(--text-lg);
 }
 
 @keyframes fadeIn {
