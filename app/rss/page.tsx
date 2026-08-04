@@ -1,17 +1,12 @@
 import type { Metadata } from 'next'
 import { PageHeader, Card, InlineLink } from '@/components/ui'
+import { READERS, FEED } from '@/content/rss'
 import styles from './page.module.css'
 
 export const metadata: Metadata = {
   title: 'RSS Feed',
   description: 'Subscribe to updates from Data With Dillon via RSS.',
 }
-
-const readers = [
-  { title: 'Feedly', description: 'Web-based, free tier available.', href: 'https://feedly.com' },
-  { title: 'NetNewsWire', description: 'Free, open source, Mac and iOS.', href: 'https://netnewswire.com' },
-  { title: 'Reeder', description: 'Mac and iOS, polished reading experience.', href: 'https://reederapp.com' },
-]
 
 export default function RssPage() {
   return (
@@ -32,20 +27,20 @@ export default function RssPage() {
           To subscribe, copy the feed URL below and paste it into your RSS reader:
         </p>
         <p>
-          <InlineLink href="https://datawithdillon.com/rss/feed">
-            https://datawithdillon.com/rss/feed
+          <InlineLink href={`${FEED.siteUrl}/rss/feed`}>
+            {`${FEED.siteUrl}/rss/feed`}
           </InlineLink>
         </p>
         <p>
-          Don't have an RSS reader yet? Here are a few good ones:
+          Don&apos;t have an RSS reader yet? Here are a few good ones:
         </p>
       </div>
 
       <div className={styles.readers}>
-        {readers.map((r) => (
+        {READERS.map((r) => (
           <Card
-            key={r.title}
-            title={r.title}
+            key={r.name}
+            title={r.name}
             description={r.description}
             action={
               <a

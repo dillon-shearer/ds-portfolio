@@ -1,27 +1,29 @@
 import { NextResponse } from 'next/server'
-
-const SITE_URL = 'https://datawithdillon.com'
-const SITE_TITLE = 'Data With Dillon'
-const SITE_DESCRIPTION =
-  'Data engineer and analyst building analytics, pipelines, and AI tooling for healthcare and life-science teams.'
+import { FEED } from '@/content/rss'
 
 export function GET() {
+  const items = FEED.items
+    .map(
+      (item) => `    <item>
+      <title>${item.title}</title>
+      <link>${item.link}</link>
+      <guid isPermaLink="true">${item.link}</guid>
+      <description>${item.description}</description>
+      <pubDate>${item.pubDate}</pubDate>
+    </item>`
+    )
+    .join('\n')
+
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>${SITE_TITLE}</title>
-    <link>${SITE_URL}</link>
-    <description>${SITE_DESCRIPTION}</description>
+    <title>${FEED.title}</title>
+    <link>${FEED.siteUrl}</link>
+    <description>${FEED.description}</description>
     <language>en-us</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-    <atom:link href="${SITE_URL}/rss/feed" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Site launched</title>
-      <link>${SITE_URL}</link>
-      <guid isPermaLink="true">${SITE_URL}</guid>
-      <description>datawithdillon.com rebuilt with a print-editorial design system.</description>
-      <pubDate>Tue, 27 May 2026 00:00:00 +0000</pubDate>
-    </item>
+    <atom:link href="${FEED.siteUrl}/rss/feed" rel="self" type="application/rss+xml" />
+${items}
   </channel>
 </rss>`
 

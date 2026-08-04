@@ -2,14 +2,8 @@
 
 import { useEffect, useRef } from 'react'
 import { NavLink } from '@/components/ui'
+import { NAV_ITEMS } from '@/content/site'
 import styles from './MobileDrawer.module.css'
-
-const NAV_ITEMS = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/dashboards', label: 'Dashboards' },
-  { href: '/contact', label: 'Contact' },
-]
 
 interface MobileDrawerProps {
   isOpen: boolean

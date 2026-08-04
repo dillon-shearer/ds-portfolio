@@ -4,15 +4,9 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { NavLink } from '@/components/ui'
+import { NAV_ITEMS } from '@/content/site'
 import { MobileDrawer } from './MobileDrawer'
 import styles from './Header.module.css'
-
-const NAV_ITEMS = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/dashboards', label: 'Dashboards' },
-  { href: '/contact', label: 'Contact' },
-]
 
 export function Header() {
   const [drawerOpen, setDrawerOpen] = useState(false)

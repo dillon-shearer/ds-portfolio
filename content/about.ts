@@ -1,0 +1,28 @@
+export const BIO_PARAGRAPHS: string[] = [
+  "After graduating with my MIS degree from UWG, I wasn't sure which direction to take my career. An internship as a QA/BA at a rare disease data platform opened my eyes to the impact that clean, well-structured data can have on real lives.",
+  "That experience led me to my current role as a data scientist at Answer ALS, where I've been building production ETL pipelines, analytics systems, and AI tooling for ALS research ever since.",
+  "What I love most about this work is the variety. Healthcare data challenges don't fit into neat categories, so I've embraced everything from building AI agents to creating executive dashboards to implementing data transformation tools.",
+  "Behind every data point is a patient, a family, or a researcher working toward better treatments. That's what keeps me focused on getting it right.",
+  "I believe the best data work happens when you combine technical rigor with genuine curiosity about the problems you're solving. I'm always learning something new, whether that's mastering a new tool, diving deeper into a domain, or finding better ways to communicate complex insights to diverse stakeholders.",
+]
+
+export const RESUMES: { role: string; description: string; href: string }[] = [
+  {
+    role: 'Data Engineer',
+    description: 'Pipelines, infrastructure, and data reliability.',
+    href: '/resumes/Dillon_Shearer_Resume.pdf',
+  },
+  {
+    role: 'Data Analyst',
+    description: 'Analytics, dashboards, and business intelligence.',
+    href: '/resumes/Dillon_Shearer_Resume.pdf',
+  },
+]
+
+export const CERTIFICATIONS: { title: string; meta: string; credentialId: string }[] = [
+  {
+    title: 'Protecting Human Research Participants',
+    meta: 'Apr 2025 / PHRP Online Training, Inc.',
+    credentialId: '3004648',
+  },
+]

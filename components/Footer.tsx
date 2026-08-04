@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { FOOTER_NAV, SOCIALS } from '@/content/site'
 import styles from './Footer.module.css'
 
 export function Footer() {
@@ -11,11 +12,7 @@ export function Footer() {
           <div>
             <p className={styles.columnTitle}>Navigate</p>
             <ul className={styles.columnLinks}>
-              {[
-                { href: '/', label: 'Home' },
-                { href: '/about', label: 'About' },
-                { href: '/contact', label: 'Contact' },
-              ].map((item) => (
+              {FOOTER_NAV.map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className={styles.columnLink}>
                     {item.label}
@@ -30,17 +27,17 @@ export function Footer() {
             <ul className={styles.columnLinks}>
               <li>
                 <a
-                  href="https://github.com/dillon-shearer/ds-portfolio"
+                  href={SOCIALS.sourceRepo}
                   className={styles.columnLink}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  This site's source
+                  This site&apos;s source
                 </a>
               </li>
               <li>
                 <a
-                  href="https://github.com/dillon-shearer"
+                  href={SOCIALS.github}
                   className={styles.columnLink}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -50,7 +47,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://www.linkedin.com/in/dillonshearer/"
+                  href={SOCIALS.linkedin}
                   className={styles.columnLink}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -66,10 +63,10 @@ export function Footer() {
             <ul className={styles.columnLinks}>
               <li>
                 <a
-                  href="mailto:dillon@datawithdillon.com"
+                  href={`mailto:${SOCIALS.email}`}
                   className={styles.columnLink}
                 >
-                  dillon@datawithdillon.com
+                  {SOCIALS.email}
                 </a>
               </li>
             </ul>
@@ -77,9 +74,9 @@ export function Footer() {
         </div>
 
         <div className={styles.meta}>
-          <span>© {year} Dillon Shearer</span>
+          <span>&copy; {year} Dillon Shearer</span>
           <a
-            href="https://github.com/dillon-shearer/ds-portfolio"
+            href={SOCIALS.sourceRepo}
             className={styles.columnLink}
             target="_blank"
             rel="noopener noreferrer"

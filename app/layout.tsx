@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Source_Serif_4, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google'
 import { SiteChrome } from '@/components/SiteChrome'
+import { SITE } from '@/content/site'
 import '@/styles/tokens.css'
 import './globals.css'
 
@@ -26,11 +27,10 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Data With Dillon',
-    template: '%s | Data With Dillon',
+    default: SITE.title,
+    template: `%s | ${SITE.title}`,
   },
-  description:
-    'Data engineer and analyst building analytics, pipelines, and AI tooling for healthcare and life-science teams.',
+  description: SITE.description,
 }
 
 export default function RootLayout({
