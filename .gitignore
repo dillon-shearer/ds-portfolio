@@ -48,3 +48,6 @@ next-env.d.ts
 
 .vercel
 .env*.local
+
+# Local browser evidence and its isolated Playwright support install.
+/.ui-evidence/
