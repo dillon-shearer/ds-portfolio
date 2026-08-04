@@ -118,8 +118,8 @@ export default function BodyDiagram({
       if (s >= greenAt * k) return lerpHex(NA_COLOR, base, 1.0)
       if (s >= yellowAt * k) return lerpHex(NA_COLOR, base, 0.65)
       return lerpHex(NA_COLOR, base, 0.35)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [stats, greenAt, yellowAt, splitFactor, splitCounts],
   )
 
