@@ -2,20 +2,9 @@
 'use server'
 
 import { sql } from '@/lib/gym-db'
+import type { BodyPart } from '@/lib/gym/body-parts'
 
-export type BodyPartKey =
-  | 'biceps'
-  | 'chest'
-  | 'shoulders'
-  | 'back'
-  | 'triceps'
-  | 'quads'
-  | 'hamstrings'
-  | 'forearms'
-  | 'core'
-  | 'glutes'
-  | 'calves'
-  | 'hips'
+export type BodyPartKey = BodyPart
 
 export interface BodyPartRow {
   key: BodyPartKey

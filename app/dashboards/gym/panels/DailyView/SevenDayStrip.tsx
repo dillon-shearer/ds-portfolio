@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react'
 import type { GymLift } from '../../actions'
+import { setVolume } from '@/lib/gym/metrics'
 import styles from './SevenDayStrip.module.css'
 
 type Props = {
@@ -27,8 +28,7 @@ export default function SevenDayStrip({ lifts, date, onChangeDate }: Props) {
     const now = new Date()
     const todayUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
     const volMap = new Map<string, number>()
-    // Volume = weight x reps per set (unilateral sets record one side; no doubling applied)
-    for (const l of lifts) volMap.set(l.date, (volMap.get(l.date) || 0) + l.weight * l.reps)
+    for (const l of lifts) volMap.set(l.date, (volMap.get(l.date) || 0) + setVolume(l.weight, l.reps))
 
     return Array.from({ length: 7 }, (_, offset) => {
       const d = new Date(todayUTC)

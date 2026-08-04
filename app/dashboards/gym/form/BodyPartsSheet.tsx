@@ -1,36 +1,11 @@
 'use client'
 
 import { useEffect } from 'react'
+import { ALL_BODY_PARTS, type BodyPart } from '@/lib/gym/body-parts'
 import styles from './BodyPartsSheet.module.css'
 
-export type BodyPart =
-  | 'biceps'
-  | 'chest'
-  | 'shoulders'
-  | 'back'
-  | 'triceps'
-  | 'quads'
-  | 'hamstrings'
-  | 'forearms'
-  | 'core'
-  | 'glutes'
-  | 'calves'
-  | 'hips'
-
-export const ALL_BODY_PARTS: BodyPart[] = [
-  'biceps',
-  'chest',
-  'shoulders',
-  'back',
-  'triceps',
-  'quads',
-  'hamstrings',
-  'forearms',
-  'core',
-  'glutes',
-  'calves',
-  'hips',
-]
+export { ALL_BODY_PARTS }
+export type { BodyPart }
 
 const LAST_USED_KEY = 'gymLastUsedBodyParts'
 

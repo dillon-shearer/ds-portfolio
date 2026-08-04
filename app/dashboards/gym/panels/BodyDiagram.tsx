@@ -5,41 +5,13 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, RoundedBox } from '@react-three/drei'
+import { BODY_PART_HEX, type BodyPart } from '@/lib/gym/body-parts'
 import styles from './BodyDiagram.module.css'
-
-export type BodyPart =
-  | 'biceps'
-  | 'chest'
-  | 'shoulders'
-  | 'back'
-  | 'triceps'
-  | 'quads'
-  | 'hamstrings'
-  | 'forearms'
-  | 'core'
-  | 'glutes'
-  | 'calves'
-  | 'hips'
 
 type Stats = Partial<Record<BodyPart, { volume: number; sets: number }>>
 type SplitKey = 'Push' | 'Pull' | 'Legs'
 
 const NA_COLOR = '#F2EDE5'
-
-const PART_COLOR: Record<BodyPart, string> = {
-  biceps: '#4A6B3A',
-  chest: '#7A2E2E',
-  shoulders: '#B8893B',
-  back: '#4A4239',
-  triceps: '#5A7A8A',
-  quads: '#5C3A1A',
-  hamstrings: '#1A4A3A',
-  forearms: '#6B6B3A',
-  core: '#3A1A4A',
-  glutes: '#9A5A3A',
-  calves: '#3A6B5A',
-  hips: '#5A3A6B',
-}
 
 function lerpHex(a: string, b: string, t: number): string {
   const p = (h: string) => {
@@ -114,7 +86,7 @@ export default function BodyDiagram({
       const s = rawSets(p)
       if (s <= 0) return NA_COLOR
       const k = splitsForPart(p)
-      const base = PART_COLOR[p]
+      const base = BODY_PART_HEX[p]
       if (s >= greenAt * k) return lerpHex(NA_COLOR, base, 1.0)
       if (s >= yellowAt * k) return lerpHex(NA_COLOR, base, 0.65)
       return lerpHex(NA_COLOR, base, 0.35)

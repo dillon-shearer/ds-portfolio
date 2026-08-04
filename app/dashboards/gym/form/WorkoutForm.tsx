@@ -17,6 +17,7 @@ import {
 import { type Exercise } from '@/app/dashboards/gym/catalog'
 import DayInfoSheet from './DayInfoSheet'
 import BodyPartsSheet, { ALL_BODY_PARTS, type BodyPart } from './BodyPartsSheet'
+import { setVolume } from '@/lib/gym/metrics'
 import ExerciseManagerModal from './ExerciseManagerModal'
 import EditSetModal, { EQUIPMENT_OPTIONS, type Equipment } from './EditSetModal'
 import styles from './WorkoutForm.module.css'
@@ -313,16 +314,14 @@ export default function WorkoutForm() {
           return ta - tb
         })
         const latestTs = Date.parse(setsChrono[setsChrono.length - 1]?.timestamp ?? '')
-        // Volume = weight x reps per set (unilateral sets record one side; no doubling applied)
-        const exerciseVolume = sets.reduce((sum, s) => sum + s.weight * s.reps, 0)
+        const exerciseVolume = sets.reduce((sum, s) => sum + setVolume(s.weight, s.reps), 0)
         return { exercise, sets: setsChrono, latestTs, exerciseVolume }
       })
       .sort((a, b) => b.latestTs - a.latestTs)
   }, [liftsByExerciseForSelectedDate])
 
-  // Volume = weight x reps per set (unilateral sets record one side; no doubling applied)
   const totalVolumeForSelectedDate = liftsForSelectedDate.reduce(
-    (sum, lift) => sum + lift.weight * lift.reps,
+    (sum, lift) => sum + setVolume(lift.weight, lift.reps),
     0,
   )
   const dayTagForSelectedDate = (formData.dayTag || '').trim()

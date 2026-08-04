@@ -1,34 +1,6 @@
 import { NextResponse } from 'next/server'
-import { getGymLifts, type GymLift } from '@/app/dashboards/gym/actions'
-
-type OutRow = GymLift & {
-  volume: number
-  oneRM_est: number
-  day_of_week: string
-  iso_week: string
-  month: string
-  year: number
-}
-
-function enrich(lifts: GymLift[]): OutRow[] {
-  return lifts.map((l) => {
-    const d = new Date(l.date + 'T00:00:00Z')
-    const dow = d.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' })
-    const iso = (() => {
-      const date = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()))
-      date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7))
-      const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1))
-      const weekNo = Math.ceil((((date.getTime() - yearStart.getTime()) / 86400000) + 1) / 7)
-      return `${date.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`
-    })()
-    const month = l.date.slice(0, 7)
-    const year = parseInt(l.date.slice(0, 4), 10)
-    // Volume = weight x reps per set (unilateral sets record one side; no doubling applied)
-    const volume = l.weight * l.reps
-    const oneRM_est = Math.round(l.weight * (1 + l.reps / 30))
-    return { ...l, volume, oneRM_est, day_of_week: dow, iso_week: iso, month, year }
-  })
-}
+import { getGymLifts } from '@/app/dashboards/gym/actions'
+import { enrich } from '@/lib/gym/metrics'
 
 // very small CSV helper
 const csvEscape = (v: unknown) => {
@@ -44,29 +16,43 @@ export async function GET(req: Request) {
   const to = searchParams.get('to')
   const exclude = (searchParams.get('exclude') || '')
     .split(',')
-    .map(s => s.trim())
+    .map((s) => s.trim())
     .filter(Boolean)
 
   let rows = enrich(await getGymLifts())
   if (day) {
-    rows = rows.filter(r => r.date === day)
+    rows = rows.filter((r) => r.date === day)
   } else {
-    if (from) rows = rows.filter(r => r.date >= from)
-    if (to)   rows = rows.filter(r => r.date <= to)
+    if (from) rows = rows.filter((r) => r.date >= from)
+    if (to) rows = rows.filter((r) => r.date <= to)
   }
 
   const baseHeaders = rows[0]
     ? Object.keys(rows[0])
     : [
-        'id','date','exercise','weight','reps','setNumber','timestamp','dayTag','isUnilateral','equipment',
-        'volume','oneRM_est','day_of_week','iso_week','month','year'
+        'id',
+        'date',
+        'exercise',
+        'weight',
+        'reps',
+        'setNumber',
+        'timestamp',
+        'dayTag',
+        'isUnilateral',
+        'equipment',
+        'volume',
+        'oneRM_est',
+        'day_of_week',
+        'iso_week',
+        'month',
+        'year',
       ]
 
-  const headers = baseHeaders.filter(h => !exclude.includes(h))
+  const headers = baseHeaders.filter((h) => !exclude.includes(h))
 
   const lines = [
     headers.join(','),
-    ...rows.map(r => headers.map(h => csvEscape((r as any)[h])).join(',')),
+    ...rows.map((r) => headers.map((h) => csvEscape((r as any)[h])).join(',')),
   ]
   const csv = lines.join('\n')
 

@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import type { BodyPart } from './BodyDiagram'
+import type { BodyPart } from '@/lib/gym/body-parts'
 
 const BodyDiagramInner = dynamic(() => import('./BodyDiagram'), { ssr: false })
 

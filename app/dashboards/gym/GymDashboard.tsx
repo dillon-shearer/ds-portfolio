@@ -2,7 +2,8 @@
 
 import { useMemo, useState, useCallback } from 'react'
 import type { GymLift } from './actions'
-import type { BodyPart } from './panels/BodyDiagram'
+import { bodyPartForExercise, type BodyPart } from '@/lib/gym/body-parts'
+import { epley1RM, setVolume } from '@/lib/gym/metrics'
 import DashboardShell from '@/components/dashboard/DashboardShell'
 import DashboardPanel from '@/components/dashboard/DashboardPanel'
 import StatWidget from '@/components/dashboard/StatWidget'
@@ -84,8 +85,7 @@ function calcDailyVolume(lifts: GymLift[], dates: string[]) {
   const byDate = groupBy(lifts, (l) => l.date)
   return dates.map((date) => {
     const day = byDate.get(date) ?? []
-    // Volume = weight x reps per set (unilateral sets record one side; no doubling applied)
-    const volume = day.reduce((sum, l) => sum + l.weight * l.reps, 0)
+    const volume = day.reduce((sum, l) => sum + setVolume(l.weight, l.reps), 0)
     return { date, volume }
   })
 }
@@ -104,29 +104,6 @@ function formatLongDate(dateStr: string) {
   const d = new Date(dateStr + 'T00:00:00')
   return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
 }
-
-const EXERCISES_BY_BODY_PART: Record<BodyPart, string[]> = {
-  biceps: ['Preacher Curl', 'Hammer Curl', 'Bayesian Curl', 'Incline Curl'],
-  chest: ['Incline Press', 'Flat Press', 'Decline Press', 'Chest Fly', 'Bench Press'],
-  shoulders: ['Lateral Raise', 'Overhead Press', 'Rear Delt Fly', 'Rear Delt Xs'],
-  back: ['Lat Pulldown', 'High Row', 'Low Row', 'Pull Ups', 'Pull Overs'],
-  triceps: ['Tricep Pushdowns', 'Tricep Extensions', 'Skull Crushers', 'Tricep Kickbacks', 'Dips'],
-  quads: ['Leg Press', 'Hack Squat', 'Pendelum Squat', 'Squat', 'Leg Extensions', 'Split Squat'],
-  hamstrings: ['RDLs', 'Seated Leg Curl', 'Lying Leg Curl', 'Hamstrick Kickback'],
-  forearms: ['Wrist Curl', 'Reverse Curl', 'Reverse Wrist Curl'],
-  core: ['Hanging Leg Raise', 'Decline Crunch', 'Flat Crunch', 'Incline Crunch', 'Oblique Twist'],
-  glutes: ['Hip Thrust', 'Glute Kickback'],
-  calves: ['Standing Calf Raise', 'Seated Calf Raise'],
-  hips: ['Abduction Machine', 'Adduction Machine'],
-}
-
-const EXERCISE_TO_BODY: Record<string, BodyPart> = Object.entries(EXERCISES_BY_BODY_PART).reduce(
-  (acc, [bp, arr]) => {
-    for (const ex of arr) acc[ex] = bp as BodyPart
-    return acc
-  },
-  {} as Record<string, BodyPart>,
-)
 
 function normalizeSplitTag(raw?: string | null) {
   const t = (raw || '').trim().toLowerCase()
@@ -194,10 +171,9 @@ export default function GymDashboard({ lifts }: Props) {
       hips: { volume: 0, sets: 0 },
     }
     for (const s of filtered) {
-      const bp = EXERCISE_TO_BODY[s.exercise]
-      if (!bp) continue
-      // Volume = weight x reps per set (unilateral sets record one side; no doubling applied)
-      base[bp].volume += s.weight * s.reps
+      const bp = bodyPartForExercise(s.exercise)
+      if (bp === 'other') continue
+      base[bp].volume += setVolume(s.weight, s.reps)
       base[bp].sets += 1
     }
     return base
@@ -232,7 +208,7 @@ export default function GymDashboard({ lifts }: Props) {
       let best1RM = 0
       let bestSet: GymLift | undefined
       for (const s of sets) {
-        const oneRM = Math.round(s.weight * (1 + s.reps / 30))
+        const oneRM = Math.round(epley1RM(s.weight, s.reps))
         if (!bestSet) {
           bestSet = s
           bestWeight = s.weight
@@ -294,8 +270,7 @@ export default function GymDashboard({ lifts }: Props) {
     const recentDates = Array.from(byDate.keys()).sort((a, b) => (a < b ? 1 : -1))
     return recentDates.map((date) => {
       const day = byDate.get(date) || []
-      // Volume = weight x reps per set (unilateral sets record one side; no doubling applied)
-      const volume = day.reduce((s, l) => s + l.weight * l.reps, 0)
+      const volume = day.reduce((s, l) => s + setVolume(l.weight, l.reps), 0)
       const exercises = unique(day.map((l) => l.exercise))
       const sets = day.length
       const tags = day.map((l) => cleanTag(l.dayTag)).filter(Boolean)
