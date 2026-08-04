@@ -93,8 +93,8 @@ function calcDailyVolume(lifts: GymLift[], dates: string[]) {
 function cleanTag(s?: string | null) {
   return (s ?? '')
     .normalize('NFKC')
-    .replace(/[​-‍﻿]/g, '')
-    .replace(/ /g, ' ')
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
+    .replace(/\u00A0/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
     .toLowerCase()
@@ -471,7 +471,7 @@ export default function GymDashboard({ lifts }: Props) {
                     onClick={() => setShowDownload(false)}
                     aria-label="Close"
                   >
-                    ×
+                    &times;
                   </button>
                 </div>
                 <div className={styles.modalBody}>

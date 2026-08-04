@@ -44,7 +44,7 @@ export default function RecentSessions({ rows, page, totalPages, onPrev, onNext,
               <p className={styles.tag}>{titleCaseTag(s.dayTag)}</p>
             )}
             <p className={styles.meta}>
-              {s.exercises.length} ex · {s.sets} sets · {s.volume.toLocaleString()} lbs
+              {s.exercises.length} ex / {s.sets} sets / {s.volume.toLocaleString()} lbs
             </p>
           </button>
         ))}

@@ -53,7 +53,7 @@ export async function listExercises(): Promise<Exercise[]> {
 export async function listExercisesForParts(parts: BodyPartKey[]): Promise<Exercise[]> {
   if (!parts?.length) return listExercises()
 
-  // Old @vercel/postgres: no sql.array/join — pass array param and cast in SQL.
+  // Old @vercel/postgres: no sql.array/join - pass array param and cast in SQL.
   const partsParam = parts as unknown as any
 
   const { rows } = await sql/* sql */`

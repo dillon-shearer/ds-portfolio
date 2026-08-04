@@ -129,7 +129,7 @@ export default function WorkoutForm() {
   useEffect(() => {
     if (!bootstrappedRef.current) return
     fetchDayInfoFor(formData.date)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [formData.date])
 
   const fetchAllLifts = async () => {
@@ -313,14 +313,14 @@ export default function WorkoutForm() {
           return ta - tb
         })
         const latestTs = Date.parse(setsChrono[setsChrono.length - 1]?.timestamp ?? '')
-        // Volume = weight × reps per set (unilateral sets record one side; no doubling applied)
+        // Volume = weight x reps per set (unilateral sets record one side; no doubling applied)
         const exerciseVolume = sets.reduce((sum, s) => sum + s.weight * s.reps, 0)
         return { exercise, sets: setsChrono, latestTs, exerciseVolume }
       })
       .sort((a, b) => b.latestTs - a.latestTs)
   }, [liftsByExerciseForSelectedDate])
 
-  // Volume = weight × reps per set (unilateral sets record one side; no doubling applied)
+  // Volume = weight x reps per set (unilateral sets record one side; no doubling applied)
   const totalVolumeForSelectedDate = liftsForSelectedDate.reduce((sum, lift) => sum + (lift.weight * lift.reps), 0)
   const dayTagForSelectedDate = (formData.dayTag || '').trim()
   const exerciseCount = Object.keys(liftsByExerciseForSelectedDate).length
@@ -402,7 +402,7 @@ export default function WorkoutForm() {
           <span className={styles.dateLineValue}>{formData.date}</span>
           {dayTagForSelectedDate && (
             <>
-              <span className={styles.dateLineSep}>·</span>
+              <span className={styles.dateLineSep}>/</span>
               <span className={styles.chip}>{dayTagForSelectedDate}</span>
             </>
           )}
@@ -509,7 +509,7 @@ export default function WorkoutForm() {
         <div className={styles.historyMeta}>
           {dayTagForSelectedDate && <span className={styles.chip}>{dayTagForSelectedDate}</span>}
           <span className={styles.historyMetaText}>
-            {exerciseCount} exercise{exerciseCount !== 1 ? 's' : ''} ·{' '}
+            {exerciseCount} exercise{exerciseCount !== 1 ? 's' : ''} /{' '}
             <span className={styles.historyMetaNum}>{totalVolumeForSelectedDate.toLocaleString()}</span> lbs total
           </span>
         </div>

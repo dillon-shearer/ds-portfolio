@@ -194,7 +194,7 @@ export function RemotePanel() {
           onClick={() => setIsPanelOpen(true)}
           aria-label="Open setup"
         >
-          ⚙
+          {'\u2699'}
         </button>
       </header>
 
@@ -203,7 +203,7 @@ export function RemotePanel() {
           <RemoteButton
             action="prev"
             label="Prev"
-            hint="swipe ←"
+            hint={'swipe \u2190'}
             pressed={activeAction === 'prev'}
             disabled={disabled}
             onPress={() => enqueue('prev')}
@@ -211,7 +211,7 @@ export function RemotePanel() {
           <RemoteButton
             action="next"
             label="Next"
-            hint="swipe →"
+            hint={'swipe \u2192'}
             pressed={activeAction === 'next'}
             disabled={disabled}
             onPress={() => enqueue('next')}

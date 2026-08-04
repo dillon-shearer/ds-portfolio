@@ -1,5 +1,5 @@
 /* ==========================================================
-   Design Tokens — single source of truth
+   Design Tokens - single source of truth
    All colors, fonts, spacing, and motion live here.
    No hex/rgb values anywhere else in the codebase.
    ========================================================== */
@@ -24,7 +24,7 @@
   --color-warn:         #B8893B;
 
   /* ---------- Chart palette ---------- */
-  /* Body part colors — earthy, distinguishable, portfolio-consistent */
+  /* Body part colors - earthy, distinguishable, portfolio-consistent */
   --chart-bp-chest:      #7A2E2E;
   --chart-bp-back:       #4A4239;
   --chart-bp-shoulders:  #B8893B;

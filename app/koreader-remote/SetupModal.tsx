@@ -57,7 +57,7 @@ export function SetupModal({ open, onClose, endpoint }: Props) {
             onClick={handleClose}
             aria-label="Close setup"
           >
-            ×
+            &times;
           </button>
         </div>
 

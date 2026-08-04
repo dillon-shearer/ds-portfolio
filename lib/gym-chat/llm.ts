@@ -362,16 +362,16 @@ const CHART_SPEC_SCHEMA = z.object({
 
 const CHART_SPEC_SYSTEM = `You decide when workout query results should be visualized as a chart.
 
-Always respond with this JSON format — never wrap it in another key:
+Always respond with this JSON format - never wrap it in another key:
 {"charts":[{"type":"bar","queryId":"q1","x":"exercise","y":"volume","title":"Volume by exercise"}]}
 When nothing is chartable: {"charts":[]}
 
 When to generate a chart (REQUIRED if any of these apply):
-- Query has 3+ rows, one field is a category (exercise names, body parts, muscle groups, splits), another is numeric (volume, count, weight, reps) → type "bar"
-- Query has 3+ rows, one field is a date/week/month, another is numeric → type "line"
+- Query has 3+ rows, one field is a category (exercise names, body parts, muscle groups, splits), another is numeric (volume, count, weight, reps) -> type "bar"
+- Query has 3+ rows, one field is a date/week/month, another is numeric -> type "line"
 
 Rules:
-- queryId: exact id string from the provided queries array (e.g. "q1") — do not invent ids
+- queryId: exact id string from the provided queries array (e.g. "q1") - do not invent ids
 - x: the categorical or time field (exact name from that query's fields list)
 - y: the numeric field (exact name from that query's fields list; "27570.0" string format still counts as numeric)
 - title: 3-6 words, sentence case, no trailing period
@@ -384,7 +384,7 @@ async function generateChartSpecs(
   const chartable = queries.filter(q => !q.error && q.previewRows.length >= 3)
   if (!chartable.length) return undefined
 
-  // Skip if the request budget is running low — chart generation is non-critical
+  // Skip if the request budget is running low - chart generation is non-critical
   if (options?.budget && options.budget.remainingMs() < 10000) return undefined
 
   const queryContext = chartable.map(q => ({

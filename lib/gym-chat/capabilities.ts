@@ -9,8 +9,8 @@ const METRIC_GLOSSARY = `Metric glossary:
 - best set: heaviest set for an exercise (or highest estimated 1RM if requested).
 - set-level fatigue: compare early vs late sets within a session using set_number buckets (thirds).
 - per-exercise summary: total sets, total volume, last performed date, and best set per exercise.
-- planned body parts: gym_day_meta.body_parts (text[]) — what the user intended to train that day.
-- logged body parts: gym_lifts_v.body_part_key — what they actually trained, resolved via exercises + exercise_aliases.
+- planned body parts: gym_day_meta.body_parts (text[]) - what the user intended to train that day.
+- logged body parts: gym_lifts_v.body_part_key - what they actually trained, resolved via exercises + exercise_aliases.
 - split/day_tag: strings like push, pull, leg, upper, lower stored on each set via day_tag.
 `
 
@@ -18,7 +18,7 @@ const DATA_SCOPE = `Data scope and limitations:
 - All tables live in the public schema and are read-only.
 - gym_lifts: every logged set (id, date, timestamp, exercise text, weight, reps, set_number, equipment, is_unilateral, day_tag).
 - gym_lifts_v: gym_lifts pre-joined to exercises and exercise_aliases. Adds exercise_id, canonical_name, body_part_key. Use this for any muscle-aware query.
-- gym_day_meta: per-day metadata (date, day_tag, body_parts text[], updated_at). body_parts is INTENT — what was planned, not necessarily what was logged.
+- gym_day_meta: per-day metadata (date, day_tag, body_parts text[], updated_at). body_parts is INTENT - what was planned, not necessarily what was logged.
 - exercises: canonical exercise catalog (id, name, body_part_key, is_active). body_part_key is authoritative anatomy.
 - exercise_aliases: alias -> exercise_id mapping. Resolves text variations like "RDL" -> "RDLs".
 - body_parts: the 12 valid body_part_key values and their display labels.

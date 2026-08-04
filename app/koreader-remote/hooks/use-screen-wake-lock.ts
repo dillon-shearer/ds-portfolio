@@ -185,7 +185,7 @@ export function useScreenWakeLock(shouldEnable: boolean): WakeLockState {
       cleanupFallbackListener()
       void releaseResources()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [shouldEnable])
 
   return state

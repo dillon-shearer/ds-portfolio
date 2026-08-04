@@ -47,7 +47,7 @@ export function ContactForm() {
 
       {isSuccess && (
         <p className={styles.successMsg} role="status">
-          Thanks for your message. I'll get back to you soon.
+          Thanks for your message. I&apos;ll get back to you soon.
         </p>
       )}
 

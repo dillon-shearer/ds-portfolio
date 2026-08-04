@@ -12,9 +12,9 @@ type Props = {
 }
 
 const GLYPHS: Record<StatusTone, string> = {
-  idle: '▸',
-  pending: '◌',
-  success: '✓',
+  idle: '\u25B8',
+  pending: '\u25CC',
+  success: '\u2713',
   error: '!',
 }
 
@@ -32,7 +32,7 @@ export function StatusBar({ tone, message, detail }: Props) {
       <span className={styles.message}>{message}</span>
       {detail ? (
         <>
-          <span className={styles.divider}>·</span>
+          <span className={styles.divider}>/</span>
           <span className={styles.detail}>{detail}</span>
         </>
       ) : null}

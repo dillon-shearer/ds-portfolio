@@ -1,4 +1,4 @@
-/* Base reset — tokens loaded separately via layout.tsx import */
+/* Base reset - tokens loaded separately via layout.tsx import */
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -51,7 +51,7 @@ button {
   cursor: pointer;
 }
 
-/* Page wrapper — used by all prose pages */
+/* Page wrapper - used by all prose pages */
 .page-wrapper {
   max-width: var(--content-width);
   margin: 0 auto;

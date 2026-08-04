@@ -69,7 +69,7 @@ async function resequenceSetsForDate(dateISO: string) {
   `
 }
 
-/** Fetch all lifts — order by real time; cast date defensively. */
+/** Fetch all lifts - order by real time; cast date defensively. */
 export async function getGymLifts(): Promise<GymLift[]> {
   const { rows } = await sql/* sql */`
     SELECT
@@ -374,7 +374,7 @@ export async function deleteGymLift(id: string) {
   return { success: true }
 }
 
-/** Recent lifts — cast date defensively for ordering */
+/** Recent lifts - cast date defensively for ordering */
 export async function getRecentLifts(limit: number = 10): Promise<GymLift[]> {
   const { rows } = await sql/* sql */`
     SELECT

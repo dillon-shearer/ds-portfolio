@@ -24,7 +24,7 @@ type Props = {
 
 function SortIndicator({ active, dir }: { active: boolean; dir: 'asc' | 'desc' }) {
   if (!active) return null
-  return <span>{dir === 'asc' ? ' ↑' : ' ↓'}</span>
+  return <span>{dir === 'asc' ? ' \u2191' : ' \u2193'}</span>
 }
 
 export default function ExercisePRsTable({ rows, page, totalPages, sortKey, sortDir, onSort, onPrev, onNext }: Props) {

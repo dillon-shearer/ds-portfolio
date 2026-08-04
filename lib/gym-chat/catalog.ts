@@ -111,14 +111,14 @@ const TABLE_ANNOTATIONS: Record<string, { purpose: string; notes: string[] }> = 
     purpose: 'Every logged set. One row per set. Free-form exercise text.',
     notes: [
       'date (date) and timestamp (timestamptz) may both be present. Always normalize with COALESCE(date::date, timestamp::date) AS session_date for day-level grouping, and COALESCE(timestamp::timestamptz, date::timestamptz) AS performed_at for time-ordered sorting.',
-      'is_unilateral = true means weight is logged per side — do not double it when computing volume.',
+      'is_unilateral = true means weight is logged per side - do not double it when computing volume.',
       'Use gym_lifts_v instead for any query that filters or groups by muscle.',
     ],
   },
   gym_lifts_v: {
     purpose: 'gym_lifts pre-joined to exercises and exercise_aliases. Adds exercise_id, canonical_name, body_part_key. Use this for any muscle-aware query.',
     notes: [
-      'canonical_name and body_part_key are NULL when an exercise has no matching exercises row or alias — treat as unclassified. Current data has 100% coverage; nulls indicate future drift.',
+      'canonical_name and body_part_key are NULL when an exercise has no matching exercises row or alias - treat as unclassified. Current data has 100% coverage; nulls indicate future drift.',
       'body_part_key values come from body_parts.key (biceps, chest, shoulders, back, triceps, quads, hamstrings, forearms, core, glutes, calves, hips).',
       'Same date/timestamp pattern as gym_lifts: COALESCE(date::date, timestamp::date) AS session_date, COALESCE(timestamp::timestamptz, date::timestamptz) AS performed_at.',
     ],
@@ -126,7 +126,7 @@ const TABLE_ANNOTATIONS: Record<string, { purpose: string; notes: string[] }> = 
   gym_day_meta: {
     purpose: 'One row per training day. Stores day-level INTENT (planned muscles).',
     notes: [
-      'body_parts is text[] — use UNNEST(body_parts) AS body_part in SELECT/GROUP BY, or EXISTS (SELECT 1 FROM unnest(body_parts) AS bp WHERE bp ILIKE $1) to filter by muscle group.',
+      'body_parts is text[] - use UNNEST(body_parts) AS body_part in SELECT/GROUP BY, or EXISTS (SELECT 1 FROM unnest(body_parts) AS bp WHERE bp ILIKE $1) to filter by muscle group.',
       'Use this for "what did I plan to train" questions. Use gym_lifts_v.body_part_key for "what did I actually train" questions.',
       'Join to gym_lifts on: gm.date = COALESCE(gl.date::date, gl.timestamp::date). With the sets CTE: JOIN gym_day_meta gm ON gm.date = sets.session_date.',
     ],
@@ -199,7 +199,7 @@ function buildCatalogContext(tables: GymCatalogTable[]): string {
     const cols = table.columns.map(column => `${column.name} (${column.dataType})`).join(', ')
     const annotation = TABLE_ANNOTATIONS[table.name.toLowerCase()]
     if (annotation) {
-      lines.push(`- ${table.name} — ${annotation.purpose}`)
+      lines.push(`- ${table.name} - ${annotation.purpose}`)
       lines.push(`  Columns: ${cols}`)
       annotation.notes.forEach(note => lines.push(`  Note: ${note}`))
     } else {
@@ -360,7 +360,7 @@ export const getCatalogTables = () => cachedTables
 export const getCatalogAllowlist = (): CatalogAllowlist => cachedAllowlist
 export const getFallbackCatalog = () => FALLBACK_TABLES
 
-// Body-parts pre-fetch — loads distinct body_part values from gym_day_meta
+// Body-parts pre-fetch - loads distinct body_part values from gym_day_meta
 // so the model knows the exact strings to use in WHERE clauses.
 
 type BodyPartEntry = { key: string; label: string }

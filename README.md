@@ -7,9 +7,9 @@ Personal portfolio and project hub for Dillon Shearer. Deployed at [datawithdill
 - **Framework:** Next.js 15 (App Router) on Turbopack
 - **Language:** TypeScript, React 19
 - **Styling:** CSS Modules + design tokens in `styles/tokens.css` (no Tailwind, no UI library)
-- **Fonts:** Source Serif 4 · IBM Plex Sans · IBM Plex Mono via `next/font/google`
+- **Fonts:** Source Serif 4 / IBM Plex Sans / IBM Plex Mono via `next/font/google`
 - **Data:** Neon Postgres via `@vercel/postgres` (gym dashboard)
-- **Charts / 3D:** Recharts · React Three Fiber + drei
+- **Charts / 3D:** Recharts / React Three Fiber + drei
 - **AI:** OpenAI Chat Completions (gym chat assistant)
 - **Email:** Resend API (direct fetch, no SDK)
 - **Deployment:** Vercel
@@ -66,7 +66,7 @@ docs/superpowers/           Specs and execution plans (specs/, plans/)
 | `/contact` | Contact form |
 | `/dashboards` | Dashboard list |
 | `/dashboards/coming-soon` | Placeholder card target |
-| `/dashboards/gym` | Gym tracker — analytics, workout logging, AI chat |
+| `/dashboards/gym` | Gym tracker - analytics, workout logging, AI chat |
 | `/koreader-remote` | Hidden full-bleed utility; not linked from nav |
 | `/rss`, `/rss/feed` | RSS 2.0 feed |
 

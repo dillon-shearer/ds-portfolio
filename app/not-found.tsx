@@ -7,7 +7,7 @@ export default function NotFound() {
       <p className={styles.eyebrow}>404</p>
       <h1 className={styles.heading}>Page not found</h1>
       <p className={styles.message}>
-        This page doesn't exist. It may have moved or been removed.
+        This page doesn&apos;t exist. It may have moved or been removed.
       </p>
       <Link
         href="/"

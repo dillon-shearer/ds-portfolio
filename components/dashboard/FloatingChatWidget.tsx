@@ -321,7 +321,7 @@ const QueryDetails = ({ queries, anchorPrefix }: { queries?: GymChatQuery[]; anc
                 <div className={styles.queryPurpose}>{query.purpose}</div>
               </div>
               <div className={styles.queryMeta}>
-                {query.error ? 'Error' : `${query.rowCount} rows`} · {query.durationMs}ms
+                {query.error ? 'Error' : `${query.rowCount} rows`} / {query.durationMs}ms
               </div>
             </div>
             {query.error ? (
@@ -330,7 +330,7 @@ const QueryDetails = ({ queries, anchorPrefix }: { queries?: GymChatQuery[]; anc
             <div className={styles.queryParams}>Params: {JSON.stringify(query.params)}</div>
             {query.policy ? (
               <div className={styles.queryPolicy}>
-                Policy: limit {query.policy.appliedLimit} rows · window {formatPolicyWindow(query.policy.appliedTimeWindow)}
+                Policy: limit {query.policy.appliedLimit} rows / window {formatPolicyWindow(query.policy.appliedTimeWindow)}
               </div>
             ) : null}
             <details className={styles.sqlDetails}>

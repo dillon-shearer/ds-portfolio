@@ -717,7 +717,7 @@ const cteBindingReferencesTable = (cteStatement: SelectStatement, tableName: str
   try {
     v.statement(cteStatement)
   } catch {
-    // ignore – best-effort check
+    // ignore - best-effort check
   }
   return found
 }
