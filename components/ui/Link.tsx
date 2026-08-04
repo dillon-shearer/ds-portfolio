@@ -30,7 +30,7 @@ interface NavLinkProps {
 }
 
 export function NavLink({ href, children, currentPath, onClick }: NavLinkProps) {
-  const isCurrent = currentPath === href
+  const isCurrent = currentPath === href || (href !== '/' && currentPath?.startsWith(`${href}/`))
   return (
     <NextLink
       href={href}

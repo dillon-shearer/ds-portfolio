@@ -1,11 +1,12 @@
 .button {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 500;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: var(--tracking-wide);
   line-height: var(--leading-snug);
   padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-sm);
   cursor: pointer;
   display: inline-block;
   text-decoration: none;
@@ -23,40 +24,35 @@
 
 /* primary */
 .primary {
-  background-color: var(--color-ink);
-  color: var(--color-paper);
-  border: var(--rule-hairline) solid var(--color-ink);
+  background-color: var(--color-accent);
+  color: var(--color-paper-2);
+  border: var(--rule-hairline) solid var(--color-accent);
 }
 
 .primary:hover:not(:disabled) {
-  background-color: var(--color-accent);
-  border-color: var(--color-accent);
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
 }
 
 /* outline */
 .outline {
-  background-color: transparent;
+  background-color: var(--color-paper-2);
   color: var(--color-ink);
-  border: var(--rule-hairline) solid var(--color-ink);
+  border: var(--rule-hairline) solid var(--color-rule);
 }
 
 .outline:hover:not(:disabled) {
-  background-color: var(--color-ink);
-  color: var(--color-paper);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 /* ghost */
 .ghost {
   background-color: transparent;
-  color: var(--color-ink);
+  color: var(--color-ink-3);
   border: none;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  text-decoration-thickness: 1px;
-  padding-left: 0;
-  padding-right: 0;
 }
 
 .ghost:hover:not(:disabled) {
-  color: var(--color-accent);
+  color: var(--color-ink);
 }

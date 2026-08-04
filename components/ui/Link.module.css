@@ -1,42 +1,33 @@
 /* Inline body link */
 .inline {
-  color: var(--color-accent);
+  color: var(--color-ink);
   text-decoration: underline;
   text-decoration-thickness: 1px;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
   transition: color var(--duration-fast) var(--ease-out);
 }
 
 .inline:hover {
-  color: var(--color-accent-hover);
+  color: var(--color-accent);
 }
 
 /* Nav link */
 .nav {
-  font-family: var(--font-sans);
-  font-size: var(--text-sm);
-  font-weight: 500;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: var(--tracking-wide);
   line-height: var(--leading-snug);
-  color: var(--color-ink);
+  color: var(--color-ink-3);
   text-decoration: none;
-  position: relative;
-  padding-bottom: var(--space-1);
+  transition: color var(--duration-fast) var(--ease-out);
 }
 
-.nav::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: var(--rule-medium);
-  background-color: var(--color-ink);
-  transition: width var(--duration-fast) var(--ease-out);
+.nav:hover {
+  color: var(--color-ink);
 }
 
-.nav:hover::after,
-.nav[aria-current='page']::after {
-  width: 100%;
+.nav[aria-current='page'] {
+  color: var(--color-accent);
 }

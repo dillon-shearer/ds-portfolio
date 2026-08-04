@@ -1,3 +1,4 @@
+import NextLink from 'next/link'
 import styles from './Button.module.css'
 
 type Variant = 'primary' | 'outline' | 'ghost'
@@ -24,6 +25,14 @@ export function Button({
   const className = `${styles.button} ${styles[variant]}`
 
   if (href) {
+    if (href.startsWith('/')) {
+      return (
+        <NextLink href={href} download={download} className={className}>
+          {children}
+        </NextLink>
+      )
+    }
+
     return (
       <a href={href} download={download} className={className}>
         {children}
