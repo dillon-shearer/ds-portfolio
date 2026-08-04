@@ -11,16 +11,18 @@ export const metadata: Metadata = {
 
 export default function DashboardsPage() {
   return (
-    <div className="page-wrapper">
+    <div className="page-wrapper--wide">
       <PageHeader
+        eyebrow="Dashboards"
         title="Dashboards"
         lead="A collection of data visualizations and analytics dashboards built across tools and domains."
         rule={false}
       />
-      <div className={styles.list}>
-        {DASHBOARDS.map((d) => (
+      <ol className={styles.list}>
+        {DASHBOARDS.map((d, index) => (
           <DashboardCard
             key={`${d.tool}-${d.title}`}
+            index={index + 1}
             tool={d.tool}
             title={d.title}
             description={d.description}
@@ -29,7 +31,7 @@ export default function DashboardsPage() {
             tech={d.tech}
           />
         ))}
-      </div>
+      </ol>
     </div>
   )
 }

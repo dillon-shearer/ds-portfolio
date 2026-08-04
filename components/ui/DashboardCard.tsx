@@ -1,10 +1,8 @@
-'use client'
-
-import { useState } from 'react'
-import { Button } from './Button'
+import Link from 'next/link'
 import styles from './DashboardCard.module.css'
 
 interface DashboardCardProps {
+  index?: number
   tool: string
   title: string
   description: string
@@ -14,6 +12,7 @@ interface DashboardCardProps {
 }
 
 export function DashboardCard({
+  index,
   tool,
   title,
   description,
@@ -21,40 +20,30 @@ export function DashboardCard({
   longDescription,
   tech,
 }: DashboardCardProps) {
-  const [expanded, setExpanded] = useState(false)
-  const hasMore = Boolean(longDescription) || (tech && tech.length > 0)
-
   return (
-    <div className={styles.card}>
-      <p className={styles.eyebrow}>{tool}</p>
-      <h3 className={styles.title}>{title}</h3>
-      <p className={styles.description}>{description}</p>
-      <div className={styles.actions}>
-        <Button href={href} variant="outline">
-          View Dashboard
-        </Button>
-        {hasMore ? (
-          <Button variant="ghost" onClick={() => setExpanded((v) => !v)}>
-            {expanded ? 'See less' : 'See more'}
-          </Button>
+    <li className={styles.row}>
+      <span className={styles.index} aria-hidden="true">
+        {String(index ?? 1).padStart(2, '0')}
+      </span>
+      <div className={styles.content}>
+        <h2 className={styles.title}>
+          <Link href={href} className={styles.titleLink}>
+            {title}
+          </Link>
+        </h2>
+        <p className={styles.tool}>{tool}</p>
+        <p className={styles.description}>{description}</p>
+        {longDescription ? <p className={styles.longDescription}>{longDescription}</p> : null}
+        {tech && tech.length > 0 ? (
+          <ul className={styles.tech}>
+            {tech.map((item) => (
+              <li key={item} className={styles.tag}>
+                {item}
+              </li>
+            ))}
+          </ul>
         ) : null}
       </div>
-      {hasMore ? (
-        <div className={styles.expand} data-expanded={expanded} aria-hidden={!expanded}>
-          <div className={styles.expandInner}>
-            {longDescription ? <p className={styles.long}>{longDescription}</p> : null}
-            {tech && tech.length > 0 ? (
-              <ul className={styles.tech}>
-                {tech.map((t) => (
-                  <li key={t} className={styles.tag}>
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </div>
-        </div>
-      ) : null}
-    </div>
+    </li>
   )
 }
