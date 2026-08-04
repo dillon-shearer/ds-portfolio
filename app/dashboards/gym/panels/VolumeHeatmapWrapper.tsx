@@ -19,12 +19,7 @@ export default function VolumeHeatmap({ mode, data }: Props) {
   return (
     <div className={styles.wrapper}>
       <div style={{ flex: 1, minHeight: 0 }}>
-        <VolumeHeatmapInner
-          mode={mode}
-          data={data}
-          fillParent
-          naColor="#EBE3D5"
-        />
+        <VolumeHeatmapInner mode={mode} data={data} fillParent naColor="#EBE3D5" />
       </div>
       <div className={styles.legend}>
         <span className={styles.legendLabel}>Volume</span>

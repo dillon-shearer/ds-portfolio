@@ -62,10 +62,7 @@ export function Footer() {
             <p className={styles.columnTitle}>Connect</p>
             <ul className={styles.columnLinks}>
               <li>
-                <a
-                  href={`mailto:${SOCIALS.email}`}
-                  className={styles.columnLink}
-                >
+                <a href={`mailto:${SOCIALS.email}`} className={styles.columnLink}>
                   {SOCIALS.email}
                 </a>
               </li>

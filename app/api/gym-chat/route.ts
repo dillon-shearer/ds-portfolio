@@ -3,7 +3,12 @@ import { randomUUID } from 'crypto'
 import { NextResponse } from 'next/server'
 import { createClient, createPool } from '@vercel/postgres'
 
-import { getCatalogContext, getBodyPartsContext, loadBodyParts, loadGymCatalog } from '@/lib/gym-chat/catalog'
+import {
+  getCatalogContext,
+  getBodyPartsContext,
+  loadBodyParts,
+  loadGymCatalog,
+} from '@/lib/gym-chat/catalog'
 import { getCapabilitiesContext } from '@/lib/gym-chat/capabilities'
 import { SEMANTIC_HINTS } from '@/lib/gym-chat/semantics'
 import {
@@ -61,7 +66,8 @@ const EXECUTE_GYM_QUERY_TOOL: OpenAITool = {
               params: {
                 type: 'array',
                 items: {},
-                description: 'Array of parameterized values matching $1, $2, etc. placeholders in the SQL',
+                description:
+                  'Array of parameterized values matching $1, $2, etc. placeholders in the SQL',
               },
             },
             required: ['id', 'purpose', 'sql', 'params'],
@@ -88,11 +94,11 @@ const resolveReadonlyConnection = () => {
 }
 
 const normalizeMessages = (messages: GymChatMessage[]) =>
-  messages.filter(message => message && message.role && message.content)
+  messages.filter((message) => message && message.role && message.content)
 
 const extractLatestUserQuestion = (messages: GymChatMessage[]) => {
   const reversed = [...messages].reverse()
-  return reversed.find(message => message.role === 'user')?.content ?? ''
+  return reversed.find((message) => message.role === 'user')?.content ?? ''
 }
 
 const formatCellValue = (value: unknown) => {
@@ -122,7 +128,9 @@ const executeQuery = async (client: Queryable, sql: string, params: unknown[]) =
       rowCount: result.rowCount ?? rows.length,
       durationMs,
       rows: rows.map((row: Record<string, unknown>) =>
-        Object.fromEntries(Object.entries(row).map(([key, value]) => [key, formatCellValue(value)])),
+        Object.fromEntries(
+          Object.entries(row).map(([key, value]) => [key, formatCellValue(value)]),
+        ),
       ),
     }
   } catch (error) {
@@ -202,17 +210,19 @@ const normalizeConversationState = (value: unknown): GymChatConversationState =>
   if (!value || typeof value !== 'object') return {}
   const state = value as GymChatConversationState
   const messages = Array.isArray(state.messages)
-    ? state.messages.filter(entry => entry && entry.role && typeof entry.content === 'string')
+    ? state.messages.filter((entry) => entry && entry.role && typeof entry.content === 'string')
     : undefined
   const sessionId = typeof state.sessionId === 'string' ? state.sessionId : undefined
   return { sessionId, messages }
 }
 
-const buildConversationMessages = (history: GymChatConversationState['messages']): OpenAIMessage[] => {
+const buildConversationMessages = (
+  history: GymChatConversationState['messages'],
+): OpenAIMessage[] => {
   if (!history?.length) return []
   return history
-    .filter(entry => entry.role === 'user' || entry.role === 'assistant' || entry.role === 'tool')
-    .map(entry => ({
+    .filter((entry) => entry.role === 'user' || entry.role === 'assistant' || entry.role === 'tool')
+    .map((entry) => ({
       role: entry.role,
       content: entry.content,
       tool_call_id: entry.tool_call_id,
@@ -221,14 +231,14 @@ const buildConversationMessages = (history: GymChatConversationState['messages']
 }
 
 const trimConversationMessages = (messages: OpenAIMessage[]) => {
-  const withoutSystem = messages.filter(m => m.role !== 'system')
+  const withoutSystem = messages.filter((m) => m.role !== 'system')
   if (withoutSystem.length <= 50) return withoutSystem
   const head = withoutSystem.slice(0, 2)
   const dropped = withoutSystem.slice(2, -46)
   const tail = withoutSystem.slice(-46)
   const droppedTopics = dropped
-    .filter(m => m.role === 'user' && typeof m.content === 'string' && !m.content.startsWith('['))
-    .map(m => (m.content as string).trim().slice(0, 80))
+    .filter((m) => m.role === 'user' && typeof m.content === 'string' && !m.content.startsWith('['))
+    .map((m) => (m.content as string).trim().slice(0, 80))
     .slice(0, 5)
   if (!droppedTopics.length) return [...head, ...tail]
   const bridge: OpenAIMessage = {
@@ -262,7 +272,9 @@ const executeToolCall = async (
   }
 
   if (connection.fallback) {
-    console.warn('GYM_CHAT_DATABASE_URL_READONLY missing; falling back to default connection in development.')
+    console.warn(
+      'GYM_CHAT_DATABASE_URL_READONLY missing; falling back to default connection in development.',
+    )
   }
 
   const usePool = connection.url.includes('-pooler.')
@@ -457,7 +469,7 @@ export async function POST(req: Request) {
         systemPrompt,
         messages: openaiMessages,
         tools: [EXECUTE_GYM_QUERY_TOOL],
-        executeQueries: async queries => {
+        executeQueries: async (queries) => {
           const results = await executeToolCall(queries, connection)
           for (const result of results) {
             if (result.rowCount === 0 && !result.error && result.params?.length) {
@@ -481,7 +493,7 @@ export async function POST(req: Request) {
 
       const updatedState: GymChatConversationState = {
         sessionId: conversationState.sessionId ?? randomUUID(),
-        messages: trimConversationMessages(openaiMessages).map(message => ({
+        messages: trimConversationMessages(openaiMessages).map((message) => ({
           role: message.role === 'system' ? 'assistant' : message.role,
           content: message.content ?? '',
           tool_call_id: message.tool_call_id,
@@ -526,7 +538,7 @@ export async function POST(req: Request) {
         streamController = null
         return
       }
-      void run().catch(error => {
+      void run().catch((error) => {
         const message = error instanceof Error ? error.message : 'Request failed.'
         sendError(message, resolveErrorType(500))
       })

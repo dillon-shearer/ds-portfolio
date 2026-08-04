@@ -28,7 +28,9 @@ export default function DayInfoSheet({
     const el = document.documentElement
     const prev = el.style.overflow
     if (open) el.style.overflow = 'hidden'
-    return () => { el.style.overflow = prev }
+    return () => {
+      el.style.overflow = prev
+    }
   }, [open])
 
   if (!open) return null
@@ -52,7 +54,9 @@ export default function DayInfoSheet({
           }}
         >
           <div className={styles.field}>
-            <label htmlFor="day-info-date" className={styles.label}>Date *</label>
+            <label htmlFor="day-info-date" className={styles.label}>
+              Date *
+            </label>
             <input
               id="day-info-date"
               type="date"

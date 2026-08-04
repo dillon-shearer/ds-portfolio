@@ -12,7 +12,9 @@ export function Table({ headers, rows }: TableProps) {
         <thead>
           <tr>
             {headers.map((h) => (
-              <th key={h} className={styles.th}>{h}</th>
+              <th key={h} className={styles.th}>
+                {h}
+              </th>
             ))}
           </tr>
         </thead>
@@ -20,7 +22,9 @@ export function Table({ headers, rows }: TableProps) {
           {rows.map((row, i) => (
             <tr key={i}>
               {row.map((cell, j) => (
-                <td key={j} className={styles.td}>{cell}</td>
+                <td key={j} className={styles.td}>
+                  {cell}
+                </td>
               ))}
             </tr>
           ))}

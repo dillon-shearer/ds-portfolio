@@ -9,9 +9,7 @@ const NAKED_PATHS = ['/koreader-remote']
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? ''
-  const naked = NAKED_PATHS.some(
-    (p) => pathname === p || pathname.startsWith(`${p}/`),
-  )
+  const naked = NAKED_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`))
   if (naked) {
     return <>{children}</>
   }

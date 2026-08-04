@@ -42,15 +42,7 @@ const FORBIDDEN_FUNCTIONS = new Set([
   'pg_database_size',
 ])
 
-const ALLOWED_STRING_LITERALS = new Set([
-  'day',
-  'week',
-  'month',
-  'year',
-  'push%',
-  'pull%',
-  'leg%',
-])
+const ALLOWED_STRING_LITERALS = new Set(['day', 'week', 'month', 'year', 'push%', 'pull%', 'leg%'])
 const INTERVAL_LITERAL_REGEX = /^\d+\s+(day|days|week|weeks|month|months|year|years)$/i
 const COMPARISON_OPERATORS = new Set<BinaryOperator>(['=', '!=', '>', '>=', '<', '<='])
 
@@ -60,7 +52,10 @@ const POLICY_HINT_REGEX = /^\s*\/\*policy:([\s\S]*?)\*\/\s*/i
 const UNSUPPORTED_SQL_PATTERNS: Array<{ regex: RegExp; message: string }> = [
   { regex: /\bFILTER\s*\(/i, message: 'Unsupported syntax: FILTER aggregates are not supported.' },
   { regex: /\bROWS\s+BETWEEN\b/i, message: 'Unsupported syntax: window frames are not supported.' },
-  { regex: /\bRANGE\s+BETWEEN\b/i, message: 'Unsupported syntax: window frames are not supported.' },
+  {
+    regex: /\bRANGE\s+BETWEEN\b/i,
+    message: 'Unsupported syntax: window frames are not supported.',
+  },
 ]
 
 type PolicyHints = {
@@ -82,7 +77,7 @@ const collectSelectColumnNames = (statement: SelectFromStatement) => {
     expr: { type: string; name?: string }
   }>
   const names = new Set<string>()
-  columns.forEach(column => {
+  columns.forEach((column) => {
     const alias = column.alias?.name
     if (alias) {
       names.add(normalizeName(alias))
@@ -99,9 +94,9 @@ const parsePolicyHints = (segment: string): PolicyHints => {
   const hints: PolicyHints = {}
   segment
     .split(';')
-    .map(entry => entry.trim())
+    .map((entry) => entry.trim())
     .filter(Boolean)
-    .forEach(entry => {
+    .forEach((entry) => {
       const [keyPart, valuePart] = entry.split('=')
       if (!keyPart || !valuePart) return
       const rawKey = keyPart.trim().toLowerCase()
@@ -213,14 +208,14 @@ const collectValidationSummary = (statement: SelectStatement, allowlist: Catalog
 
   const mainSelection = findMainSelection(statement)
   if (mainSelection?.columns) {
-    mainSelection.columns.forEach(column => {
+    mainSelection.columns.forEach((column) => {
       if (column.alias?.name) {
         selectionAliases.add(normalizeName(column.alias.name))
       }
     })
   }
   if (mainSelection?.from) {
-    mainSelection.from.forEach(entry => {
+    mainSelection.from.forEach((entry) => {
       if (entry.type !== 'call' || !isAllowedUnnestCall(entry)) {
         return
       }
@@ -231,27 +226,27 @@ const collectValidationSummary = (statement: SelectStatement, allowlist: Catalog
           derivedColumns.add(aliasName)
         }
       }
-      entry.alias?.columns?.forEach(column => derivedColumns.add(normalizeName(column.name)))
+      entry.alias?.columns?.forEach((column) => derivedColumns.add(normalizeName(column.name)))
     })
   }
 
-  const visitor = astVisitor(map => ({
-    with: st => {
-      st.bind.forEach(binding => {
+  const visitor = astVisitor((map) => ({
+    with: (st) => {
+      st.bind.forEach((binding) => {
         const aliasName = normalizeName(binding.alias.name)
         cteAliases.add(aliasName)
         if (binding.statement.type !== 'select') {
           errors.push('WITH bindings must be SELECT statements.')
           return
         }
-        collectSelectColumnNames(binding.statement).forEach(name => cteColumns.add(name))
+        collectSelectColumnNames(binding.statement).forEach((name) => cteColumns.add(name))
       })
       if (st.in.type !== 'select') {
         errors.push('WITH must wrap a SELECT statement.')
       }
       map.super().with(st)
     },
-    fromTable: table => {
+    fromTable: (table) => {
       const tableName = normalizeName(table.name.name)
       const schema = table.name.schema ? normalizeName(table.name.schema) : null
       if (isSystemSchema(schema)) {
@@ -265,7 +260,7 @@ const collectValidationSummary = (statement: SelectStatement, allowlist: Catalog
       if (alias) aliasToTable.set(alias, tableName)
       map.super().fromTable(table)
     },
-    fromStatement: entry => {
+    fromStatement: (entry) => {
       const table = entry as unknown as {
         statement: SelectStatement
         alias?: { name?: string; columns?: Array<{ name: string }> } | string
@@ -283,13 +278,13 @@ const collectValidationSummary = (statement: SelectStatement, allowlist: Catalog
       derivedTablesAllowAll.add(aliasName)
       derivedTables.add(aliasName)
       if (table.alias && typeof table.alias !== 'string') {
-        table.alias.columns?.forEach(column => derivedColumns.add(normalizeName(column.name)))
+        table.alias.columns?.forEach((column) => derivedColumns.add(normalizeName(column.name)))
       }
       const subqueryColumns = (table.statement.columns ?? []) as Array<{
         alias?: { name?: string }
         expr: { type: string; name?: string }
       }>
-      subqueryColumns.forEach(column => {
+      subqueryColumns.forEach((column) => {
         const alias = column.alias?.name
         if (alias) {
           derivedColumns.add(normalizeName(alias))
@@ -308,7 +303,7 @@ const collectValidationSummary = (statement: SelectStatement, allowlist: Catalog
       }
       map.super().fromStatement(entry)
     },
-    fromCall: call => {
+    fromCall: (call) => {
       if (!isAllowedUnnestCall(call)) {
         errors.push('Set-returning functions in FROM are not allowed.')
         return
@@ -320,14 +315,14 @@ const collectValidationSummary = (statement: SelectStatement, allowlist: Catalog
           derivedColumns.add(aliasName)
         }
       }
-      call.alias?.columns?.forEach(column => derivedColumns.add(normalizeName(column.name)))
+      call.alias?.columns?.forEach((column) => derivedColumns.add(normalizeName(column.name)))
       if (isBodyPartsUnnestCall(call)) {
         // Always allow the synthetic body_part column emitted by UNNEST(body_parts)
         derivedColumns.add('body_part')
       }
       map.super().fromCall(call)
     },
-    call: call => {
+    call: (call) => {
       const funcName = normalizeName(call.function.name)
       const funcSchema = getQNameSchema(call.function)
       if (isSystemSchema(funcSchema)) {
@@ -346,14 +341,13 @@ const collectValidationSummary = (statement: SelectStatement, allowlist: Catalog
         }
       }
       const isCountStar =
-        funcName === 'count' &&
-        call.args.some(arg => arg.type === 'ref' && arg.name === '*')
+        funcName === 'count' && call.args.some((arg) => arg.type === 'ref' && arg.name === '*')
       const prevAllowStar = allowStar
       if (isCountStar) allowStar = true
       map.super().call(call)
       allowStar = prevAllowStar
     },
-    ref: ref => {
+    ref: (ref) => {
       if (ref.name === '*') {
         if (!allowStar && !allowAllTables) {
           errors.push('SELECT * is not allowed.')
@@ -414,7 +408,7 @@ const collectValidationSummary = (statement: SelectStatement, allowlist: Catalog
         errors.push(`Column is not allowlisted: ${column}`)
       }
     },
-    constant: constant => {
+    constant: (constant) => {
       if (constant.type === 'string') {
         const literal = normalizeName(constant.value)
         if (!ALLOWED_STRING_LITERALS.has(literal) && !INTERVAL_LITERAL_REGEX.test(constant.value)) {
@@ -442,16 +436,16 @@ const collectValidationSummary = (statement: SelectStatement, allowlist: Catalog
 
   if (referencedTableRefs.size) {
     const knownRefs = new Set<string>()
-    tables.forEach(table => {
+    tables.forEach((table) => {
       knownRefs.add(normalizeName(table.name))
       if (table.alias) {
         knownRefs.add(normalizeName(table.alias))
       }
     })
-    derivedTables.forEach(name => knownRefs.add(normalizeName(name)))
-    derivedTablesAllowAll.forEach(name => knownRefs.add(normalizeName(name)))
-    cteAliases.forEach(alias => knownRefs.add(normalizeName(alias)))
-    referencedTableRefs.forEach(ref => {
+    derivedTables.forEach((name) => knownRefs.add(normalizeName(name)))
+    derivedTablesAllowAll.forEach((name) => knownRefs.add(normalizeName(name)))
+    cteAliases.forEach((alias) => knownRefs.add(normalizeName(alias)))
+    referencedTableRefs.forEach((ref) => {
       if (!knownRefs.has(ref)) {
         errors.push(`Unknown table reference: ${ref}`)
       }
@@ -462,7 +456,9 @@ const collectValidationSummary = (statement: SelectStatement, allowlist: Catalog
     throw new Error(errors[0])
   }
 
-  let hasDateFilter = Boolean(mainSelection && mainSelection.where && exprReferencesDate(mainSelection.where))
+  let hasDateFilter = Boolean(
+    mainSelection && mainSelection.where && exprReferencesDate(mainSelection.where),
+  )
 
   // Also check CTE bindings for date filters so the policy does not
   // inject a duplicate when the LLM already filtered inside the CTE.
@@ -498,7 +494,7 @@ const exprReferencesDate = (expr: Expr): boolean => {
     return exprReferencesDate(expr.operand)
   }
   if (expr.type === 'call') {
-    return expr.args.some(arg => exprReferencesDate(arg))
+    return expr.args.some((arg) => exprReferencesDate(arg))
   }
   if (expr.type === 'cast') {
     return exprReferencesDate(expr.operand)
@@ -506,15 +502,17 @@ const exprReferencesDate = (expr: Expr): boolean => {
   if (expr.type === 'case') {
     return (
       (expr.value ? exprReferencesDate(expr.value) : false) ||
-      expr.whens.some(when => exprReferencesDate(when.when) || exprReferencesDate(when.value)) ||
+      expr.whens.some((when) => exprReferencesDate(when.when) || exprReferencesDate(when.value)) ||
       (expr.else ? exprReferencesDate(expr.else) : false)
     )
   }
   if (expr.type === 'list' || expr.type === 'array') {
-    return expr.expressions.some(entry => exprReferencesDate(entry))
+    return expr.expressions.some((entry) => exprReferencesDate(entry))
   }
   if (expr.type === 'ternary') {
-    return exprReferencesDate(expr.value) || exprReferencesDate(expr.lo) || exprReferencesDate(expr.hi)
+    return (
+      exprReferencesDate(expr.value) || exprReferencesDate(expr.lo) || exprReferencesDate(expr.hi)
+    )
   }
   if (expr.type === 'extract') {
     return exprReferencesDate(expr.from)
@@ -526,7 +524,11 @@ const exprReferencesDate = (expr: Expr): boolean => {
     return exprReferencesDate(expr.array) || exprReferencesDate(expr.index)
   }
   if (expr.type === 'overlay') {
-    return exprReferencesDate(expr.value) || exprReferencesDate(expr.placing) || exprReferencesDate(expr.from)
+    return (
+      exprReferencesDate(expr.value) ||
+      exprReferencesDate(expr.placing) ||
+      exprReferencesDate(expr.from)
+    )
   }
   if (expr.type === 'substring') {
     return exprReferencesDate(expr.value) || (expr.from ? exprReferencesDate(expr.from) : false)
@@ -559,9 +561,9 @@ const maybeCastDateRef = (expr: Expr): Expr => {
 }
 
 const applyDateRefCasts = (statement: SelectStatement): SelectStatement => {
-  const mapper = astMapper(map => ({
-    ref: ref => maybeCastDateRef(ref),
-    binary: val => {
+  const mapper = astMapper((map) => ({
+    ref: (ref) => maybeCastDateRef(ref),
+    binary: (val) => {
       const mapped = map.super().binary(val) as ExprBinary
       if (!COMPARISON_OPERATORS.has(mapped.op)) return mapped
       const left = maybeCastDateRef(mapped.left)
@@ -569,7 +571,7 @@ const applyDateRefCasts = (statement: SelectStatement): SelectStatement => {
       if (left === mapped.left && right === mapped.right) return mapped
       return { ...mapped, left, right }
     },
-    ternary: val => {
+    ternary: (val) => {
       const mapped = map.super().ternary(val) as ExprTernary
       if (mapped.op !== 'BETWEEN' && mapped.op !== 'NOT BETWEEN') return mapped
       const value = maybeCastDateRef(mapped.value)
@@ -616,9 +618,10 @@ const autoParameterizeStrings = (
       }
       // Handle ExprConstant (type: 'constant') with string values
       if (value.type === 'constant') {
-        const dataType = 'dataType' in value && value.dataType && 'name' in value.dataType
-          ? normalizeName(value.dataType.name)
-          : ''
+        const dataType =
+          'dataType' in value && value.dataType && 'name' in value.dataType
+            ? normalizeName(value.dataType.name)
+            : ''
         // Keep interval literals
         if (dataType === 'interval' && typeof value.value === 'string') return value
         // Parameterize other string values
@@ -641,7 +644,10 @@ const autoParameterizeStrings = (
   }
 }
 
-const buildDateFilterExpr = (tableAlias: string | null, window: '90 days' | '12 months'): ExprBinary => {
+const buildDateFilterExpr = (
+  tableAlias: string | null,
+  window: '90 days' | '12 months',
+): ExprBinary => {
   const table = tableAlias ? { name: tableAlias } : undefined
   const dateRef: Expr = {
     type: 'cast',
@@ -665,7 +671,9 @@ const buildDateFilterExpr = (tableAlias: string | null, window: '90 days' | '12 
   }
 }
 
-const applyLimit = (selection: SelectFromStatement): { selection: SelectFromStatement; limit: number } => {
+const applyLimit = (
+  selection: SelectFromStatement,
+): { selection: SelectFromStatement; limit: number } => {
   let limitValue = DEFAULT_LIMIT
   if (selection.limit?.limit) {
     const expr = selection.limit.limit
@@ -689,7 +697,10 @@ const applyTimeWindow = (
   selection: SelectFromStatement,
   summary: ValidationSummary,
   requestedWindow: PolicyHints['timeWindow'],
-): { selection: SelectFromStatement; applied: '30 days' | '90 days' | '12 months' | 'all_time' | null } => {
+): {
+  selection: SelectFromStatement
+  applied: '30 days' | '90 days' | '12 months' | 'all_time' | null
+} => {
   if (requestedWindow === 'all_time') {
     return { selection, applied: 'all_time' }
   }
@@ -706,8 +717,8 @@ const applyTimeWindow = (
 
 const cteBindingReferencesTable = (cteStatement: SelectStatement, tableName: string): boolean => {
   let found = false
-  const v = astVisitor(map => ({
-    fromTable: table => {
+  const v = astVisitor((map) => ({
+    fromTable: (table) => {
       if (normalizeName(table.name.name) === tableName) {
         found = true
       }
@@ -773,7 +784,7 @@ const applyPolicyToStatement = (
     }
 
     // Find the first real table (not a CTE alias).
-    const primaryTable = summary.tables.find(t => !summary.cteAliases.has(t.name))
+    const primaryTable = summary.tables.find((t) => !summary.cteAliases.has(t.name))
     if (!primaryTable) {
       return {
         statement: { ...statement, in: limitedOuter },
@@ -784,7 +795,7 @@ const applyPolicyToStatement = (
 
     const window = summary.isTrendQuery ? '12 months' : '90 days'
     let appliedWindow: '90 days' | '12 months' | null = null
-    const updatedBindings = statement.bind.map(binding => {
+    const updatedBindings = statement.bind.map((binding) => {
       if (appliedWindow) return binding
       if (binding.statement.type !== 'select') return binding
       if (!cteBindingReferencesTable(binding.statement, primaryTable.name)) return binding
@@ -810,7 +821,7 @@ const applyPolicyToStatement = (
 }
 
 const ensureParamsMatchPlaceholders = (sql: string, params: unknown[]) => {
-  const placeholders = Array.from(sql.matchAll(/\$([1-9]\d*)/g)).map(match => Number(match[1]))
+  const placeholders = Array.from(sql.matchAll(/\$([1-9]\d*)/g)).map((match) => Number(match[1]))
   if (!placeholders.length && params.length) {
     throw new Error('Parameters provided but SQL has no placeholders.')
   }
@@ -844,7 +855,7 @@ const validateCteScoping = (statement: SelectStatement): void => {
   const outerScope = new Set<string>()
 
   // Add all CTE aliases
-  statement.bind.forEach(binding => {
+  statement.bind.forEach((binding) => {
     outerScope.add(normalizeName(binding.alias.name))
   })
 
@@ -873,7 +884,7 @@ const validateCteScoping = (statement: SelectStatement): void => {
   // Collect table-qualified column references from the outer query only
   const outerTableRefs = new Set<string>()
   const outerVisitor = astVisitor(() => ({
-    ref: ref => {
+    ref: (ref) => {
       if (ref.table) {
         outerTableRefs.add(normalizeName(ref.table.name))
       }
@@ -885,7 +896,7 @@ const validateCteScoping = (statement: SelectStatement): void => {
   outerVisitor.statement(outerSelection)
 
   // Check each outer table reference against the outer scope
-  outerTableRefs.forEach(ref => {
+  outerTableRefs.forEach((ref) => {
     if (!outerScope.has(ref)) {
       throw new Error(
         `Table "${ref}" is referenced in the outer query but is only defined inside a CTE binding. ` +
@@ -901,7 +912,10 @@ export const validateAndRewriteSql = (rawSql: string, params: unknown[]): SqlPol
   }
   const normalizedSql = rawSql
     .replace(/\binterval\s+\$(\d+)/gi, (_match, index) => `($${index})::interval`)
-    .replace(/current_date\s*-\s*\$(\d+)/gi, (_match, index) => `current_date - ($${index})::interval`)
+    .replace(
+      /current_date\s*-\s*\$(\d+)/gi,
+      (_match, index) => `current_date - ($${index})::interval`,
+    )
   const { sql: hintFreeSql, hints } = stripPolicyHints(normalizedSql)
   ensureAllowedKeywordUsage(hintFreeSql)
   ensureSupportedSqlSyntax(hintFreeSql)

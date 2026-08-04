@@ -12,7 +12,7 @@ export const EQUIPMENT_OPTIONS = [
   'Curl Bar',
   'Barbell',
 ] as const
-export type Equipment = typeof EQUIPMENT_OPTIONS[number]
+export type Equipment = (typeof EQUIPMENT_OPTIONS)[number]
 
 type Props = {
   lift: GymLift | null
@@ -35,7 +35,9 @@ export default function EditSetModal({
     const el = document.documentElement
     const prev = el.style.overflow
     if (open) el.style.overflow = 'hidden'
-    return () => { el.style.overflow = prev }
+    return () => {
+      el.style.overflow = prev
+    }
   }, [open])
 
   if (!lift) return null
@@ -48,7 +50,9 @@ export default function EditSetModal({
 
         <div className={styles.body}>
           <div className={styles.field}>
-            <label htmlFor="edit-set-date" className={styles.label}>Date</label>
+            <label htmlFor="edit-set-date" className={styles.label}>
+              Date
+            </label>
             <input
               id="edit-set-date"
               type="date"
@@ -59,7 +63,9 @@ export default function EditSetModal({
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="edit-set-exercise" className={styles.label}>Exercise</label>
+            <label htmlFor="edit-set-exercise" className={styles.label}>
+              Exercise
+            </label>
             <select
               id="edit-set-exercise"
               value={lift.exercise}
@@ -67,22 +73,28 @@ export default function EditSetModal({
               className={styles.select}
             >
               {allExerciseOptions.map((ex) => (
-                <option key={ex} value={ex}>{ex}</option>
+                <option key={ex} value={ex}>
+                  {ex}
+                </option>
               ))}
             </select>
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="edit-set-equipment" className={styles.label}>Equipment</label>
+            <label htmlFor="edit-set-equipment" className={styles.label}>
+              Equipment
+            </label>
             <select
               id="edit-set-equipment"
               value={lift.equipment ?? ''}
-              onChange={(e) => onChange({ ...lift, equipment: (e.target.value || null) })}
+              onChange={(e) => onChange({ ...lift, equipment: e.target.value || null })}
               className={styles.select}
             >
               <option value="">Select equipment</option>
               {EQUIPMENT_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>{opt}</option>
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
               ))}
             </select>
           </div>
@@ -102,7 +114,9 @@ export default function EditSetModal({
 
           <div className={styles.grid2}>
             <div className={styles.field}>
-              <label htmlFor="edit-set-weight" className={styles.label}>Weight (lbs)</label>
+              <label htmlFor="edit-set-weight" className={styles.label}>
+                Weight (lbs)
+              </label>
               <input
                 id="edit-set-weight"
                 type="number"
@@ -116,7 +130,9 @@ export default function EditSetModal({
               />
             </div>
             <div className={styles.field}>
-              <label htmlFor="edit-set-reps" className={styles.label}>Reps</label>
+              <label htmlFor="edit-set-reps" className={styles.label}>
+                Reps
+              </label>
               <input
                 id="edit-set-reps"
                 type="number"
@@ -129,7 +145,9 @@ export default function EditSetModal({
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="edit-set-set-number" className={styles.label}>Set Number</label>
+            <label htmlFor="edit-set-set-number" className={styles.label}>
+              Set Number
+            </label>
             <input
               id="edit-set-set-number"
               type="number"
@@ -141,7 +159,9 @@ export default function EditSetModal({
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="edit-set-day-tag" className={styles.label}>Day Tag</label>
+            <label htmlFor="edit-set-day-tag" className={styles.label}>
+              Day Tag
+            </label>
             <input
               id="edit-set-day-tag"
               type="text"

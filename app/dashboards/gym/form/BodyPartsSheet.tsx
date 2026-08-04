@@ -4,14 +4,32 @@ import { useEffect } from 'react'
 import styles from './BodyPartsSheet.module.css'
 
 export type BodyPart =
-  | 'biceps' | 'chest' | 'shoulders' | 'back' | 'triceps'
-  | 'quads' | 'hamstrings' | 'forearms' | 'core'
-  | 'glutes' | 'calves' | 'hips'
+  | 'biceps'
+  | 'chest'
+  | 'shoulders'
+  | 'back'
+  | 'triceps'
+  | 'quads'
+  | 'hamstrings'
+  | 'forearms'
+  | 'core'
+  | 'glutes'
+  | 'calves'
+  | 'hips'
 
 export const ALL_BODY_PARTS: BodyPart[] = [
-  'biceps', 'chest', 'shoulders', 'back', 'triceps',
-  'quads', 'hamstrings', 'forearms', 'core',
-  'glutes', 'calves', 'hips',
+  'biceps',
+  'chest',
+  'shoulders',
+  'back',
+  'triceps',
+  'quads',
+  'hamstrings',
+  'forearms',
+  'core',
+  'glutes',
+  'calves',
+  'hips',
 ]
 
 const LAST_USED_KEY = 'gymLastUsedBodyParts'
@@ -39,7 +57,9 @@ export default function BodyPartsSheet({
     const el = document.documentElement
     const prev = el.style.overflow
     if (open) el.style.overflow = 'hidden'
-    return () => { el.style.overflow = prev }
+    return () => {
+      el.style.overflow = prev
+    }
   }, [open])
 
   // Cache last-used body parts whenever the selection changes while open
@@ -48,7 +68,9 @@ export default function BodyPartsSheet({
     if (typeof window === 'undefined') return
     try {
       localStorage.setItem(LAST_USED_KEY, JSON.stringify(selected))
-    } catch { /* noop */ }
+    } catch {
+      /* noop */
+    }
   }, [selected, open])
 
   if (!open) return null
@@ -68,10 +90,20 @@ export default function BodyPartsSheet({
           <div className={styles.toolbar}>
             <div className={styles.hint}>Check the muscle groups you are targeting today.</div>
             <div className={styles.toolActions}>
-              <button type="button" className={styles.toolBtn} onClick={onSelectAll} title="Select all">
+              <button
+                type="button"
+                className={styles.toolBtn}
+                onClick={onSelectAll}
+                title="Select all"
+              >
                 Select All
               </button>
-              <button type="button" className={styles.toolBtn} onClick={onClear} title="Clear selection">
+              <button
+                type="button"
+                className={styles.toolBtn}
+                onClick={onClear}
+                title="Clear selection"
+              >
                 Clear
               </button>
             </div>

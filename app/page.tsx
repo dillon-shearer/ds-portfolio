@@ -5,8 +5,7 @@ import styles from './page.module.css'
 
 export const metadata: Metadata = {
   title: 'Data With Dillon',
-  description:
-    'Data engineer and analyst working in healthcare and life science data.',
+  description: 'Data engineer and analyst working in healthcare and life science data.',
 }
 
 export default function HomePage() {
@@ -18,8 +17,12 @@ export default function HomePage() {
         <h1 className={styles.name}>{HERO.name}</h1>
         <p className={styles.valueProp}>{HERO.statement}</p>
         <div className={styles.ctas}>
-          <Button href={HERO.ctas.primary.href} variant="primary">{HERO.ctas.primary.label}</Button>
-          <Button href={HERO.ctas.secondary.href} variant="outline">{HERO.ctas.secondary.label}</Button>
+          <Button href={HERO.ctas.primary.href} variant="primary">
+            {HERO.ctas.primary.label}
+          </Button>
+          <Button href={HERO.ctas.secondary.href} variant="outline">
+            {HERO.ctas.secondary.label}
+          </Button>
         </div>
       </section>
 
@@ -38,7 +41,6 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-
     </div>
   )
 }

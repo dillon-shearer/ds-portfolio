@@ -32,17 +32,11 @@ export function SwipeShell({ children }: { children: React.ReactNode }) {
           ? 'next'
           : null
     if (!action) return
-    window.dispatchEvent(
-      new CustomEvent('koreader-swipe', { detail: { action } }),
-    )
+    window.dispatchEvent(new CustomEvent('koreader-swipe', { detail: { action } }))
   }
 
   return (
-    <div
-      className={styles.shell}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
+    <div className={styles.shell} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       {children}
     </div>
   )

@@ -1,6 +1,8 @@
 /* Base reset - tokens loaded separately via layout.tsx import */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -26,7 +28,12 @@ main {
   flex: 1;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: inherit;
   line-height: inherit;
 }
@@ -36,7 +43,8 @@ p {
   hanging-punctuation: first last;
 }
 
-img, video {
+img,
+video {
   max-width: 100%;
   height: auto;
   display: block;

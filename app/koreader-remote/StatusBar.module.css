@@ -4,8 +4,7 @@
   align-items: baseline;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
-  border-top: var(--rule-hairline) solid
-    color-mix(in srgb, var(--color-paper) 22%, transparent);
+  border-top: var(--rule-hairline) solid color-mix(in srgb, var(--color-paper) 22%, transparent);
   color: var(--color-paper);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
@@ -18,10 +17,18 @@
   flex-shrink: 0;
 }
 
-.toneIdle    { color: var(--color-paper); }
-.tonePending { color: var(--color-warn); }
-.toneSuccess { color: var(--color-positive); }
-.toneError   { color: var(--color-accent); }
+.toneIdle {
+  color: var(--color-paper);
+}
+.tonePending {
+  color: var(--color-warn);
+}
+.toneSuccess {
+  color: var(--color-positive);
+}
+.toneError {
+  color: var(--color-accent);
+}
 
 .message {
   color: var(--color-paper);

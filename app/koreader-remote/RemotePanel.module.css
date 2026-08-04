@@ -14,8 +14,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--space-4);
-  border-bottom: var(--rule-hairline) solid
-    color-mix(in srgb, var(--color-paper) 22%, transparent);
+  border-bottom: var(--rule-hairline) solid color-mix(in srgb, var(--color-paper) 22%, transparent);
 }
 
 .title {

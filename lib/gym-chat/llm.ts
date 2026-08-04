@@ -85,7 +85,7 @@ type LlmRequestOptions = {
   }) => boolean
 }
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const extractJson = (content: string) => {
   const trimmed = content.trim()
@@ -308,7 +308,7 @@ const callOpenAIChat = async (
 }
 
 const buildToolResultPayload = (queries: GymChatQuery[]) => ({
-  queries: queries.map(query => {
+  queries: queries.map((query) => {
     let error: string | null = query.error ?? null
     if (error) {
       const { diagnosis, suggestion } = interpretSqlError(error)
@@ -333,7 +333,7 @@ const extractCitations = (text: string, queries: GymChatQuery[]): GymChatCitatio
   let match: RegExpExecArray | null
   while ((match = markerRegex.exec(text)) !== null) {
     const queryId = match[1]
-    const query = queries.find(item => item.id === queryId)
+    const query = queries.find((item) => item.id === queryId)
     if (query && !query.error) {
       citations.push({
         marker: queryId,
@@ -381,13 +381,13 @@ async function generateChartSpecs(
   queries: GymChatQuery[],
   options?: LlmRequestOptions,
 ): Promise<GymChatChartSpec[] | undefined> {
-  const chartable = queries.filter(q => !q.error && q.previewRows.length >= 3)
+  const chartable = queries.filter((q) => !q.error && q.previewRows.length >= 3)
   if (!chartable.length) return undefined
 
   // Skip if the request budget is running low - chart generation is non-critical
   if (options?.budget && options.budget.remainingMs() < 10000) return undefined
 
-  const queryContext = chartable.map(q => ({
+  const queryContext = chartable.map((q) => ({
     id: q.id,
     fields: Object.keys(q.previewRows[0] ?? {}),
     sampleRows: q.previewRows.slice(0, 3),
@@ -406,7 +406,11 @@ async function generateChartSpecs(
     })
     const parsed = CHART_SPEC_SCHEMA.safeParse(raw)
     if (!parsed.success) {
-      console.error('generateChartSpecs: schema mismatch:', parsed.error.message, JSON.stringify(raw))
+      console.error(
+        'generateChartSpecs: schema mismatch:',
+        parsed.error.message,
+        JSON.stringify(raw),
+      )
       return undefined
     }
     return parsed.data.charts.length ? parsed.data.charts : undefined
@@ -423,8 +427,8 @@ const extractFollowUps = (text: string): string[] | undefined => {
   if (!followUpMatch) return undefined
   const lines = followUpMatch[1]
     .split('\n')
-    .map(line => line.replace(/^[-*\d.)\s]+/, '').trim())
-    .filter(line => line.length > 0 && line.endsWith('?'))
+    .map((line) => line.replace(/^[-*\d.)\s]+/, '').trim())
+    .filter((line) => line.length > 0 && line.endsWith('?'))
   return lines.length > 0 ? lines.slice(0, 4) : undefined
 }
 
@@ -483,7 +487,9 @@ export async function runGymChatConversation(input: {
           continue
         }
 
-        let parsedArgs: { queries?: Array<{ id: string; purpose: string; sql: string; params: unknown[] }> } = {}
+        let parsedArgs: {
+          queries?: Array<{ id: string; purpose: string; sql: string; params: unknown[] }>
+        } = {}
         try {
           parsedArgs = toolCall.function.arguments ? JSON.parse(toolCall.function.arguments) : {}
         } catch {
@@ -499,7 +505,7 @@ export async function runGymChatConversation(input: {
         input.onStatus?.('query', 'Running database queries...')
         const result = await input.executeQueries(queries)
         for (const query of result.queries) {
-          const idx = executedQueries.findIndex(q => q.id === query.id)
+          const idx = executedQueries.findIndex((q) => q.id === query.id)
           if (idx !== -1) {
             executedQueries[idx] = query
           } else {

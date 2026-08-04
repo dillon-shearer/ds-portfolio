@@ -102,8 +102,9 @@
   border: var(--rule-hairline) solid var(--color-rule);
   padding: var(--space-1) var(--space-3);
   cursor: pointer;
-  transition: border-color var(--duration-fast) var(--ease-out),
-              color var(--duration-fast) var(--ease-out);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
 }
 
 .toolBtn:hover {
@@ -135,8 +136,9 @@
   border: var(--rule-hairline) solid var(--color-rule);
   padding: var(--space-2) var(--space-3);
   cursor: pointer;
-  transition: border-color var(--duration-fast) var(--ease-out),
-              color var(--duration-fast) var(--ease-out);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
 }
 
 .option:hover {

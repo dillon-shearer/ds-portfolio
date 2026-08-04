@@ -24,8 +24,9 @@
   border: var(--rule-hairline) solid var(--color-rule);
   padding: var(--space-2) var(--space-4);
   cursor: pointer;
-  transition: border-color var(--duration-fast) var(--ease-out),
-              color var(--duration-fast) var(--ease-out);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
 }
 
 .toolBtn:hover {

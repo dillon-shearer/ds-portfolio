@@ -10,7 +10,9 @@ type Props = {
   onChangeDate: (d: string) => void
 }
 
-function ymd(d: Date) { return d.toISOString().slice(0, 10) }
+function ymd(d: Date) {
+  return d.toISOString().slice(0, 10)
+}
 
 function fmtWeekdayShort(d: Date) {
   return d.toLocaleDateString('en-US', { timeZone: 'UTC', weekday: 'short' })

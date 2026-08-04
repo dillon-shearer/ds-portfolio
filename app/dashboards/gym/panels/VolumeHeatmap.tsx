@@ -62,10 +62,7 @@ export default function VolumeHeatmap({
     }
   }, [])
 
-  const N =
-    mode === 'week' ? 7 :
-    mode === 'month' ? 30 :
-    Math.max(1, data.length)
+  const N = mode === 'week' ? 7 : mode === 'month' ? 30 : Math.max(1, data.length)
 
   const series: Cell[] =
     data.length >= N
@@ -79,8 +76,8 @@ export default function VolumeHeatmap({
         ]
 
   const nonZero = series
-    .filter(d => d.volume > 0)
-    .map(d => d.volume)
+    .filter((d) => d.volume > 0)
+    .map((d) => d.volume)
     .sort((a, b) => a - b)
 
   const quantile = (arr: number[], p: number) => {
@@ -138,9 +135,11 @@ export default function VolumeHeatmap({
     computedHeight = heightFromParent
   } else {
     const targetSegH =
-      mode === 'week' ? Math.min(segW, 36) :
-      mode === 'month' ? Math.min(segW, 26) :
-      Math.min(segW * 0.85, 28)
+      mode === 'week'
+        ? Math.min(segW, 36)
+        : mode === 'month'
+          ? Math.min(segW, 26)
+          : Math.min(segW * 0.85, 28)
     segH = Math.max(8, targetSegH)
     computedHeight = Math.ceil(padding * 2 + rows * segH + totalGapY)
   }
@@ -182,33 +181,41 @@ export default function VolumeHeatmap({
               rx={rx}
               ry={rx}
               fill={colorFor(d)}
-              onMouseEnter={() => isReal ? setHoveredCell(d) : setHoveredCell(null)}
+              onMouseEnter={() => (isReal ? setHoveredCell(d) : setHoveredCell(null))}
               style={{ cursor: isReal ? 'default' : 'default' }}
             />
           )
         })}
       </svg>
       {hoveredCell && (
-        <div style={{
-          position: 'absolute',
-          left: tipPos.x + 10,
-          top: tipPos.y - 48,
-          background: 'var(--color-ink)',
-          color: 'var(--color-paper)',
-          padding: 'var(--space-2) var(--space-3)',
-          fontFamily: 'var(--font-sans)',
-          fontSize: 'var(--text-xs)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '2px',
-          whiteSpace: 'nowrap',
-          pointerEvents: 'none',
-          zIndex: 10,
-        }}>
+        <div
+          style={{
+            position: 'absolute',
+            left: tipPos.x + 10,
+            top: tipPos.y - 48,
+            background: 'var(--color-ink)',
+            color: 'var(--color-paper)',
+            padding: 'var(--space-2) var(--space-3)',
+            fontFamily: 'var(--font-sans)',
+            fontSize: 'var(--text-xs)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '2px',
+            whiteSpace: 'nowrap',
+            pointerEvents: 'none',
+            zIndex: 10,
+          }}
+        >
           <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-rule)' }}>
             {fmtDate(hoveredCell.date)}
           </span>
-          <span style={{ fontWeight: '500', letterSpacing: 'var(--tracking-wide)', textTransform: 'uppercase' }}>
+          <span
+            style={{
+              fontWeight: '500',
+              letterSpacing: 'var(--tracking-wide)',
+              textTransform: 'uppercase',
+            }}
+          >
             {hoveredCell.volume > 0 ? `${hoveredCell.volume.toLocaleString()} lbs` : 'Rest day'}
           </span>
         </div>

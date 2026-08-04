@@ -38,7 +38,7 @@ export function MobileDrawer({ isOpen, onClose, currentPath }: MobileDrawerProps
       if (!drawer) return
 
       const focusable = drawer.querySelectorAll<HTMLElement>(
-        'button, a, input, textarea, select, [tabindex]:not([tabindex="-1"])'
+        'button, a, input, textarea, select, [tabindex]:not([tabindex="-1"])',
       )
       const first = focusable[0]
       const last = focusable[focusable.length - 1]
@@ -67,18 +67,16 @@ export function MobileDrawer({ isOpen, onClose, currentPath }: MobileDrawerProps
     } else {
       document.body.style.overflow = ''
     }
-    return () => { document.body.style.overflow = '' }
+    return () => {
+      document.body.style.overflow = ''
+    }
   }, [isOpen])
 
   if (!isOpen) return null
 
   return (
     <>
-      <div
-        className={styles.backdrop}
-        onClick={onClose}
-        aria-hidden="true"
-      />
+      <div className={styles.backdrop} onClick={onClose} aria-hidden="true" />
       <div
         ref={drawerRef}
         className={styles.drawer}
@@ -93,7 +91,15 @@ export function MobileDrawer({ isOpen, onClose, currentPath }: MobileDrawerProps
             onClick={onClose}
             aria-label="Close navigation menu"
           >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
               <line x1="4" y1="4" x2="16" y2="16" />
               <line x1="16" y1="4" x2="4" y2="16" />
             </svg>

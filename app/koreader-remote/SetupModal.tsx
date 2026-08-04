@@ -63,8 +63,8 @@ export function SetupModal({ open, onClose, endpoint }: Props) {
 
         {!introSeen ? (
           <p className={styles.intro}>
-            Point the remote at your KOReader HTTP Inspector. Same Wi-Fi only.
-            The endpoint is stored only in this browser.
+            Point the remote at your KOReader HTTP Inspector. Same Wi-Fi only. The endpoint is
+            stored only in this browser.
           </p>
         ) : null}
 

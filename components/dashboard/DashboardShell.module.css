@@ -19,8 +19,9 @@
   border: none;
   padding: var(--space-2) var(--space-4);
   cursor: pointer;
-  transition: color var(--duration-fast) var(--ease-out),
-              background var(--duration-fast) var(--ease-out);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
 }
 
 .tab:hover {

@@ -13,8 +13,7 @@
 .card {
   width: min(420px, 100%);
   background: var(--color-ink);
-  border: var(--rule-hairline) solid
-    color-mix(in srgb, var(--color-paper) 22%, transparent);
+  border: var(--rule-hairline) solid color-mix(in srgb, var(--color-paper) 22%, transparent);
   border-radius: var(--radius-sm);
   padding: var(--space-6);
   display: flex;
@@ -73,8 +72,7 @@
   color: var(--color-paper);
   background: transparent;
   border: none;
-  border-bottom: var(--rule-hairline) solid
-    color-mix(in srgb, var(--color-paper) 35%, transparent);
+  border-bottom: var(--rule-hairline) solid color-mix(in srgb, var(--color-paper) 35%, transparent);
   padding: var(--space-2) 0;
 }
 

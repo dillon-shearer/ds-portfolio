@@ -44,7 +44,9 @@
 .expand {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 240ms ease, margin-top 240ms ease;
+  transition:
+    grid-template-rows 240ms ease,
+    margin-top 240ms ease;
   margin-top: 0;
 }
 

@@ -10,7 +10,7 @@ export function GET() {
       <guid isPermaLink="true">${item.link}</guid>
       <description>${item.description}</description>
       <pubDate>${item.pubDate}</pubDate>
-    </item>`
+    </item>`,
     )
     .join('\n')
 

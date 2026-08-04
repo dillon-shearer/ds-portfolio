@@ -5,7 +5,8 @@ import styles from './page.module.css'
 
 export const metadata: Metadata = {
   title: 'Dashboards',
-  description: 'A collection of data visualizations and analytics dashboards built across tools and domains.',
+  description:
+    'A collection of data visualizations and analytics dashboards built across tools and domains.',
 }
 
 export default function DashboardsPage() {

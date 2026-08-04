@@ -41,7 +41,9 @@ export default function ExerciseManagerModal({
     const el = document.documentElement
     const prev = el.style.overflow
     if (open) el.style.overflow = 'hidden'
-    return () => { el.style.overflow = prev }
+    return () => {
+      el.style.overflow = prev
+    }
   }, [open])
 
   useEffect(() => {
@@ -54,7 +56,9 @@ export default function ExerciseManagerModal({
     try {
       const all = await listExercises()
       onCatalogChange(all)
-    } catch { /* noop */ }
+    } catch {
+      /* noop */
+    }
   }
 
   const rows = tab === 'filtered' ? filteredRows : allRows
@@ -96,7 +100,9 @@ export default function ExerciseManagerModal({
               <div className={styles.tabs}>
                 <button
                   type="button"
-                  className={[styles.tabBtn, tab === 'filtered' ? styles.tabBtnActive : ''].join(' ')}
+                  className={[styles.tabBtn, tab === 'filtered' ? styles.tabBtnActive : ''].join(
+                    ' ',
+                  )}
                   onClick={() => setTab('filtered')}
                 >
                   Filtered ({filteredRows.length})
@@ -135,7 +141,8 @@ export default function ExerciseManagerModal({
                     }
                   }}
                   onDelete={async () => {
-                    if (!confirm(`Delete "${row.name}"? This will hide it from all dropdowns.`)) return
+                    if (!confirm(`Delete "${row.name}"? This will hide it from all dropdowns.`))
+                      return
                     try {
                       setBusyId(row.id)
                       await softDeleteExercise(row.id)
@@ -148,9 +155,7 @@ export default function ExerciseManagerModal({
                 />
               ))}
 
-              {rows.length === 0 && (
-                <div className={styles.empty}>No exercises to show.</div>
-              )}
+              {rows.length === 0 && <div className={styles.empty}>No exercises to show.</div>}
             </div>
           </div>
         </div>
@@ -189,7 +194,9 @@ function AddExerciseInline({
           className={styles.select}
         >
           {ALL_BODY_PARTS.map((p) => (
-            <option key={p} value={p}>{p.charAt(0).toUpperCase() + p.slice(1)}</option>
+            <option key={p} value={p}>
+              {p.charAt(0).toUpperCase() + p.slice(1)}
+            </option>
           ))}
         </select>
         <button
@@ -248,7 +255,9 @@ function ManageExerciseRow({
           className={styles.select}
         >
           {ALL_BODY_PARTS.map((p) => (
-            <option key={p} value={p}>{p.charAt(0).toUpperCase() + p.slice(1)}</option>
+            <option key={p} value={p}>
+              {p.charAt(0).toUpperCase() + p.slice(1)}
+            </option>
           ))}
         </select>
       </div>
@@ -261,12 +270,7 @@ function ManageExerciseRow({
         >
           {busy ? 'Saving...' : 'Save'}
         </button>
-        <button
-          type="button"
-          disabled={busy}
-          onClick={onDelete}
-          className={styles.deleteBtn}
-        >
+        <button type="button" disabled={busy} onClick={onDelete} className={styles.deleteBtn}>
           {busy ? '...' : 'Delete'}
         </button>
       </div>

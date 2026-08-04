@@ -116,7 +116,8 @@ const TABLE_ANNOTATIONS: Record<string, { purpose: string; notes: string[] }> = 
     ],
   },
   gym_lifts_v: {
-    purpose: 'gym_lifts pre-joined to exercises and exercise_aliases. Adds exercise_id, canonical_name, body_part_key. Use this for any muscle-aware query.',
+    purpose:
+      'gym_lifts pre-joined to exercises and exercise_aliases. Adds exercise_id, canonical_name, body_part_key. Use this for any muscle-aware query.',
     notes: [
       'canonical_name and body_part_key are NULL when an exercise has no matching exercises row or alias - treat as unclassified. Current data has 100% coverage; nulls indicate future drift.',
       'body_part_key values come from body_parts.key (biceps, chest, shoulders, back, triceps, quads, hamstrings, forearms, core, glutes, calves, hips).',
@@ -132,7 +133,8 @@ const TABLE_ANNOTATIONS: Record<string, { purpose: string; notes: string[] }> = 
     ],
   },
   exercises: {
-    purpose: 'Canonical exercise catalog. One row per exercise. body_part_key is authoritative anatomy.',
+    purpose:
+      'Canonical exercise catalog. One row per exercise. body_part_key is authoritative anatomy.',
     notes: [
       'Filter by is_active = true to limit to current programming.',
       'Foreign key: body_part_key -> body_parts.key.',
@@ -148,15 +150,11 @@ const TABLE_ANNOTATIONS: Record<string, { purpose: string; notes: string[] }> = 
   },
   body_parts: {
     purpose: 'Reference: the 12 valid body_part_key values and their display labels.',
-    notes: [
-      'Use this to validate body_part filters and to format keys as user-facing labels.',
-    ],
+    notes: ['Use this to validate body_part filters and to format keys as user-facing labels.'],
   },
   daytag_defaults: {
     purpose: 'Programmed muscle defaults per day_tag (push/pull/leg). One row per day_tag.',
-    notes: [
-      'body_parts is text[]. Use to answer "what is supposed to be on a push day?"',
-    ],
+    notes: ['body_parts is text[]. Use to answer "what is supposed to be on a push day?"'],
   },
 }
 
@@ -171,11 +169,11 @@ function buildAllowlist(tables: GymCatalogTable[]): CatalogAllowlist {
   const columnMap = new Map<string, Set<string>>()
   const columnUnion = new Set<string>()
 
-  tables.forEach(table => {
+  tables.forEach((table) => {
     const normalized = NORMALIZE(table.name)
     tableSet.add(normalized)
     const columnSet = new Set<string>()
-    table.columns.forEach(column => {
+    table.columns.forEach((column) => {
       const normalizedColumn = NORMALIZE(column.name)
       columnSet.add(normalizedColumn)
       columnUnion.add(normalizedColumn)
@@ -195,13 +193,13 @@ function buildCatalogContext(tables: GymCatalogTable[]): string {
     return 'Allowed tables: (none discovered)'
   }
   const lines: string[] = ['Tables (read-only, public schema):']
-  tables.forEach(table => {
-    const cols = table.columns.map(column => `${column.name} (${column.dataType})`).join(', ')
+  tables.forEach((table) => {
+    const cols = table.columns.map((column) => `${column.name} (${column.dataType})`).join(', ')
     const annotation = TABLE_ANNOTATIONS[table.name.toLowerCase()]
     if (annotation) {
       lines.push(`- ${table.name} - ${annotation.purpose}`)
       lines.push(`  Columns: ${cols}`)
-      annotation.notes.forEach(note => lines.push(`  Note: ${note}`))
+      annotation.notes.forEach((note) => lines.push(`  Note: ${note}`))
     } else {
       lines.push(`- ${table.name}: ${cols}`)
     }
@@ -216,9 +214,11 @@ const formatArrayType = (dataType: string, udtName: string) => {
   return dataType
 }
 
-const groupRowsIntoTables = (rows: Array<{ table_name: string; column_name: string; data_type: string; udt_name: string }>) => {
+const groupRowsIntoTables = (
+  rows: Array<{ table_name: string; column_name: string; data_type: string; udt_name: string }>,
+) => {
   const tableMap = new Map<string, GymCatalogTable>()
-  rows.forEach(row => {
+  rows.forEach((row) => {
     const tableName = row.table_name
     if (!GYM_TABLES.has(tableName)) return
     const entry = tableMap.get(tableName) ?? { name: tableName, columns: [] }
@@ -301,7 +301,12 @@ async function fetchCatalogFromDatabase(): Promise<GymCatalogTable[] | null> {
   }
 
   const allowedNames = Array.from(GYM_TABLES)
-  const rows = await runCatalogQueryWithParams<{ table_name: string; column_name: string; data_type: string; udt_name: string }>(
+  const rows = await runCatalogQueryWithParams<{
+    table_name: string
+    column_name: string
+    data_type: string
+    udt_name: string
+  }>(
     connectionString,
     `
       SELECT table_name, column_name, data_type, udt_name
@@ -376,7 +381,7 @@ async function fetchBodyPartsFromDatabase(): Promise<BodyPartEntry[]> {
     connectionString,
     `SELECT key, label FROM body_parts ORDER BY key`,
   )
-  return rows.map(r => ({ key: r.key, label: r.label })).filter(e => e.key)
+  return rows.map((r) => ({ key: r.key, label: r.label })).filter((e) => e.key)
 }
 
 export async function loadBodyParts(options?: { force?: boolean }) {
@@ -411,6 +416,6 @@ export async function loadBodyParts(options?: { force?: boolean }) {
 
 export const getBodyPartsContext = (): string => {
   if (!cachedBodyParts.length) return ''
-  const formatted = cachedBodyParts.map(p => `${p.key} (${p.label})`).join(', ')
+  const formatted = cachedBodyParts.map((p) => `${p.key} (${p.label})`).join(', ')
   return `Valid body_part_key values (use these verbatim in WHERE/EXISTS filters and gym_lifts_v.body_part_key comparisons):\n${formatted}`
 }

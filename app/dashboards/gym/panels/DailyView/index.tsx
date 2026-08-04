@@ -12,22 +12,27 @@ import ExerciseTable from './ExerciseTable'
 import styles from './index.module.css'
 
 const EXERCISES_BY_BODY_PART: Record<BodyPart, string[]> = {
-  biceps:     ['Preacher Curl', 'Hammer Curl', 'Bayesian Curl', 'Incline Curl'],
-  chest:      ['Incline Press', 'Flat Press', 'Decline Press', 'Chest Fly', 'Bench Press'],
-  shoulders:  ['Lateral Raise', 'Overhead Press', 'Rear Delt Fly', 'Rear Delt Xs'],
-  back:       ['Lat Pulldown', 'High Row', 'Low Row', 'Pull Ups', 'Pull Overs'],
-  triceps:    ['Tricep Pushdowns', 'Tricep Extensions', 'Skull Crushers', 'Tricep Kickbacks', 'Dips'],
-  quads:      ['Leg Press', 'Hack Squat', 'Pendelum Squat', 'Squat', 'Leg Extensions', 'Split Squat'],
+  biceps: ['Preacher Curl', 'Hammer Curl', 'Bayesian Curl', 'Incline Curl'],
+  chest: ['Incline Press', 'Flat Press', 'Decline Press', 'Chest Fly', 'Bench Press'],
+  shoulders: ['Lateral Raise', 'Overhead Press', 'Rear Delt Fly', 'Rear Delt Xs'],
+  back: ['Lat Pulldown', 'High Row', 'Low Row', 'Pull Ups', 'Pull Overs'],
+  triceps: ['Tricep Pushdowns', 'Tricep Extensions', 'Skull Crushers', 'Tricep Kickbacks', 'Dips'],
+  quads: ['Leg Press', 'Hack Squat', 'Pendelum Squat', 'Squat', 'Leg Extensions', 'Split Squat'],
   hamstrings: ['RDLs', 'Seated Leg Curl', 'Lying Leg Curl', 'Hamstrick Kickback'],
-  forearms:   ['Wrist Curl', 'Reverse Curl', 'Reverse Wrist Curl'],
-  core:       ['Hanging Leg Raise', 'Decline Crunch', 'Flat Crunch', 'Incline Crunch', 'Oblique Twist'],
-  glutes:     ['Hip Thrust', 'Glute Kickback'],
-  calves:     ['Standing Calf Raise', 'Seated Calf Raise'],
-  hips:       ['Abduction Machine', 'Adduction Machine'],
+  forearms: ['Wrist Curl', 'Reverse Curl', 'Reverse Wrist Curl'],
+  core: ['Hanging Leg Raise', 'Decline Crunch', 'Flat Crunch', 'Incline Crunch', 'Oblique Twist'],
+  glutes: ['Hip Thrust', 'Glute Kickback'],
+  calves: ['Standing Calf Raise', 'Seated Calf Raise'],
+  hips: ['Abduction Machine', 'Adduction Machine'],
 }
 
 const normalize = (s: string) =>
-  s.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim().replace(/s\b/g, '')
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/s\b/g, '')
 
 const EX_TO_BP = (() => {
   const m = new Map<string, BodyPart>()
@@ -52,13 +57,13 @@ type Props = {
 }
 
 export default function DailyView({ lifts, date, onChangeDate }: Props) {
-  const dayLifts = useMemo(() => lifts.filter(l => l.date === date), [lifts, date])
+  const dayLifts = useMemo(() => lifts.filter((l) => l.date === date), [lifts, date])
 
   // Volume = weight x reps per set (unilateral sets record one side; no doubling applied)
   const totalVolume = useMemo(() => dayLifts.reduce((s, l) => s + l.weight * l.reps, 0), [dayLifts])
   const totalSets = dayLifts.length
   const totalReps = useMemo(() => dayLifts.reduce((s, l) => s + l.reps, 0), [dayLifts])
-  const exerciseCount = useMemo(() => new Set(dayLifts.map(l => l.exercise)).size, [dayLifts])
+  const exerciseCount = useMemo(() => new Set(dayLifts.map((l) => l.exercise)).size, [dayLifts])
 
   const nearMaxSets = useMemo(() => {
     const prMap: Record<string, number> = {}
@@ -66,7 +71,7 @@ export default function DailyView({ lifts, date, onChangeDate }: Props) {
       const est = Math.round(l.weight * (1 + l.reps / 30))
       if (!prMap[l.exercise] || est > prMap[l.exercise]) prMap[l.exercise] = est
     }
-    return dayLifts.filter(l => {
+    return dayLifts.filter((l) => {
       const best = prMap[l.exercise] || 0
       const cur = Math.round(l.weight * (1 + l.reps / 30))
       return best > 0 && cur / best >= 0.9
@@ -92,9 +97,18 @@ export default function DailyView({ lifts, date, onChangeDate }: Props) {
       </DashboardPanel>
       <div className={styles.kpiRow}>
         <StatWidget label="Total Volume" value={totalVolume} sub="lbs" className={styles.kpiItem} />
-        <StatWidget label="Exercises / Sets / Reps" value={`${exerciseCount} / ${totalSets} / ${totalReps}`} className={styles.kpiItem} />
+        <StatWidget
+          label="Exercises / Sets / Reps"
+          value={`${exerciseCount} / ${totalSets} / ${totalReps}`}
+          className={styles.kpiItem}
+        />
         <StatWidget label="Top Body Part" value={topBodyPart} className={styles.kpiItem} />
-        <StatWidget label="Near-Max Sets" value={nearMaxSets} sub=">= 90% lifetime 1RM" className={styles.kpiItem} />
+        <StatWidget
+          label="Near-Max Sets"
+          value={nearMaxSets}
+          sub=">= 90% lifetime 1RM"
+          className={styles.kpiItem}
+        />
       </div>
       <div className={styles.chartRow}>
         <DashboardPanel eyebrow="Cumulative Volume by Body Part" className={styles.chartLarge}>

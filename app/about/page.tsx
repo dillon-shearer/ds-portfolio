@@ -29,8 +29,8 @@ export default function AboutPage() {
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Resumes</h2>
         <p className={styles.sectionIntro}>
-          Role-specific resumes available for download. Each is tailored to a different
-          position type.
+          Role-specific resumes available for download. Each is tailored to a different position
+          type.
         </p>
         <div className={styles.cards}>
           {RESUMES.map((r) => (
@@ -52,9 +52,7 @@ export default function AboutPage() {
       {/* Certifications */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Certifications</h2>
-        <p className={styles.sectionIntro}>
-          Completed certifications and training programs.
-        </p>
+        <p className={styles.sectionIntro}>Completed certifications and training programs.</p>
         <div className={styles.cards}>
           {CERTIFICATIONS.map((c) => (
             <Card

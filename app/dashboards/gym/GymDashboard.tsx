@@ -46,7 +46,7 @@ const addUTCDays = (d: Date, n: number) =>
 const todayUTCKey = () => toKeyDate(new Date())
 const clampToToday = (ymd: string) => (ymd > todayUTCKey() ? todayUTCKey() : ymd)
 const shiftYMD = (ymd: string, days: number) => {
-  const [y, m, d] = ymd.split('-').map(n => parseInt(n, 10))
+  const [y, m, d] = ymd.split('-').map((n) => parseInt(n, 10))
   return toKeyDate(addUTCDays(new Date(Date.UTC(y, m - 1, d)), days))
 }
 
@@ -82,7 +82,7 @@ function yearDatesYTDUTC(year: number) {
 
 function calcDailyVolume(lifts: GymLift[], dates: string[]) {
   const byDate = groupBy(lifts, (l) => l.date)
-  return dates.map(date => {
+  return dates.map((date) => {
     const day = byDate.get(date) ?? []
     // Volume = weight x reps per set (unilateral sets record one side; no doubling applied)
     const volume = day.reduce((sum, l) => sum + l.weight * l.reps, 0)
@@ -106,22 +106,27 @@ function formatLongDate(dateStr: string) {
 }
 
 const EXERCISES_BY_BODY_PART: Record<BodyPart, string[]> = {
-  biceps:     ['Preacher Curl', 'Hammer Curl', 'Bayesian Curl', 'Incline Curl'],
-  chest:      ['Incline Press', 'Flat Press', 'Decline Press', 'Chest Fly', 'Bench Press'],
-  shoulders:  ['Lateral Raise', 'Overhead Press', 'Rear Delt Fly', 'Rear Delt Xs'],
-  back:       ['Lat Pulldown', 'High Row', 'Low Row', 'Pull Ups', 'Pull Overs'],
-  triceps:    ['Tricep Pushdowns', 'Tricep Extensions', 'Skull Crushers', 'Tricep Kickbacks', 'Dips'],
-  quads:      ['Leg Press', 'Hack Squat', 'Pendelum Squat', 'Squat', 'Leg Extensions', 'Split Squat'],
+  biceps: ['Preacher Curl', 'Hammer Curl', 'Bayesian Curl', 'Incline Curl'],
+  chest: ['Incline Press', 'Flat Press', 'Decline Press', 'Chest Fly', 'Bench Press'],
+  shoulders: ['Lateral Raise', 'Overhead Press', 'Rear Delt Fly', 'Rear Delt Xs'],
+  back: ['Lat Pulldown', 'High Row', 'Low Row', 'Pull Ups', 'Pull Overs'],
+  triceps: ['Tricep Pushdowns', 'Tricep Extensions', 'Skull Crushers', 'Tricep Kickbacks', 'Dips'],
+  quads: ['Leg Press', 'Hack Squat', 'Pendelum Squat', 'Squat', 'Leg Extensions', 'Split Squat'],
   hamstrings: ['RDLs', 'Seated Leg Curl', 'Lying Leg Curl', 'Hamstrick Kickback'],
-  forearms:   ['Wrist Curl', 'Reverse Curl', 'Reverse Wrist Curl'],
-  core:       ['Hanging Leg Raise', 'Decline Crunch', 'Flat Crunch', 'Incline Crunch', 'Oblique Twist'],
-  glutes:     ['Hip Thrust', 'Glute Kickback'],
-  calves:     ['Standing Calf Raise', 'Seated Calf Raise'],
-  hips:       ['Abduction Machine', 'Adduction Machine'],
+  forearms: ['Wrist Curl', 'Reverse Curl', 'Reverse Wrist Curl'],
+  core: ['Hanging Leg Raise', 'Decline Crunch', 'Flat Crunch', 'Incline Crunch', 'Oblique Twist'],
+  glutes: ['Hip Thrust', 'Glute Kickback'],
+  calves: ['Standing Calf Raise', 'Seated Calf Raise'],
+  hips: ['Abduction Machine', 'Adduction Machine'],
 }
 
-const EXERCISE_TO_BODY: Record<string, BodyPart> = Object.entries(EXERCISES_BY_BODY_PART)
-  .reduce((acc, [bp, arr]) => { for (const ex of arr) acc[ex] = bp as BodyPart; return acc }, {} as Record<string, BodyPart>)
+const EXERCISE_TO_BODY: Record<string, BodyPart> = Object.entries(EXERCISES_BY_BODY_PART).reduce(
+  (acc, [bp, arr]) => {
+    for (const ex of arr) acc[ex] = bp as BodyPart
+    return acc
+  },
+  {} as Record<string, BodyPart>,
+)
 
 function normalizeSplitTag(raw?: string | null) {
   const t = (raw || '').trim().toLowerCase()
@@ -147,37 +152,46 @@ export default function GymDashboard({ lifts }: Props) {
 
   const datasetMinDate = useMemo(
     () => (lifts.length ? lifts.reduce((m, l) => (l.date < m ? l.date : m), lifts[0].date) : ''),
-    [lifts]
+    [lifts],
   )
   const datasetMaxDate = useMemo(
     () => (lifts.length ? lifts.reduce((m, l) => (l.date > m ? l.date : m), lifts[0].date) : ''),
-    [lifts]
+    [lifts],
   )
 
   const now = new Date()
   const dateWindow = useMemo<string[]>(() => {
-    if (mode === 'day')   return [dayDate]
-    if (mode === 'week')  return lastNDatesUTC(7, now)
+    if (mode === 'day') return [dayDate]
+    if (mode === 'week') return lastNDatesUTC(7, now)
     if (mode === 'month') return lastNDatesUTC(30, now)
     return yearDatesYTDUTC(year)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, year, dayDate])
 
   const filtered = useMemo<GymLift[]>(() => {
     const setDates = new Set(dateWindow)
-    return lifts.filter(l => setDates.has(l.date))
+    return lifts.filter((l) => setDates.has(l.date))
   }, [lifts, dateWindow])
 
   const daily = useMemo(() => calcDailyVolume(filtered, dateWindow), [filtered, dateWindow])
   const totalVolume = useMemo(() => daily.reduce((s, d) => s + d.volume, 0), [daily])
-  const gymDays = useMemo(() => unique(filtered.map(l => l.date)).length, [filtered])
-  const exerciseVariety = useMemo(() => unique(filtered.map(l => l.exercise)).length, [filtered])
+  const gymDays = useMemo(() => unique(filtered.map((l) => l.date)).length, [filtered])
+  const exerciseVariety = useMemo(() => unique(filtered.map((l) => l.exercise)).length, [filtered])
 
   const bodyStats = useMemo(() => {
     const base: Record<BodyPart, { volume: number; sets: number }> = {
-      biceps:{volume:0,sets:0}, chest:{volume:0,sets:0}, shoulders:{volume:0,sets:0}, back:{volume:0,sets:0},
-      triceps:{volume:0,sets:0}, quads:{volume:0,sets:0}, hamstrings:{volume:0,sets:0}, forearms:{volume:0,sets:0},
-      core:{volume:0,sets:0}, glutes:{volume:0,sets:0}, calves:{volume:0,sets:0}, hips:{volume:0,sets:0},
+      biceps: { volume: 0, sets: 0 },
+      chest: { volume: 0, sets: 0 },
+      shoulders: { volume: 0, sets: 0 },
+      back: { volume: 0, sets: 0 },
+      triceps: { volume: 0, sets: 0 },
+      quads: { volume: 0, sets: 0 },
+      hamstrings: { volume: 0, sets: 0 },
+      forearms: { volume: 0, sets: 0 },
+      core: { volume: 0, sets: 0 },
+      glutes: { volume: 0, sets: 0 },
+      calves: { volume: 0, sets: 0 },
+      hips: { volume: 0, sets: 0 },
     }
     for (const s of filtered) {
       const bp = EXERCISE_TO_BODY[s.exercise]
@@ -191,14 +205,14 @@ export default function GymDashboard({ lifts }: Props) {
 
   const splitCountsPPL = useMemo(() => {
     const byDate = groupBy(filtered, (l) => l.date)
-    const counts = { Push: 0, Pull: 0, Legs: 0 } as Record<'Push'|'Pull'|'Legs', number>
+    const counts = { Push: 0, Pull: 0, Legs: 0 } as Record<'Push' | 'Pull' | 'Legs', number>
     for (const [, sets] of byDate.entries()) {
-      const tags = sets.map(s => cleanTag(s.dayTag)).filter(Boolean)
+      const tags = sets.map((s) => cleanTag(s.dayTag)).filter(Boolean)
       if (!tags.length) continue
       const tally = new Map<string, number>()
       for (const t of tags) tally.set(t, (tally.get(t) || 0) + 1)
       const winner = Array.from(tally.entries()).sort((a, b) => b[1] - a[1])[0]?.[0]
-      const key = normalizeSplitTag(winner) as 'Push'|'Pull'|'Legs'|''
+      const key = normalizeSplitTag(winner) as 'Push' | 'Pull' | 'Legs' | ''
       if (key) counts[key] += 1
     }
     return counts
@@ -207,10 +221,9 @@ export default function GymDashboard({ lifts }: Props) {
   const bodyPartsList = useMemo(() => {
     return (Object.keys(bodyStats) as BodyPart[])
       .map((bp) => ({ bp, sets: bodyStats[bp].sets, volume: bodyStats[bp].volume }))
-      .filter(x => x.sets > 0 || x.volume > 0)
-      .sort((a, b) => (b.sets - a.sets) || (b.volume - a.volume))
+      .filter((x) => x.sets > 0 || x.volume > 0)
+      .sort((a, b) => b.sets - a.sets || b.volume - a.volume)
   }, [bodyStats])
-
 
   const prsAll = useMemo(() => {
     const byEx = groupBy(filtered, (l) => l.exercise)
@@ -220,12 +233,21 @@ export default function GymDashboard({ lifts }: Props) {
       let bestSet: GymLift | undefined
       for (const s of sets) {
         const oneRM = Math.round(s.weight * (1 + s.reps / 30))
-        if (!bestSet) { bestSet = s; bestWeight = s.weight; best1RM = oneRM; continue }
+        if (!bestSet) {
+          bestSet = s
+          bestWeight = s.weight
+          best1RM = oneRM
+          continue
+        }
         const better =
           s.weight > bestSet.weight ||
           (s.weight === bestSet.weight && s.reps > bestSet.reps) ||
           (s.weight === bestSet.weight && s.reps === bestSet.reps && s.date > bestSet.date)
-        if (better) { bestSet = s; bestWeight = s.weight; best1RM = oneRM }
+        if (better) {
+          bestSet = s
+          bestWeight = s.weight
+          best1RM = oneRM
+        }
       }
       return {
         exercise,
@@ -255,22 +277,28 @@ export default function GymDashboard({ lifts }: Props) {
     return { rows: sorted.slice(start, start + prsPageSize), totalPages, page }
   }, [prsAll, sortKey, sortDir, prsPage])
 
-  const toggleSort = useCallback((k: SortKey) => {
-    if (k === sortKey) setSortDir(d => (d === 'asc' ? 'desc' : 'asc'))
-    else { setSortKey(k); setSortDir('desc') }
-    setPrsPage(1)
-  }, [sortKey])
+  const toggleSort = useCallback(
+    (k: SortKey) => {
+      if (k === sortKey) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
+      else {
+        setSortKey(k)
+        setSortDir('desc')
+      }
+      setPrsPage(1)
+    },
+    [sortKey],
+  )
 
   const recentSessionsAll = useMemo(() => {
     const byDate = groupBy(filtered, (l) => l.date)
     const recentDates = Array.from(byDate.keys()).sort((a, b) => (a < b ? 1 : -1))
-    return recentDates.map(date => {
+    return recentDates.map((date) => {
       const day = byDate.get(date) || []
       // Volume = weight x reps per set (unilateral sets record one side; no doubling applied)
       const volume = day.reduce((s, l) => s + l.weight * l.reps, 0)
-      const exercises = unique(day.map(l => l.exercise))
+      const exercises = unique(day.map((l) => l.exercise))
       const sets = day.length
-      const tags = day.map(l => cleanTag(l.dayTag)).filter(Boolean)
+      const tags = day.map((l) => cleanTag(l.dayTag)).filter(Boolean)
       let dayTag: string | null = null
       if (tags.length) {
         const counts = new Map<string, number>()
@@ -297,9 +325,15 @@ export default function GymDashboard({ lifts }: Props) {
 
   const buildDownloadUrl = () => {
     const base = dlFormat === 'json' ? '/api/gym-data' : '/api/gym-data.csv'
-    let from = '', to = ''
-    if (dlRange === 'current') { from = dateWindow[0]; to = dateWindow[dateWindow.length - 1] }
-    else { from = datasetMinDate; to = datasetMaxDate }
+    let from = '',
+      to = ''
+    if (dlRange === 'current') {
+      from = dateWindow[0]
+      to = dateWindow[dateWindow.length - 1]
+    } else {
+      from = datasetMinDate
+      to = datasetMaxDate
+    }
     const qs = new URLSearchParams()
     if (from) qs.set('from', from)
     if (to) qs.set('to', to)
@@ -350,7 +384,11 @@ export default function GymDashboard({ lifts }: Props) {
                     <button
                       type="button"
                       className={styles.navArrow}
-                      onClick={mode === 'day' ? () => setDayDate(d => shiftYMD(d, -1)) : () => setYear(y => Math.max(1970, y - 1))}
+                      onClick={
+                        mode === 'day'
+                          ? () => setDayDate((d) => shiftYMD(d, -1))
+                          : () => setYear((y) => Math.max(1970, y - 1))
+                      }
                       disabled={mode === 'day' && !!datasetMinDate && dayDate <= datasetMinDate}
                       aria-label={mode === 'day' ? 'Previous day' : 'Previous year'}
                     >
@@ -362,7 +400,11 @@ export default function GymDashboard({ lifts }: Props) {
                     <button
                       type="button"
                       className={styles.navArrow}
-                      onClick={mode === 'day' ? () => setDayDate(d => clampToToday(shiftYMD(d, 1))) : () => setYear(y => Math.min(currentYear, y + 1))}
+                      onClick={
+                        mode === 'day'
+                          ? () => setDayDate((d) => clampToToday(shiftYMD(d, 1)))
+                          : () => setYear((y) => Math.min(currentYear, y + 1))
+                      }
                       disabled={mode === 'day' ? dayDate >= todayUTCKey() : year >= currentYear}
                       aria-label={mode === 'day' ? 'Next day' : 'Next year'}
                     >
@@ -380,7 +422,15 @@ export default function GymDashboard({ lifts }: Props) {
               </div>
 
               {mode === 'day' ? (
-                <DailyView lifts={lifts} date={dayDate} onChangeDate={(d) => { setDayDate(d); if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' }) }} />
+                <DailyView
+                  lifts={lifts}
+                  date={dayDate}
+                  onChangeDate={(d) => {
+                    setDayDate(d)
+                    if (typeof window !== 'undefined')
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }}
+                />
               ) : (
                 <div className={styles.panelStack}>
                   {/* KPI row */}
@@ -426,8 +476,8 @@ export default function GymDashboard({ lifts }: Props) {
                         sortKey={sortKey}
                         sortDir={sortDir}
                         onSort={toggleSort}
-                        onPrev={() => setPrsPage(p => Math.max(1, p - 1))}
-                        onNext={() => setPrsPage(p => Math.min(prsSortedPaged.totalPages, p + 1))}
+                        onPrev={() => setPrsPage((p) => Math.max(1, p - 1))}
+                        onNext={() => setPrsPage((p) => Math.min(prsSortedPaged.totalPages, p + 1))}
                       />
                     </DashboardPanel>
                     <DashboardPanel eyebrow="Volume Heatmap">
@@ -441,8 +491,8 @@ export default function GymDashboard({ lifts }: Props) {
                       rows={recentSessions.rows}
                       page={recentSessions.page}
                       totalPages={recentSessions.totalPages}
-                      onPrev={() => setSessPage(p => Math.max(1, p - 1))}
-                      onNext={() => setSessPage(p => Math.min(recentSessions.totalPages, p + 1))}
+                      onPrev={() => setSessPage((p) => Math.max(1, p - 1))}
+                      onNext={() => setSessPage((p) => Math.min(recentSessions.totalPages, p + 1))}
                       onJumpToDay={jumpToDay}
                     />
                   </DashboardPanel>
@@ -462,7 +512,7 @@ export default function GymDashboard({ lifts }: Props) {
           {/* Download modal */}
           {showDownload && (
             <div className={styles.modalBackdrop} onClick={() => setShowDownload(false)}>
-              <div className={styles.modal} onClick={e => e.stopPropagation()}>
+              <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                 <div className={styles.modalHeader}>
                   <p className={styles.modalTitle}>Download Dataset</p>
                   <button
@@ -479,14 +529,20 @@ export default function GymDashboard({ lifts }: Props) {
                   <div className={styles.modalRow}>
                     <button
                       type="button"
-                      className={[styles.modalOpt, dlRange === 'current' ? styles.modalOptActive : ''].join(' ')}
+                      className={[
+                        styles.modalOpt,
+                        dlRange === 'current' ? styles.modalOptActive : '',
+                      ].join(' ')}
                       onClick={() => setDlRange('current')}
                     >
                       Current filter
                     </button>
                     <button
                       type="button"
-                      className={[styles.modalOpt, dlRange === 'all' ? styles.modalOptActive : ''].join(' ')}
+                      className={[
+                        styles.modalOpt,
+                        dlRange === 'all' ? styles.modalOptActive : '',
+                      ].join(' ')}
                       onClick={() => setDlRange('all')}
                     >
                       All time
@@ -496,14 +552,20 @@ export default function GymDashboard({ lifts }: Props) {
                   <div className={styles.modalRow}>
                     <button
                       type="button"
-                      className={[styles.modalOpt, dlFormat === 'csv' ? styles.modalOptActive : ''].join(' ')}
+                      className={[
+                        styles.modalOpt,
+                        dlFormat === 'csv' ? styles.modalOptActive : '',
+                      ].join(' ')}
                       onClick={() => setDlFormat('csv')}
                     >
                       CSV
                     </button>
                     <button
                       type="button"
-                      className={[styles.modalOpt, dlFormat === 'json' ? styles.modalOptActive : ''].join(' ')}
+                      className={[
+                        styles.modalOpt,
+                        dlFormat === 'json' ? styles.modalOptActive : '',
+                      ].join(' ')}
                       onClick={() => setDlFormat('json')}
                     >
                       JSON
@@ -511,7 +573,11 @@ export default function GymDashboard({ lifts }: Props) {
                   </div>
                 </div>
                 <div className={styles.modalFooter}>
-                  <button type="button" className={styles.modalCancel} onClick={() => setShowDownload(false)}>
+                  <button
+                    type="button"
+                    className={styles.modalCancel}
+                    onClick={() => setShowDownload(false)}
+                  >
                     Cancel
                   </button>
                   <a

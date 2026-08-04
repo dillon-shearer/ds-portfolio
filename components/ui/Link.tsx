@@ -10,12 +10,7 @@ interface InlineLinkProps {
 export function InlineLink({ href, children, external }: InlineLinkProps) {
   if (external) {
     return (
-      <a
-        href={href}
-        className={styles.inline}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      <a href={href} className={styles.inline} target="_blank" rel="noopener noreferrer">
         {children}
       </a>
     )

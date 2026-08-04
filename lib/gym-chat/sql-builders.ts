@@ -13,12 +13,17 @@ export type SetsBaseCte = {
 
 const resolveSetsDateExpressions = () => {
   const tables = getCatalogTables()
-  const lifts = tables.find(table => table.name.toLowerCase() === 'gym_lifts')
-  const hasTimestamp = lifts?.columns.some(column => column.name.toLowerCase() === 'timestamp') ?? false
-  const hasDayTag = lifts?.columns.some(column => column.name.toLowerCase() === 'day_tag') ?? false
-  const hasSetNumber = lifts?.columns.some(column => column.name.toLowerCase() === 'set_number') ?? false
-  const hasEquipment = lifts?.columns.some(column => column.name.toLowerCase() === 'equipment') ?? false
-  const hasUnilateral = lifts?.columns.some(column => column.name.toLowerCase() === 'is_unilateral') ?? false
+  const lifts = tables.find((table) => table.name.toLowerCase() === 'gym_lifts')
+  const hasTimestamp =
+    lifts?.columns.some((column) => column.name.toLowerCase() === 'timestamp') ?? false
+  const hasDayTag =
+    lifts?.columns.some((column) => column.name.toLowerCase() === 'day_tag') ?? false
+  const hasSetNumber =
+    lifts?.columns.some((column) => column.name.toLowerCase() === 'set_number') ?? false
+  const hasEquipment =
+    lifts?.columns.some((column) => column.name.toLowerCase() === 'equipment') ?? false
+  const hasUnilateral =
+    lifts?.columns.some((column) => column.name.toLowerCase() === 'is_unilateral') ?? false
   const dateExpr = hasTimestamp ? 'COALESCE(gl.date::date, gl.timestamp::date)' : 'gl.date::date'
   const timestampExpr = hasTimestamp
     ? 'COALESCE(gl.timestamp::timestamptz, gl.date::timestamptz)'

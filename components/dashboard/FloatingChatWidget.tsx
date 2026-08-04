@@ -51,8 +51,7 @@ const SUGGESTED_QUESTIONS = [
 
 const createMessageId = () => `msg_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
 
-const buildTimezone = () =>
-  Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
+const buildTimezone = () => Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
 
 const CITATION_REGEX = /\[([a-zA-Z0-9_-]+)\](?!\()/g
 
@@ -118,7 +117,11 @@ const readEventStream = async (
   }
 }
 
-const formatContentWithCitations = (content: string, queryIds: Set<string>, anchorPrefix: string) => {
+const formatContentWithCitations = (
+  content: string,
+  queryIds: Set<string>,
+  anchorPrefix: string,
+) => {
   if (!queryIds.size) return content
   return content.replace(CITATION_REGEX, (match, marker) => {
     if (!queryIds.has(marker)) return match
@@ -127,44 +130,37 @@ const formatContentWithCitations = (content: string, queryIds: Set<string>, anch
 }
 
 const buildMarkdownComponents = (): Components => ({
-  h1: ({ ...props }) => (
-    <h1 className={styles.mdH1} {...props} />
-  ),
-  h2: ({ ...props }) => (
-    <h2 className={styles.mdH2} {...props} />
-  ),
-  h3: ({ ...props }) => (
-    <h3 className={styles.mdH3} {...props} />
-  ),
-  p: ({ ...props }) => (
-    <p className={styles.mdP} {...props} />
-  ),
-  ul: ({ ...props }) => (
-    <ul className={styles.mdUl} {...props} />
-  ),
-  ol: ({ ...props }) => (
-    <ol className={styles.mdOl} {...props} />
-  ),
-  li: ({ ...props }) => (
-    <li className={styles.mdLi} {...props} />
-  ),
+  h1: ({ ...props }) => <h1 className={styles.mdH1} {...props} />,
+  h2: ({ ...props }) => <h2 className={styles.mdH2} {...props} />,
+  h3: ({ ...props }) => <h3 className={styles.mdH3} {...props} />,
+  p: ({ ...props }) => <p className={styles.mdP} {...props} />,
+  ul: ({ ...props }) => <ul className={styles.mdUl} {...props} />,
+  ol: ({ ...props }) => <ol className={styles.mdOl} {...props} />,
+  li: ({ ...props }) => <li className={styles.mdLi} {...props} />,
   strong: ({ ...props }) => <strong className={styles.mdStrong} {...props} />,
   em: ({ ...props }) => <em className={styles.mdEm} {...props} />,
-  code: ({ children, className, ...props }: React.ComponentPropsWithoutRef<'code'> & { inline?: boolean }) => {
+  code: ({
+    children,
+    className,
+    ...props
+  }: React.ComponentPropsWithoutRef<'code'> & { inline?: boolean }) => {
     const isBlock = !!className || String(children).includes('\n')
     return isBlock ? (
-      <pre className={styles.mdPre}><code className={className} {...props}>{children}</code></pre>
+      <pre className={styles.mdPre}>
+        <code className={className} {...props}>
+          {children}
+        </code>
+      </pre>
     ) : (
-      <code className={styles.mdCodeInline} {...props}>{children}</code>
+      <code className={styles.mdCodeInline} {...props}>
+        {children}
+      </code>
     )
   },
-  blockquote: ({ ...props }) => (
-    <blockquote className={styles.mdBlockquote} {...props} />
-  ),
+  blockquote: ({ ...props }) => <blockquote className={styles.mdBlockquote} {...props} />,
   a: ({ children, href = '', ...props }: React.ComponentPropsWithoutRef<'a'>) => {
-    const safeHref = href.startsWith('http://') || href.startsWith('https://') || href.startsWith('#')
-      ? href
-      : '#'
+    const safeHref =
+      href.startsWith('http://') || href.startsWith('https://') || href.startsWith('#') ? href : '#'
     return (
       <a href={safeHref} target="_blank" rel="noreferrer" className={styles.mdLink} {...props}>
         {children}
@@ -190,11 +186,7 @@ const MarkdownContent = ({
   anchorPrefix: string
 }) => {
   const formatted = formatContentWithCitations(content, queryIds, anchorPrefix)
-  return (
-    <ReactMarkdown components={MD_COMPONENTS}>
-      {formatted}
-    </ReactMarkdown>
-  )
+  return <ReactMarkdown components={MD_COMPONENTS}>{formatted}</ReactMarkdown>
 }
 
 const formatPolicyWindow = (value: GymChatTimeWindow | null | undefined) => {
@@ -213,15 +205,17 @@ const renderPreviewTable = (rows: Record<string, unknown>[]) => {
       <table className={styles.previewTable}>
         <thead>
           <tr>
-            {headers.map(header => (
-              <th key={header} className={styles.previewTh}>{header}</th>
+            {headers.map((header) => (
+              <th key={header} className={styles.previewTh}>
+                {header}
+              </th>
             ))}
           </tr>
         </thead>
         <tbody>
           {rows.map((row, idx) => (
             <tr key={`row-${idx}`} className={styles.previewTr}>
-              {headers.map(header => (
+              {headers.map((header) => (
                 <td key={`${idx}-${header}`} className={styles.previewTd}>
                   {row[header] == null ? '-' : String(row[header])}
                 </td>
@@ -234,41 +228,66 @@ const renderPreviewTable = (rows: Record<string, unknown>[]) => {
   )
 }
 
-function ChatChartTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: unknown }>; label?: unknown }) {
+function ChatChartTooltip({
+  active,
+  payload,
+  label,
+}: {
+  active?: boolean
+  payload?: Array<{ value: unknown }>
+  label?: unknown
+}) {
   if (!active || !payload?.length) return null
   const raw = payload[0]?.value
   const value = typeof raw === 'number' ? raw.toLocaleString() : String(raw ?? '')
   const labelStr = label != null ? String(label) : ''
   return (
-    <div style={{
-      background: 'var(--color-ink)',
-      color: 'var(--color-paper)',
-      padding: 'var(--space-2) var(--space-3)',
-      fontFamily: 'var(--font-sans)',
-      fontSize: 'var(--text-xs)',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '2px',
-      whiteSpace: 'nowrap',
-    }}>
-      {labelStr && <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-rule)' }}>{labelStr}</span>}
-      <span style={{ fontWeight: 500, letterSpacing: 'var(--tracking-wide)', textTransform: 'uppercase' }}>{value}</span>
+    <div
+      style={{
+        background: 'var(--color-ink)',
+        color: 'var(--color-paper)',
+        padding: 'var(--space-2) var(--space-3)',
+        fontFamily: 'var(--font-sans)',
+        fontSize: 'var(--text-xs)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '2px',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {labelStr && (
+        <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-rule)' }}>
+          {labelStr}
+        </span>
+      )}
+      <span
+        style={{
+          fontWeight: 500,
+          letterSpacing: 'var(--tracking-wide)',
+          textTransform: 'uppercase',
+        }}
+      >
+        {value}
+      </span>
     </div>
   )
 }
 
 const AXIS_TICK = { fill: 'var(--color-ink-3)', fontSize: 10, fontFamily: 'var(--font-sans)' }
 
-const renderCharts = (chartSpecs: GymChatChartSpec[] | undefined, queries: GymChatQuery[] | undefined) => {
+const renderCharts = (
+  chartSpecs: GymChatChartSpec[] | undefined,
+  queries: GymChatQuery[] | undefined,
+) => {
   if (!chartSpecs?.length || !queries?.length) return null
-  const queryById = new Map(queries.map(q => [q.id, q]))
+  const queryById = new Map(queries.map((q) => [q.id, q]))
   return (
     <div className={styles.chartsWrapper}>
-      {chartSpecs.map(spec => {
+      {chartSpecs.map((spec) => {
         const query = queryById.get(spec.queryId)
         if (!query?.previewRows?.length) return null
         const data = query.previewRows
-          .map(row => {
+          .map((row) => {
             const xVal = row[spec.x]
             const yVal = Number(row[spec.y])
             if (xVal == null || Number.isNaN(yVal)) return null
@@ -284,18 +303,40 @@ const renderCharts = (chartSpecs: GymChatChartSpec[] | undefined, queries: GymCh
                 {spec.type === 'bar' ? (
                   <BarChart data={data}>
                     <CartesianGrid stroke="var(--color-rule-soft)" strokeOpacity={0.5} />
-                    <XAxis dataKey="x" tick={AXIS_TICK} stroke="var(--color-rule)" tickLine={false} />
+                    <XAxis
+                      dataKey="x"
+                      tick={AXIS_TICK}
+                      stroke="var(--color-rule)"
+                      tickLine={false}
+                    />
                     <YAxis tick={AXIS_TICK} stroke="var(--color-rule)" />
-                    <Tooltip content={<ChatChartTooltip />} cursor={{ fill: 'var(--color-rule-soft)' }} />
+                    <Tooltip
+                      content={<ChatChartTooltip />}
+                      cursor={{ fill: 'var(--color-rule-soft)' }}
+                    />
                     <Bar dataKey="y" fill="var(--chart-primary)" />
                   </BarChart>
                 ) : (
                   <LineChart data={data}>
                     <CartesianGrid stroke="var(--color-rule-soft)" strokeOpacity={0.5} />
-                    <XAxis dataKey="x" tick={AXIS_TICK} stroke="var(--color-rule)" tickLine={false} />
+                    <XAxis
+                      dataKey="x"
+                      tick={AXIS_TICK}
+                      stroke="var(--color-rule)"
+                      tickLine={false}
+                    />
                     <YAxis tick={AXIS_TICK} stroke="var(--color-rule)" />
-                    <Tooltip content={<ChatChartTooltip />} cursor={{ stroke: 'var(--color-accent)', strokeOpacity: 0.3 }} />
-                    <Line type="monotone" dataKey="y" stroke="var(--chart-primary)" strokeWidth={2} dot={false} />
+                    <Tooltip
+                      content={<ChatChartTooltip />}
+                      cursor={{ stroke: 'var(--color-accent)', strokeOpacity: 0.3 }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="y"
+                      stroke="var(--chart-primary)"
+                      strokeWidth={2}
+                      dot={false}
+                    />
                   </LineChart>
                 )}
               </ResponsiveContainer>
@@ -307,13 +348,19 @@ const renderCharts = (chartSpecs: GymChatChartSpec[] | undefined, queries: GymCh
   )
 }
 
-const QueryDetails = ({ queries, anchorPrefix }: { queries?: GymChatQuery[]; anchorPrefix: string }) => {
+const QueryDetails = ({
+  queries,
+  anchorPrefix,
+}: {
+  queries?: GymChatQuery[]
+  anchorPrefix: string
+}) => {
   if (!queries?.length) return null
   return (
     <details className={styles.queryDetails}>
       <summary className={styles.queryDetailsSummary}>Query details</summary>
       <div className={styles.queryList}>
-        {queries.map(query => (
+        {queries.map((query) => (
           <div key={query.id} id={`${anchorPrefix}${query.id}`} className={styles.queryCard}>
             <div className={styles.queryCardHeader}>
               <div>
@@ -324,13 +371,12 @@ const QueryDetails = ({ queries, anchorPrefix }: { queries?: GymChatQuery[]; anc
                 {query.error ? 'Error' : `${query.rowCount} rows`} / {query.durationMs}ms
               </div>
             </div>
-            {query.error ? (
-              <div className={styles.queryError}>{query.error}</div>
-            ) : null}
+            {query.error ? <div className={styles.queryError}>{query.error}</div> : null}
             <div className={styles.queryParams}>Params: {JSON.stringify(query.params)}</div>
             {query.policy ? (
               <div className={styles.queryPolicy}>
-                Policy: limit {query.policy.appliedLimit} rows / window {formatPolicyWindow(query.policy.appliedTimeWindow)}
+                Policy: limit {query.policy.appliedLimit} rows / window{' '}
+                {formatPolicyWindow(query.policy.appliedTimeWindow)}
               </div>
             ) : null}
             <details className={styles.sqlDetails}>
@@ -362,7 +408,9 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
   const copyResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    return () => { abortControllerRef.current?.abort() }
+    return () => {
+      abortControllerRef.current?.abort()
+    }
   }, [])
 
   useEffect(() => {
@@ -383,39 +431,40 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
     } catch {}
   }, [panelSize])
 
-  const startResize = (direction: 'top' | 'left' | 'corner') => (e: React.PointerEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    e.stopPropagation()
-    const startX = e.clientX
-    const startY = e.clientY
-    const panel = e.currentTarget.parentElement as HTMLElement | null
-    if (!panel) return
-    const startW = panel.offsetWidth
-    const startH = panel.offsetHeight
+  const startResize =
+    (direction: 'top' | 'left' | 'corner') => (e: React.PointerEvent<HTMLDivElement>) => {
+      e.preventDefault()
+      e.stopPropagation()
+      const startX = e.clientX
+      const startY = e.clientY
+      const panel = e.currentTarget.parentElement as HTMLElement | null
+      if (!panel) return
+      const startW = panel.offsetWidth
+      const startH = panel.offsetHeight
 
-    const onMove = (ev: PointerEvent) => {
-      let nextW = startW
-      let nextH = startH
-      if (direction === 'left' || direction === 'corner') {
-        nextW = startW + (startX - ev.clientX)
+      const onMove = (ev: PointerEvent) => {
+        let nextW = startW
+        let nextH = startH
+        if (direction === 'left' || direction === 'corner') {
+          nextW = startW + (startX - ev.clientX)
+        }
+        if (direction === 'top' || direction === 'corner') {
+          nextH = startH + (startY - ev.clientY)
+        }
+        const maxW = Math.max(320, window.innerWidth - 48)
+        const maxH = Math.max(360, window.innerHeight - 80)
+        setPanelSize({
+          width: Math.max(320, Math.min(maxW, nextW)),
+          height: Math.max(360, Math.min(maxH, nextH)),
+        })
       }
-      if (direction === 'top' || direction === 'corner') {
-        nextH = startH + (startY - ev.clientY)
+      const onUp = () => {
+        window.removeEventListener('pointermove', onMove)
+        window.removeEventListener('pointerup', onUp)
       }
-      const maxW = Math.max(320, window.innerWidth - 48)
-      const maxH = Math.max(360, window.innerHeight - 80)
-      setPanelSize({
-        width: Math.max(320, Math.min(maxW, nextW)),
-        height: Math.max(360, Math.min(maxH, nextH)),
-      })
+      window.addEventListener('pointermove', onMove)
+      window.addEventListener('pointerup', onUp)
     }
-    const onUp = () => {
-      window.removeEventListener('pointermove', onMove)
-      window.removeEventListener('pointerup', onUp)
-    }
-    window.addEventListener('pointermove', onMove)
-    window.addEventListener('pointerup', onUp)
-  }
 
   const handleCopyMessage = async (id: string, content: string) => {
     try {
@@ -423,7 +472,7 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
       setCopiedId(id)
       if (copyResetTimerRef.current) clearTimeout(copyResetTimerRef.current)
       copyResetTimerRef.current = setTimeout(() => {
-        setCopiedId(current => (current === id ? null : current))
+        setCopiedId((current) => (current === id ? null : current))
       }, 1500)
     } catch {}
   }
@@ -476,7 +525,7 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
   }, [messages, handleScroll])
 
   useEffect(() => {
-    const latestAssistant = [...messages].reverse().find(m => m.role === 'assistant')
+    const latestAssistant = [...messages].reverse().find((m) => m.role === 'assistant')
     if (!latestAssistant) {
       lastAssistantMessageIdRef.current = null
       return
@@ -521,8 +570,8 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
       scrollToBottomSoon('auto')
 
       const updateAssistantMessage = (patch: Partial<ChatMessage>) => {
-        setMessages(current =>
-          current.map(m => (m.id === assistantMessageId ? { ...m, ...patch } : m)),
+        setMessages((current) =>
+          current.map((m) => (m.id === assistantMessageId ? { ...m, ...patch } : m)),
         )
       }
 
@@ -545,7 +594,7 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
           method: 'POST',
           headers,
           body: JSON.stringify({
-            messages: outgoingMessages.map(m => ({ role: m.role, content: m.content })),
+            messages: outgoingMessages.map((m) => ({ role: m.role, content: m.content })),
             client: { timezone: buildTimezone() },
             conversationState,
           }),
@@ -563,7 +612,7 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
 
         const contentType = res.headers.get('content-type') || ''
         if (contentType.includes('text/event-stream')) {
-          await readEventStream(res, event => {
+          await readEventStream(res, (event) => {
             if (event.event === 'status') return
             if (event.event === 'final') {
               finalReceived = true
@@ -582,7 +631,7 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
                 retryRequestId: undefined,
               })
               if (data?.conversationState) {
-                setConversationState(prev => mergeConversationState(prev, data.conversationState))
+                setConversationState((prev) => mergeConversationState(prev, data.conversationState))
               }
               return
             }
@@ -590,7 +639,7 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
               finalReceived = true
               const message =
                 event.data && typeof (event.data as Record<string, unknown>).message === 'string'
-                  ? (event.data as Record<string, unknown>).message as string
+                  ? ((event.data as Record<string, unknown>).message as string)
                   : 'Request failed.'
               updateAssistantMessage({
                 content: message,
@@ -614,7 +663,7 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
           throw new Error(data?.assistantMessage || 'Request failed.')
         }
         finalReceived = true
-        setConversationState(prev => mergeConversationState(prev, data.conversationState))
+        setConversationState((prev) => mergeConversationState(prev, data.conversationState))
         updateAssistantMessage({
           content: data.assistantMessage,
           queries: data.queries,
@@ -626,7 +675,8 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
         })
       } catch (error) {
         updateAssistantMessage({
-          content: error instanceof Error ? error.message : 'Something went wrong. Please try again.',
+          content:
+            error instanceof Error ? error.message : 'Something went wrong. Please try again.',
           retryPayload: trimmed,
           retryRequestId: effectiveRequestId ?? options?.retryRequestId,
         })
@@ -654,11 +704,11 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
   )
 
   const renderedMessages = useMemo(() => {
-    return messages.map(message => {
+    return messages.map((message) => {
       const anchorPrefix = `query-${message.id}-`
       const queryIds =
         message.role === 'assistant'
-          ? new Set(message.queries?.map(q => q.id) ?? [])
+          ? new Set(message.queries?.map((q) => q.id) ?? [])
           : new Set<string>()
       const isStatusMessage =
         message.role === 'assistant' &&
@@ -667,29 +717,49 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
         !message.retryPayload &&
         message.content.trim().length === 0
       if (isStatusMessage) return null
-      const copyButton = message.content.trim().length > 0 ? (
-        <button
-          type="button"
-          className={[
-            styles.copyBtn,
-            copiedId === message.id ? styles.copyBtnCopied : '',
-          ].join(' ').trim()}
-          onClick={() => void handleCopyMessage(message.id, message.content)}
-          aria-label={copiedId === message.id ? 'Copied' : 'Copy message'}
-          title={copiedId === message.id ? 'Copied' : 'Copy'}
-        >
-          {copiedId === message.id ? (
-            <svg width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M5 10l4 4 6-8" />
-            </svg>
-          ) : (
-            <svg width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <rect x="7" y="3" width="10" height="12" rx="1" />
-              <path d="M13 17H5a1 1 0 0 1-1-1V6" />
-            </svg>
-          )}
-        </button>
-      ) : null
+      const copyButton =
+        message.content.trim().length > 0 ? (
+          <button
+            type="button"
+            className={[styles.copyBtn, copiedId === message.id ? styles.copyBtnCopied : '']
+              .join(' ')
+              .trim()}
+            onClick={() => void handleCopyMessage(message.id, message.content)}
+            aria-label={copiedId === message.id ? 'Copied' : 'Copy message'}
+            title={copiedId === message.id ? 'Copied' : 'Copy'}
+          >
+            {copiedId === message.id ? (
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 10l4 4 6-8" />
+              </svg>
+            ) : (
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <rect x="7" y="3" width="10" height="12" rx="1" />
+                <path d="M13 17H5a1 1 0 0 1-1-1V6" />
+              </svg>
+            )}
+          </button>
+        ) : null
 
       return (
         <div
@@ -715,11 +785,15 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
                   <div className={styles.retryBox}>
                     <div className={styles.retryLabel}>Response interrupted</div>
                     <div className={styles.retryBody}>
-                      <p className={styles.retryHint}>Retry the last message without losing context.</p>
+                      <p className={styles.retryHint}>
+                        Retry the last message without losing context.
+                      </p>
                       <button
                         type="button"
                         onClick={() =>
-                          void handleSubmit(message.retryPayload, { retryRequestId: message.retryRequestId })
+                          void handleSubmit(message.retryPayload, {
+                            retryRequestId: message.retryRequestId,
+                          })
                         }
                         disabled={isLoading}
                         className={styles.retryBtn}
@@ -790,7 +864,13 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
                 className={styles.scrollBtn}
                 style={{ top: 8 }}
               >
-                <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
                   <path d="M10 6a1 1 0 0 1 .7.3l4 4a1 1 0 1 1-1.4 1.4L10 8.4l-3.3 3.3a1 1 0 1 1-1.4-1.4l4-4A1 1 0 0 1 10 6z" />
                 </svg>
               </button>
@@ -803,22 +883,24 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
                 className={styles.scrollBtn}
                 style={{ bottom: 8 }}
               >
-                <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
                   <path d="M10 14a1 1 0 0 1-.7-.3l-4-4a1 1 0 1 1 1.4-1.4l3.3 3.3 3.3-3.3a1 1 0 1 1 1.4 1.4l-4 4a1 1 0 0 1-.7.3z" />
                 </svg>
               </button>
             )}
-            <div
-              ref={scrollContainerRef}
-              onScroll={handleScroll}
-              className={styles.messages}
-            >
+            <div ref={scrollContainerRef} onScroll={handleScroll} className={styles.messages}>
               {showStart ? (
                 <div className={styles.startScreen}>
                   <p className={styles.startTitle}>Gym Chat</p>
                   <p className={styles.startSub}>Ask anything about your training data</p>
                   <div className={styles.suggestions}>
-                    {SUGGESTED_QUESTIONS.map(q => (
+                    {SUGGESTED_QUESTIONS.map((q) => (
                       <button
                         key={q}
                         type="button"
@@ -852,7 +934,7 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
             <textarea
               ref={textareaRef}
               value={input}
-              onChange={e => setInput(e.target.value)}
+              onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Ask about your training..."
               rows={1}
@@ -874,16 +956,34 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
 
       <button
         type="button"
-        onClick={() => setIsOpen(v => !v)}
+        onClick={() => setIsOpen((v) => !v)}
         className={styles.trigger}
         aria-label={isOpen ? 'Close AI chat' : 'Open AI chat'}
       >
         {isOpen ? (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M18 6L6 18M6 6l12 12" />
           </svg>
         ) : (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
         )}

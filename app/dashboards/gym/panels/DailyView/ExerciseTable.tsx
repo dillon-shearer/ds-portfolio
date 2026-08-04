@@ -40,7 +40,13 @@ export default function ExerciseTable({ dayLifts, allLifts }: Props) {
 
   if (groups.length === 0) {
     return (
-      <p style={{ fontFamily: 'var(--font-sans)', fontSize: 'var(--text-xs)', color: 'var(--color-ink-3)' }}>
+      <p
+        style={{
+          fontFamily: 'var(--font-sans)',
+          fontSize: 'var(--text-xs)',
+          color: 'var(--color-ink-3)',
+        }}
+      >
         No sets logged for this day
       </p>
     )
@@ -73,8 +79,17 @@ export default function ExerciseTable({ dayLifts, allLifts }: Props) {
                       <td className={[styles.td, styles.num].join(' ')}>{s.setNumber}</td>
                       <td className={[styles.td, styles.num].join(' ')}>{s.weight} lbs</td>
                       <td className={[styles.td, styles.num].join(' ')}>{s.reps}</td>
-                      <td className={[styles.td, styles.num, styles.hideMobile].join(' ')}>{est1rm} lbs</td>
-                      <td className={[styles.td, styles.num, styles.hideMobile, isNearMax ? styles.nearMax : styles.muted].join(' ')}>
+                      <td className={[styles.td, styles.num, styles.hideMobile].join(' ')}>
+                        {est1rm} lbs
+                      </td>
+                      <td
+                        className={[
+                          styles.td,
+                          styles.num,
+                          styles.hideMobile,
+                          isNearMax ? styles.nearMax : styles.muted,
+                        ].join(' ')}
+                      >
                         {pctPR !== null ? `${pctPR}%` : '-'}
                       </td>
                     </tr>

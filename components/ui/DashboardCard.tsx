@@ -30,30 +30,25 @@ export function DashboardCard({
       <h3 className={styles.title}>{title}</h3>
       <p className={styles.description}>{description}</p>
       <div className={styles.actions}>
-        <Button href={href} variant="outline">View Dashboard</Button>
+        <Button href={href} variant="outline">
+          View Dashboard
+        </Button>
         {hasMore ? (
-          <Button
-            variant="ghost"
-            onClick={() => setExpanded((v) => !v)}
-          >
+          <Button variant="ghost" onClick={() => setExpanded((v) => !v)}>
             {expanded ? 'See less' : 'See more'}
           </Button>
         ) : null}
       </div>
       {hasMore ? (
-        <div
-          className={styles.expand}
-          data-expanded={expanded}
-          aria-hidden={!expanded}
-        >
+        <div className={styles.expand} data-expanded={expanded} aria-hidden={!expanded}>
           <div className={styles.expandInner}>
-            {longDescription ? (
-              <p className={styles.long}>{longDescription}</p>
-            ) : null}
+            {longDescription ? <p className={styles.long}>{longDescription}</p> : null}
             {tech && tech.length > 0 ? (
               <ul className={styles.tech}>
                 {tech.map((t) => (
-                  <li key={t} className={styles.tag}>{t}</li>
+                  <li key={t} className={styles.tag}>
+                    {t}
+                  </li>
                 ))}
               </ul>
             ) : null}

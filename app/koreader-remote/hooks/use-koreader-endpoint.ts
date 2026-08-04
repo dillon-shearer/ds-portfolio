@@ -4,9 +4,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { KOREADER_STORAGE_KEY } from '@/lib/koreader/client'
 
-type SaveResult =
-  | { ok: true; value: string }
-  | { ok: false; error: string }
+type SaveResult = { ok: true; value: string } | { ok: false; error: string }
 
 export function useKoreaderEndpoint() {
   const [endpoint, setEndpoint] = useState<string>('')

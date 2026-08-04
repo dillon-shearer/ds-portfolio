@@ -43,8 +43,7 @@ export function useScreenWakeLock(shouldEnable: boolean): WakeLockState {
     if (typeof document === 'undefined') return
 
     let cancelled = false
-    const nav =
-      typeof navigator !== 'undefined' ? (navigator as NavigatorWithWakeLock) : undefined
+    const nav = typeof navigator !== 'undefined' ? (navigator as NavigatorWithWakeLock) : undefined
     const supportsScreenWakeLock = Boolean(nav?.wakeLock)
     const fallbackAvailable = typeof window !== 'undefined'
 
@@ -157,8 +156,7 @@ export function useScreenWakeLock(shouldEnable: boolean): WakeLockState {
           error: undefined,
         }))
       } catch (error) {
-        const message =
-          error instanceof Error ? error.message : 'Wake-lock request failed.'
+        const message = error instanceof Error ? error.message : 'Wake-lock request failed.'
         console.warn('Screen wake-lock request failed', error)
         setState((prev) => ({ ...prev, error: message }))
         enableFallbackListener()
@@ -185,7 +183,6 @@ export function useScreenWakeLock(shouldEnable: boolean): WakeLockState {
       cleanupFallbackListener()
       void releaseResources()
     }
-     
   }, [shouldEnable])
 
   return state

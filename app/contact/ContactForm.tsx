@@ -17,17 +17,17 @@ export function ContactForm() {
     const result = await submitContactForm(formData)
     setStatus(result)
     if ('success' in result && result.success) {
-      (e.target as HTMLFormElement).reset()
+      ;(e.target as HTMLFormElement).reset()
     }
   }
 
   const messages: Record<string, string> = {
-    'missing': 'Please fill in all required fields.',
+    missing: 'Please fill in all required fields.',
     'invalid-email': 'Please enter a valid email address.',
     'rate-limit': 'You\u2019ve reached the hourly limit. Try again later or email me directly.',
-    'spam': 'Something felt off about that submission. Please try again.',
-    'forbidden': 'Please submit the form from datawithdillon.com.',
-    'send': 'Something went wrong. Please try again or email me directly at dillon@datawithdillon.com.',
+    spam: 'Something felt off about that submission. Please try again.',
+    forbidden: 'Please submit the form from datawithdillon.com.',
+    send: 'Something went wrong. Please try again or email me directly at dillon@datawithdillon.com.',
   }
 
   const isSuccess = typeof status === 'object' && 'success' in status
@@ -63,11 +63,7 @@ export function ContactForm() {
         <Input label="Message" name="message" as="textarea" required />
       </div>
 
-      <Button
-        type="submit"
-        variant="primary"
-        disabled={status === 'sending'}
-      >
+      <Button type="submit" variant="primary" disabled={status === 'sending'}>
         {status === 'sending' ? 'Sending\u2026' : 'Send message'}
       </Button>
     </form>

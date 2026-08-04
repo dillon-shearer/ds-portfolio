@@ -27,10 +27,24 @@ function SortIndicator({ active, dir }: { active: boolean; dir: 'asc' | 'desc' }
   return <span>{dir === 'asc' ? ' \u2191' : ' \u2193'}</span>
 }
 
-export default function ExercisePRsTable({ rows, page, totalPages, sortKey, sortDir, onSort, onPrev, onNext }: Props) {
+export default function ExercisePRsTable({
+  rows,
+  page,
+  totalPages,
+  sortKey,
+  sortDir,
+  onSort,
+  onPrev,
+  onNext,
+}: Props) {
   const col = (key: SortKey, label: string, className?: string) => (
-    <th className={[styles.th, className].filter(Boolean).join(' ')} onClick={() => onSort(key)} style={{ cursor: 'pointer' }}>
-      {label}<SortIndicator active={sortKey === key} dir={sortDir} />
+    <th
+      className={[styles.th, className].filter(Boolean).join(' ')}
+      onClick={() => onSort(key)}
+      style={{ cursor: 'pointer' }}
+    >
+      {label}
+      <SortIndicator active={sortKey === key} dir={sortDir} />
     </th>
   )
 
@@ -52,11 +66,21 @@ export default function ExercisePRsTable({ rows, page, totalPages, sortKey, sort
               <tr key={row.exercise} className={i < rows.length - 1 ? styles.row : styles.rowLast}>
                 <td className={styles.td}>{row.exercise}</td>
                 <td className={[styles.td, styles.num].join(' ')}>{row.bestWeight} lbs</td>
-                <td className={[styles.td, styles.num, styles.accent].join(' ')}>{row.best1RM} lbs</td>
+                <td className={[styles.td, styles.num, styles.accent].join(' ')}>
+                  {row.best1RM} lbs
+                </td>
                 <td className={[styles.td, styles.num, styles.muted, styles.hideMobile].join(' ')}>
                   {row.bestSet ? `${row.bestSet.weight} x ${row.bestSet.reps}` : '-'}
                 </td>
-                <td className={[styles.td, styles.num, styles.muted, styles.dateCell, styles.hideMobile].join(' ')}>
+                <td
+                  className={[
+                    styles.td,
+                    styles.num,
+                    styles.muted,
+                    styles.dateCell,
+                    styles.hideMobile,
+                  ].join(' ')}
+                >
                   {row.bestSetDate}
                 </td>
               </tr>

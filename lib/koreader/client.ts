@@ -45,9 +45,7 @@ export function buildKoreaderUrl(endpoint: string, actionId: KoreaderActionId): 
   return `${normalizedEndpoint.replace(/\/+$/, '')}${action.path}`
 }
 
-type SendCommandResult =
-  | { ok: true; url: string }
-  | { ok: false; url?: string; error: string }
+type SendCommandResult = { ok: true; url: string } | { ok: false; url?: string; error: string }
 
 type SendOptions = {
   retries?: number

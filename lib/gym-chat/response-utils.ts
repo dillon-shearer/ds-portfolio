@@ -1,4 +1,10 @@
-import type { AnalysisKind, GymChatChartSpec, GymChatQuery, TargetMuscleConstraint, WorkoutPlanAnalysisMeta } from '@/types/gym-chat'
+import type {
+  AnalysisKind,
+  GymChatChartSpec,
+  GymChatQuery,
+  TargetMuscleConstraint,
+  WorkoutPlanAnalysisMeta,
+} from '@/types/gym-chat'
 import { resolveExercisePrimaryMuscle, selectExercisesForMuscles } from './workout-planner'
 
 export type MetricInfo = {
@@ -48,11 +54,28 @@ export type WorkoutTemplateExercise = {
 
 const DEFAULT_TOP_N = 10
 const TOP_N_REGEX = /\btop[-\s]+(\d+)\b/i
-const RANKING_KEYWORDS = ['top', 'most', 'highest', 'lowest', 'least', 'rank', 'ranking', 'best', 'worst']
+const RANKING_KEYWORDS = [
+  'top',
+  'most',
+  'highest',
+  'lowest',
+  'least',
+  'rank',
+  'ranking',
+  'best',
+  'worst',
+]
 const PR_RANKING_REGEX = /\bpr(?:s)?\b|\bpersonal\s+(?:record|best)s?\b/i
 
 const VOLUME_KEYWORDS = ['volume', 'tonnage', 'lb-reps', 'lb reps', 'kg-reps', 'kg reps']
-const VOLUME_MISMATCH_KEYWORDS = ['total volume', 'tonnage', 'lb-reps', 'lb reps', 'kg-reps', 'kg reps']
+const VOLUME_MISMATCH_KEYWORDS = [
+  'total volume',
+  'tonnage',
+  'lb-reps',
+  'lb reps',
+  'kg-reps',
+  'kg reps',
+]
 
 const normalizeText = (value: string) => value.toLowerCase()
 
@@ -82,7 +105,13 @@ const WORKOUT_EXERCISE_LIBRARY: WorkoutTemplateExercise[] = [
   { name: 'Hack Squat', primaryMuscle: 'quads', sets: '3-4', reps: '6-10' },
   { name: 'Leg Press', primaryMuscle: 'quads', sets: '3', reps: '8-12' },
   { name: 'Front Squat', primaryMuscle: 'quads', sets: '3', reps: '5-8' },
-  { name: 'Bulgarian Split Squat', primaryMuscle: 'quads', sets: '3', reps: '8-12', notes: 'per leg' },
+  {
+    name: 'Bulgarian Split Squat',
+    primaryMuscle: 'quads',
+    sets: '3',
+    reps: '8-12',
+    notes: 'per leg',
+  },
   { name: 'Seated Leg Curl', primaryMuscle: 'hamstrings', sets: '3', reps: '8-12' },
   { name: 'Romanian Deadlift', primaryMuscle: 'hamstrings', sets: '3', reps: '6-10' },
   { name: 'Hip Thrust', primaryMuscle: 'glutes', sets: '3-4', reps: '8-12' },
@@ -119,26 +148,25 @@ const levenshteinDistance = (a: string, b: string): number => {
 const fuzzyMatchExercises = (input: string, maxDistance = 2, maxResults = 3): string[] => {
   const normalized = normalizeExerciseText(input)
   if (!normalized) return []
-  const scored = WORKOUT_EXERCISE_LIBRARY
-    .map(entry => {
-      const name = normalizeExerciseText(entry.name)
-      const distance = levenshteinDistance(normalized, name)
-      const words = name.split(/\s+/)
-      const inputWords = normalized.split(/\s+/)
-      let bestWordDistance = distance
-      for (const inputWord of inputWords) {
-        for (const word of words) {
-          const wordDist = levenshteinDistance(inputWord, word)
-          if (wordDist < bestWordDistance) {
-            bestWordDistance = wordDist
-          }
+  const scored = WORKOUT_EXERCISE_LIBRARY.map((entry) => {
+    const name = normalizeExerciseText(entry.name)
+    const distance = levenshteinDistance(normalized, name)
+    const words = name.split(/\s+/)
+    const inputWords = normalized.split(/\s+/)
+    let bestWordDistance = distance
+    for (const inputWord of inputWords) {
+      for (const word of words) {
+        const wordDist = levenshteinDistance(inputWord, word)
+        if (wordDist < bestWordDistance) {
+          bestWordDistance = wordDist
         }
       }
-      return { name: entry.name, distance: Math.min(distance, bestWordDistance) }
-    })
-    .filter(entry => entry.distance <= maxDistance)
+    }
+    return { name: entry.name, distance: Math.min(distance, bestWordDistance) }
+  })
+    .filter((entry) => entry.distance <= maxDistance)
     .sort((a, b) => a.distance - b.distance)
-  return scored.slice(0, maxResults).map(entry => entry.name)
+  return scored.slice(0, maxResults).map((entry) => entry.name)
 }
 
 const mapWindowDays = (window: string | null | undefined) => {
@@ -157,7 +185,7 @@ const mapWindowDays = (window: string | null | undefined) => {
 }
 
 const selectPrimaryQuery = (queries: GymChatQuery[]) => {
-  const candidates = queries.filter(query => !query.error)
+  const candidates = queries.filter((query) => !query.error)
   if (!candidates.length) return null
   return candidates.reduce((best, query) => {
     if (!best) return query
@@ -331,15 +359,18 @@ const formatMuscleList = (muscles: string[]) => {
 const buildGenericWorkoutPlan = (constraint?: TargetMuscleConstraint, maxExercises = 5) => {
   const candidates = constraint
     ? selectExercisesForMuscles(
-        WORKOUT_EXERCISE_LIBRARY.map(entry => ({
+        WORKOUT_EXERCISE_LIBRARY.map((entry) => ({
           name: entry.name,
           primaryMuscle: entry.primaryMuscle,
         })),
         constraint,
       )
-    : WORKOUT_EXERCISE_LIBRARY.map(entry => ({ name: entry.name, primaryMuscle: entry.primaryMuscle }))
-  const allowed = new Set(candidates.map(entry => entry.name))
-  const filtered = WORKOUT_EXERCISE_LIBRARY.filter(entry => allowed.has(entry.name))
+    : WORKOUT_EXERCISE_LIBRARY.map((entry) => ({
+        name: entry.name,
+        primaryMuscle: entry.primaryMuscle,
+      }))
+  const allowed = new Set(candidates.map((entry) => entry.name))
+  const filtered = WORKOUT_EXERCISE_LIBRARY.filter((entry) => allowed.has(entry.name))
   return filtered.slice(0, Math.max(1, Math.min(maxExercises, filtered.length)))
 }
 
@@ -361,7 +392,8 @@ const formatPlanDate = (value: unknown) => {
 }
 
 const inferRepTarget = (value: unknown) => {
-  const numeric = typeof value === 'number' ? value : typeof value === 'string' ? Number(value) : NaN
+  const numeric =
+    typeof value === 'number' ? value : typeof value === 'string' ? Number(value) : NaN
   if (!Number.isFinite(numeric) || numeric <= 0) return '8-12'
   if (numeric <= 4) return '3-5'
   if (numeric <= 6) return '4-6'
@@ -371,7 +403,8 @@ const inferRepTarget = (value: unknown) => {
 }
 
 const inferSetTarget = (value: unknown) => {
-  const numeric = typeof value === 'number' ? value : typeof value === 'string' ? Number(value) : NaN
+  const numeric =
+    typeof value === 'number' ? value : typeof value === 'string' ? Number(value) : NaN
   if (!Number.isFinite(numeric)) return 3
   if (numeric >= 18) return 4
   if (numeric <= 6) return 2
@@ -390,7 +423,9 @@ const resolveGoalDefaults = (goal?: WorkoutPlanAnalysisMeta['goal']) => {
 }
 
 export const buildPlanCorrectionAcknowledgement = (constraint?: TargetMuscleConstraint) => {
-  const targetList = constraint?.include?.length ? formatMuscleList(constraint.include) : 'your requested focus'
+  const targetList = constraint?.include?.length
+    ? formatMuscleList(constraint.include)
+    : 'your requested focus'
   const focusLabel = constraint?.strict ? `${targetList} only` : targetList
   return `You're right - the last plan drifted off target. I'll keep this ${focusLabel}.`
 }
@@ -406,21 +441,27 @@ export const buildWorkoutPlanFromHistory = (input: {
   const query = input.query
   const rows = query?.previewRows ?? []
   if (!rows.length) return null
-  const maxExercises = input.maxExercises && input.maxExercises > 0 ? Math.floor(input.maxExercises) : 5
+  const maxExercises =
+    input.maxExercises && input.maxExercises > 0 ? Math.floor(input.maxExercises) : 5
   const goalDefaults = resolveGoalDefaults(input.goal)
   const exercises = rows
-    .map(row => ({
+    .map((row) => ({
       row,
-      name: typeof row.exercise === 'string' ? row.exercise : typeof (row as any).exercise_name === 'string'
-        ? (row as any).exercise_name
-        : null,
+      name:
+        typeof row.exercise === 'string'
+          ? row.exercise
+          : typeof (row as any).exercise_name === 'string'
+            ? (row as any).exercise_name
+            : null,
     }))
-    .filter(entry => entry.name)
+    .filter((entry) => entry.name)
     .slice(0, maxExercises) as Array<{ row: Record<string, unknown>; name: string }>
   if (!exercises.length) return null
 
   const windowLabel = typeof query?.params?.[0] === 'string' ? String(query.params[0]) : null
-  const targetList = input.constraint?.include?.length ? formatMuscleList(input.constraint.include) : 'targeted'
+  const targetList = input.constraint?.include?.length
+    ? formatMuscleList(input.constraint.include)
+    : 'targeted'
   const focusLabel = input.constraint?.strict ? `${targetList}-only` : `${targetList}-focused`
   const opening = `${input.acknowledgement ? `${input.acknowledgement} ` : ''}Based on your ${
     windowLabel ? `${windowLabel} ` : ''
@@ -464,7 +505,8 @@ export const buildWorkoutPlanFromHistory = (input: {
   const trainingLine = input.constraint?.strict
     ? `Keep the session strictly ${targetList} only; skip accessories for other muscle groups.`
     : `Keep the session focused on ${targetList} while staying within the requested emphasis.`
-  const goalLine = input.goal && goalDefaults ? `Goal focus: ${input.goal}. ${goalDefaults.note}` : null
+  const goalLine =
+    input.goal && goalDefaults ? `Goal focus: ${input.goal}. ${goalDefaults.note}` : null
   const loadingLine = input.usesHistoricalLifts
     ? 'Aim to match your last working set; if it felt smooth, add 2.5-5 lb next time.'
     : 'Use the historical set weights as starting anchors and adjust slightly based on fatigue.'
@@ -495,11 +537,13 @@ export const buildWorkoutPlanFallbackMessage = (input: {
 }) => {
   const goalDefaults = resolveGoalDefaults(input.goal)
   const exercises = buildGenericWorkoutPlan(input.constraint, 6)
-  const targetList = input.constraint?.include?.length ? formatMuscleList(input.constraint.include) : 'targeted'
+  const targetList = input.constraint?.include?.length
+    ? formatMuscleList(input.constraint.include)
+    : 'targeted'
   const focusLabel = input.constraint?.strict ? `${targetList}-only` : `${targetList}-focused`
   const opening = `${input.acknowledgement ? `${input.acknowledgement} ` : ''}Here is a ${focusLabel} session.`
   const sessionLines = exercises.length
-    ? exercises.map(entry => {
+    ? exercises.map((entry) => {
         const sets = goalDefaults?.sets ? String(goalDefaults.sets) : entry.sets
         const reps = goalDefaults?.reps ?? entry.reps
         const note = entry.notes ? ` (${entry.notes})` : ''
@@ -512,7 +556,8 @@ export const buildWorkoutPlanFallbackMessage = (input: {
   const trainingLine = input.constraint?.strict
     ? `Keep the session strictly ${targetList} only; skip accessories for other muscle groups.`
     : `Keep the session focused on ${targetList} while staying within the requested emphasis.`
-  const goalLine = input.goal && goalDefaults ? `Goal focus: ${input.goal}. ${goalDefaults.note}` : null
+  const goalLine =
+    input.goal && goalDefaults ? `Goal focus: ${input.goal}. ${goalDefaults.note}` : null
   return [
     opening,
     '**Proposed session**',
@@ -540,7 +585,7 @@ export const isRankingQuestion = (question: string) => {
   if (!question) return false
   const normalized = normalizeText(question)
   if (PR_RANKING_REGEX.test(normalized)) return true
-  return RANKING_KEYWORDS.some(keyword => normalized.includes(keyword))
+  return RANKING_KEYWORDS.some((keyword) => normalized.includes(keyword))
 }
 
 export const suggestExerciseNames = (input: string, maxResults = 3) => {
@@ -548,43 +593,58 @@ export const suggestExerciseNames = (input: string, maxResults = 3) => {
   const normalized = normalizeExerciseText(input)
   if (!normalized) return []
   const exactMatches = WORKOUT_EXERCISE_LIBRARY.filter(
-    entry => normalizeExerciseText(entry.name) === normalized,
-  ).map(entry => entry.name)
+    (entry) => normalizeExerciseText(entry.name) === normalized,
+  ).map((entry) => entry.name)
   if (exactMatches.length) return exactMatches.slice(0, maxResults)
-  const partialMatches = WORKOUT_EXERCISE_LIBRARY.filter(entry => {
+  const partialMatches = WORKOUT_EXERCISE_LIBRARY.filter((entry) => {
     const candidate = normalizeExerciseText(entry.name)
     return candidate.includes(normalized) || normalized.includes(candidate)
-  }).map(entry => entry.name)
+  }).map((entry) => entry.name)
   if (partialMatches.length) return partialMatches.slice(0, maxResults)
   const fuzzyMatches = fuzzyMatchExercises(input, 3, maxResults)
   if (fuzzyMatches.length) return fuzzyMatches
   const primaryMuscle = resolveExercisePrimaryMuscle(input)
   if (!primaryMuscle) return []
-  const muscleMatches = WORKOUT_EXERCISE_LIBRARY.filter(entry => entry.primaryMuscle === primaryMuscle)
-    .map(entry => entry.name)
-  return muscleMatches.filter(name => normalizeExerciseText(name) !== normalized).slice(0, maxResults)
+  const muscleMatches = WORKOUT_EXERCISE_LIBRARY.filter(
+    (entry) => entry.primaryMuscle === primaryMuscle,
+  ).map((entry) => entry.name)
+  return muscleMatches
+    .filter((name) => normalizeExerciseText(name) !== normalized)
+    .slice(0, maxResults)
 }
 
 export const detectRequestedMetric = (question: string): MetricInfo | null => {
   if (!question) return null
   const normalized = normalizeText(question)
-  if (VOLUME_KEYWORDS.some(keyword => normalized.includes(keyword))) {
+  if (VOLUME_KEYWORDS.some((keyword) => normalized.includes(keyword))) {
     return { name: 'total volume', units: 'lb-reps' }
   }
-  if (normalized.includes('total sets') || hasWord(normalized, 'sets') || hasWord(normalized, 'set')) {
+  if (
+    normalized.includes('total sets') ||
+    hasWord(normalized, 'sets') ||
+    hasWord(normalized, 'set')
+  ) {
     return { name: 'total sets', units: 'sets' }
   }
-  if (normalized.includes('total reps') || hasWord(normalized, 'reps') || hasWord(normalized, 'rep')) {
+  if (
+    normalized.includes('total reps') ||
+    hasWord(normalized, 'reps') ||
+    hasWord(normalized, 'rep')
+  ) {
     return { name: 'total reps', units: 'reps' }
   }
-  if (normalized.includes('sessions') || normalized.includes('workouts') || normalized.includes('training days')) {
+  if (
+    normalized.includes('sessions') ||
+    normalized.includes('workouts') ||
+    normalized.includes('training days')
+  ) {
     return { name: 'sessions', units: 'sessions' }
   }
   return null
 }
 
 export const buildQueryResultMetadata = (queries: GymChatQuery[]): QueryResultMeta[] =>
-  queries.map(query => ({
+  queries.map((query) => ({
     queryId: query.id,
     rowsReturned: query.rowCount,
     rowsDisplayed: query.previewRows.length,
@@ -603,8 +663,10 @@ export const buildResponseMeta = (question: string, queries: GymChatQuery[]): Re
   const timeWindowLabel = primary?.policy?.appliedTimeWindow ?? null
   const timeWindowDays = mapWindowDays(timeWindowLabel ?? null)
   const displayTarget =
-    rankingRequested && primary ? Math.min(requestedTopN ?? DEFAULT_TOP_N, primary.previewRows.length) : null
-  const rowsDisplayed = displayTarget ?? (primary?.previewRows.length ?? null)
+    rankingRequested && primary
+      ? Math.min(requestedTopN ?? DEFAULT_TOP_N, primary.previewRows.length)
+      : null
+  const rowsDisplayed = displayTarget ?? primary?.previewRows.length ?? null
   const tieHandling = primary?.sql?.toLowerCase().includes('with ties')
     ? 'ties expanded'
     : 'ties not expanded'
@@ -633,7 +695,9 @@ export const formatCoverageLine = (meta: ResponseMeta, options?: { debug?: boole
   const rowsDisplayed = meta.rowsDisplayed ?? 0
   if (options?.debug) {
     const limitApplied = meta.limitApplied ?? 'none'
-    const topRequested = meta.requestedTopN ? `top ${meta.requestedTopN} requested` : 'top N not specified'
+    const topRequested = meta.requestedTopN
+      ? `top ${meta.requestedTopN} requested`
+      : 'top N not specified'
     const tieHandling = meta.tieHandling ?? 'tie handling unknown'
     return `Coverage/Limitations: window=${windowLabel}, rows returned=${rowsReturned}, rows shown=${rowsDisplayed}, limit=${limitApplied} (${topRequested}), tie handling=${tieHandling}.`
   }
@@ -674,7 +738,7 @@ export const validateRankingResponse = (
   const issues: ResponseValidationIssue[] = []
   const normalized = normalizeText(assistantMessage)
   if (meta.metricName === 'total sets') {
-    if (VOLUME_MISMATCH_KEYWORDS.some(keyword => normalized.includes(keyword))) {
+    if (VOLUME_MISMATCH_KEYWORDS.some((keyword) => normalized.includes(keyword))) {
       issues.push({
         type: 'metric_mismatch',
         message:
@@ -722,8 +786,9 @@ const formatRowSample = (row: Record<string, unknown>) =>
 
 const buildRankingSample = (rows: Record<string, unknown>[], label: string, valueKey: string) => {
   if (!rows.length) return []
-  return rows.slice(0, 5).map(row => {
-    const name = row.exercise ?? row.body_part ?? row.day_tag ?? row.week_start ?? row.session_date ?? 'Item'
+  return rows.slice(0, 5).map((row) => {
+    const name =
+      row.exercise ?? row.body_part ?? row.day_tag ?? row.week_start ?? row.session_date ?? 'Item'
     const value = row[valueKey] ?? row.total_sets ?? row.total_volume ?? row.count ?? row.sessions
     return `- ${name}: ${value ?? 'n/a'} ${label}`.trim()
   })
@@ -734,7 +799,7 @@ const extractNumericStats = (rows: Record<string, unknown>[]) => {
   const keys = Object.keys(rows[0])
   for (const key of keys) {
     const values = rows
-      .map(row => {
+      .map((row) => {
         const raw = row[key]
         if (typeof raw === 'number') return raw
         if (typeof raw === 'string' && raw.trim()) {
@@ -747,8 +812,7 @@ const extractNumericStats = (rows: Record<string, unknown>[]) => {
     if (values.length < 2) continue
     const sorted = [...values].sort((a, b) => a - b)
     const mid = Math.floor(sorted.length / 2)
-    const median =
-      sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid]
+    const median = sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid]
     return {
       key,
       min: sorted[0],
@@ -772,12 +836,13 @@ export const buildFallbackExplanation = (input: {
     priorInferred?: boolean
   }
 }) => {
-  const eligibleQueries = input.queries.filter(query => !query.error)
+  const eligibleQueries = input.queries.filter((query) => !query.error)
   const primary = eligibleQueries.length ? selectPrimaryQuery(eligibleQueries) : null
   const windowLabel = primary?.policy?.appliedTimeWindow ?? 'unknown window'
 
   if (input.analysisKind === 'session_count' && primary?.previewRows?.[0]) {
-    const sessionCount = primary.previewRows[0].session_count ?? primary.previewRows[0].sessions ?? 'n/a'
+    const sessionCount =
+      primary.previewRows[0].session_count ?? primary.previewRows[0].sessions ?? 'n/a'
     return [
       `You logged ${sessionCount} sessions over ${windowLabel}.`,
       `Coverage/Limitations: window=${windowLabel}, rows returned=${primary.rowCount}, rows shown=${primary.previewRows.length}.`,
@@ -792,16 +857,18 @@ export const buildFallbackExplanation = (input: {
       `Weekly training volume over ${windowLabel} (showing ${primary.previewRows.length} weeks).`,
       `First week: ${formatRowSample(first)}`,
       `Most recent week: ${formatRowSample(last)}`,
-      stats ? `Volume stats (${stats.key}): min=${stats.min}, median=${stats.median}, max=${stats.max}.` : '',
+      stats
+        ? `Volume stats (${stats.key}): min=${stats.min}, median=${stats.median}, max=${stats.max}.`
+        : '',
     ]
       .filter(Boolean)
       .join('\n')
   }
 
   if (input.analysisKind === 'period_compare') {
-    const summaryQuery = input.queries.find(query => query.id === 'q1' && !query.error) ?? primary
-    const adherenceQuery = input.queries.find(query => query.id === 'q3' && !query.error)
-    const gapsQuery = input.queries.find(query => query.id === 'q4' && !query.error)
+    const summaryQuery = input.queries.find((query) => query.id === 'q1' && !query.error) ?? primary
+    const adherenceQuery = input.queries.find((query) => query.id === 'q3' && !query.error)
+    const gapsQuery = input.queries.find((query) => query.id === 'q4' && !query.error)
     const summaryRow = summaryQuery?.previewRows?.[0] ?? null
     const adherenceRow = adherenceQuery?.previewRows?.[0] ?? null
     const gaps = gapsQuery?.previewRows?.slice(0, 3) ?? []
@@ -824,7 +891,7 @@ export const buildFallbackExplanation = (input: {
         ]
       : []
     const gapLines = gaps.length
-      ? gaps.map(row => {
+      ? gaps.map((row) => {
           const grain = row.gap_grain ?? 'gap'
           const start = row.gap_start ?? 'n/a'
           const end = row.gap_end ?? 'n/a'
@@ -850,7 +917,9 @@ export const buildFallbackExplanation = (input: {
     return [
       `Top-end efforts by exercise over ${windowLabel}.`,
       ...lines,
-      stats ? `Top-end stats (${stats.key}): min=${stats.min}, median=${stats.median}, max=${stats.max}.` : '',
+      stats
+        ? `Top-end stats (${stats.key}): min=${stats.min}, median=${stats.median}, max=${stats.max}.`
+        : '',
       `Coverage/Limitations: window=${windowLabel}, rows returned=${primary.rowCount}, rows shown=${primary.previewRows.length}.`,
     ]
       .filter(Boolean)
@@ -859,7 +928,7 @@ export const buildFallbackExplanation = (input: {
 
   if (input.analysisKind === 'top_weight_sets' && primary?.previewRows?.length) {
     const stats = extractNumericStats(primary.previewRows)
-    const lines = primary.previewRows.slice(0, 5).map(row => {
+    const lines = primary.previewRows.slice(0, 5).map((row) => {
       const name = row.exercise ?? 'Exercise'
       const weight = row.weight ?? 'n/a'
       const reps = row.reps ?? 'n/a'
@@ -869,7 +938,9 @@ export const buildFallbackExplanation = (input: {
     return [
       `Top-weight sets over ${windowLabel}.`,
       ...lines,
-      stats ? `Weight stats (${stats.key}): min=${stats.min}, median=${stats.median}, max=${stats.max}.` : '',
+      stats
+        ? `Weight stats (${stats.key}): min=${stats.min}, median=${stats.median}, max=${stats.max}.`
+        : '',
       `Coverage/Limitations: window=${windowLabel}, rows returned=${primary.rowCount}, rows shown=${primary.previewRows.length}.`,
     ]
       .filter(Boolean)
@@ -877,9 +948,10 @@ export const buildFallbackExplanation = (input: {
   }
 
   if (input.analysisKind === 'exercise_prs' && primary?.previewRows?.length) {
-    const lines = primary.previewRows.slice(0, 5).map(row => {
+    const lines = primary.previewRows.slice(0, 5).map((row) => {
       const name = row.exercise ?? 'Exercise'
-      const metric = row.pr_value ?? row.pr_weight ?? row.pr_est_1rm ?? row.weight ?? row.est_1rm ?? 'n/a'
+      const metric =
+        row.pr_value ?? row.pr_weight ?? row.pr_est_1rm ?? row.weight ?? row.est_1rm ?? 'n/a'
       const reps = row.reps ?? 'n/a'
       const date = row.session_date ?? row.performed_at ?? 'n/a'
       return `- ${name}: ${metric} x ${reps} (${date})`
@@ -895,7 +967,7 @@ export const buildFallbackExplanation = (input: {
 
   if (input.analysisKind === 'best_sets' && primary?.previewRows?.length) {
     const stats = extractNumericStats(primary.previewRows)
-    const lines = primary.previewRows.slice(0, 5).map(row => {
+    const lines = primary.previewRows.slice(0, 5).map((row) => {
       const name = row.exercise ?? 'Exercise'
       const metric = row.metric_value ?? row.weight ?? row.est_1rm ?? 'n/a'
       const reps = row.reps ?? 'n/a'
@@ -905,7 +977,9 @@ export const buildFallbackExplanation = (input: {
     return [
       `Best sets over ${windowLabel}.`,
       ...lines,
-      stats ? `Best-set stats (${stats.key}): min=${stats.min}, median=${stats.median}, max=${stats.max}.` : '',
+      stats
+        ? `Best-set stats (${stats.key}): min=${stats.min}, median=${stats.median}, max=${stats.max}.`
+        : '',
       input.responseMeta ? formatCoverageLine(input.responseMeta) : '',
     ]
       .filter(Boolean)
@@ -913,7 +987,7 @@ export const buildFallbackExplanation = (input: {
   }
 
   if (input.analysisKind === 'exercise_summary' && primary?.previewRows?.length) {
-    const lines = primary.previewRows.slice(0, 5).map(row => {
+    const lines = primary.previewRows.slice(0, 5).map((row) => {
       const name = row.exercise ?? 'Exercise'
       const totalSets = row.total_sets ?? 'n/a'
       const totalVolume = row.total_volume ?? 'n/a'
@@ -937,7 +1011,9 @@ export const buildFallbackExplanation = (input: {
     return [
       `Top exercises by total sets over ${windowLabel}.`,
       ...lines,
-      stats ? `Set-count stats (${stats.key}): min=${stats.min}, median=${stats.median}, max=${stats.max}.` : '',
+      stats
+        ? `Set-count stats (${stats.key}): min=${stats.min}, median=${stats.median}, max=${stats.max}.`
+        : '',
       input.responseMeta ? formatCoverageLine(input.responseMeta) : '',
     ]
       .filter(Boolean)
@@ -953,7 +1029,9 @@ export const buildFallbackExplanation = (input: {
     return [
       `Top exercises by total volume over ${windowLabel}.`,
       ...lines,
-      stats ? `Volume stats (${stats.key}): min=${stats.min}, median=${stats.median}, max=${stats.max}.` : '',
+      stats
+        ? `Volume stats (${stats.key}): min=${stats.min}, median=${stats.median}, max=${stats.max}.`
+        : '',
       input.responseMeta ? formatCoverageLine(input.responseMeta) : '',
     ]
       .filter(Boolean)
@@ -1015,7 +1093,7 @@ export const buildFallbackExplanation = (input: {
   }
 
   if (input.analysisKind === 'return_for_effort_progression' && primary?.previewRows?.length) {
-    const lines = primary.previewRows.slice(0, 5).map(row => `- ${formatRowSample(row)}`)
+    const lines = primary.previewRows.slice(0, 5).map((row) => `- ${formatRowSample(row)}`)
     return [
       `Estimated 1RM progression over ${windowLabel} (showing sample rows).`,
       ...lines,
@@ -1024,7 +1102,7 @@ export const buildFallbackExplanation = (input: {
   }
 
   if (input.analysisKind === 'exercise_progression' && primary?.previewRows?.length) {
-    const lines = primary.previewRows.slice(0, 5).map(row => `- ${formatRowSample(row)}`)
+    const lines = primary.previewRows.slice(0, 5).map((row) => `- ${formatRowSample(row)}`)
     return [
       `Estimated 1RM progression over ${windowLabel} (showing sample rows).`,
       ...lines,
@@ -1034,9 +1112,12 @@ export const buildFallbackExplanation = (input: {
       .join('\n')
   }
 
-  if (input.analysisKind === 'top_end_efforts_compare_12m_3m' && input.queryResultMetadata?.length) {
+  if (
+    input.analysisKind === 'top_end_efforts_compare_12m_3m' &&
+    input.queryResultMetadata?.length
+  ) {
     const lines = input.queryResultMetadata.map(
-      meta =>
+      (meta) =>
         `- ${meta.queryId}: ${meta.rowsReturned} rows (window ${meta.timeWindowLabel ?? 'unknown'})`,
     )
     return [
@@ -1047,26 +1128,30 @@ export const buildFallbackExplanation = (input: {
   }
 
   if (input.analysisKind === 'set_breakdown') {
-    const bucketQuery = input.queries.find(query => query.id === 'q2' && !query.error)
-    const bestWorstQuery = input.queries.find(query => query.id === 'q3' && !query.error)
-    const anchorQuery = input.queries.find(query => query.id === 'q4' && !query.error)
+    const bucketQuery = input.queries.find((query) => query.id === 'q2' && !query.error)
+    const bestWorstQuery = input.queries.find((query) => query.id === 'q3' && !query.error)
+    const anchorQuery = input.queries.find((query) => query.id === 'q4' && !query.error)
     const bucketRows = bucketQuery?.previewRows ?? []
     const bestWorstRows = bestWorstQuery?.previewRows ?? []
-    const metricKey = bucketRows.some(row => row.avg_est_1rm != null) ? 'avg_est_1rm' : 'avg_weight'
+    const metricKey = bucketRows.some((row) => row.avg_est_1rm != null)
+      ? 'avg_est_1rm'
+      : 'avg_weight'
     const metricLabel = metricKey === 'avg_est_1rm' ? 'estimated 1RM' : 'weight'
-    const early = bucketRows.find(row => String(row.bucket_label).toLowerCase() === 'early')
-    const late = bucketRows.find(row => String(row.bucket_label).toLowerCase() === 'late')
+    const early = bucketRows.find((row) => String(row.bucket_label).toLowerCase() === 'early')
+    const late = bucketRows.find((row) => String(row.bucket_label).toLowerCase() === 'late')
     const earlyValue = early?.[metricKey]
     const lateValue = late?.[metricKey]
     const earlyNumeric = typeof earlyValue === 'number' ? earlyValue : Number(earlyValue)
     const lateNumeric = typeof lateValue === 'number' ? lateValue : Number(lateValue)
     const delta =
-      Number.isFinite(earlyNumeric) && Number.isFinite(lateNumeric) ? earlyNumeric - lateNumeric : null
+      Number.isFinite(earlyNumeric) && Number.isFinite(lateNumeric)
+        ? earlyNumeric - lateNumeric
+        : null
     const dropLine =
       Number.isFinite(earlyNumeric) && Number.isFinite(lateNumeric)
         ? `Early vs late ${metricLabel}: early=${earlyNumeric}, late=${lateNumeric}, delta=${delta}.`
         : 'Early vs late bucket averages were available but could not be summarized numerically.'
-    const bestWorstLines = bestWorstRows.slice(0, 4).map(row => {
+    const bestWorstLines = bestWorstRows.slice(0, 4).map((row) => {
       const name = row.exercise ?? 'Exercise'
       const rank = row.rank_label ?? 'set'
       const metric = row.metric_value ?? row.weight ?? row.est_1rm ?? 'n/a'
@@ -1074,8 +1159,9 @@ export const buildFallbackExplanation = (input: {
       const date = row.session_date ?? 'n/a'
       return `- ${name} ${rank}: ${metric} x ${reps} (${date})`
     })
-    const anchorLine =
-      anchorQuery?.previewRows?.length ? 'Anchor query returned historical best/worst sets for context.' : null
+    const anchorLine = anchorQuery?.previewRows?.length
+      ? 'Anchor query returned historical best/worst sets for context.'
+      : null
     return [
       'Set breakdown summary:',
       dropLine,
@@ -1088,15 +1174,19 @@ export const buildFallbackExplanation = (input: {
       .join('\n')
   }
 
-  const summaryLines = input.queries.map(query => {
+  const summaryLines = input.queries.map((query) => {
     const summaryWindow = query.policy?.appliedTimeWindow ?? 'unknown window'
     const status = query.error ? `error: ${query.error}` : `${query.rowCount} rows`
     return `- ${query.id}: ${query.purpose} (${status}, window ${summaryWindow}).`
   })
   const sampleRows = primary?.previewRows?.length
-    ? primary.previewRows.slice(0, 3).map((row, index) => `- Row ${index + 1}: ${formatRowSample(row)}`)
+    ? primary.previewRows
+        .slice(0, 3)
+        .map((row, index) => `- Row ${index + 1}: ${formatRowSample(row)}`)
     : []
-  const genericStats = primary?.previewRows?.length ? extractNumericStats(primary.previewRows) : null
+  const genericStats = primary?.previewRows?.length
+    ? extractNumericStats(primary.previewRows)
+    : null
   const sampleSection = sampleRows.length
     ? ['Sample rows from the main query:', ...sampleRows].join('\n')
     : 'No preview rows were available to summarize.'
@@ -1104,7 +1194,9 @@ export const buildFallbackExplanation = (input: {
     'I ran the analysis, but I could not generate the full summary.',
     'Here is a quick snapshot of the results:',
     ...summaryLines,
-    genericStats ? `Numeric stats (${genericStats.key}): min=${genericStats.min}, median=${genericStats.median}, max=${genericStats.max}.` : '',
+    genericStats
+      ? `Numeric stats (${genericStats.key}): min=${genericStats.min}, median=${genericStats.median}, max=${genericStats.max}.`
+      : '',
     sampleSection,
     'You can open the query details below for the full output.',
   ]
@@ -1114,7 +1206,7 @@ export const buildFallbackExplanation = (input: {
 
 const collectUniqueExercises = (rows: Record<string, unknown>[]) => {
   const values = new Set<string>()
-  rows.forEach(row => {
+  rows.forEach((row) => {
     const exercise = row.exercise
     if (typeof exercise === 'string' && exercise.trim()) {
       values.add(exercise.trim())
@@ -1123,12 +1215,15 @@ const collectUniqueExercises = (rows: Record<string, unknown>[]) => {
   return values
 }
 
-const resolveSetBreakdownMetricKey = (preferEstimated1rm: boolean, rows: Record<string, unknown>[]) => {
-  if (preferEstimated1rm && rows.some(row => row.est_1rm != null || row.avg_est_1rm != null)) {
-    return rows.some(row => row.avg_est_1rm != null) ? 'avg_est_1rm' : 'est_1rm'
+const resolveSetBreakdownMetricKey = (
+  preferEstimated1rm: boolean,
+  rows: Record<string, unknown>[],
+) => {
+  if (preferEstimated1rm && rows.some((row) => row.est_1rm != null || row.avg_est_1rm != null)) {
+    return rows.some((row) => row.avg_est_1rm != null) ? 'avg_est_1rm' : 'est_1rm'
   }
-  if (rows.some(row => row.avg_weight != null)) return 'avg_weight'
-  return rows.some(row => row.weight != null) ? 'weight' : 'est_1rm'
+  if (rows.some((row) => row.avg_weight != null)) return 'avg_weight'
+  return rows.some((row) => row.weight != null) ? 'weight' : 'est_1rm'
 }
 
 export const buildSetBreakdownChartSpecs = (input: {
@@ -1136,15 +1231,18 @@ export const buildSetBreakdownChartSpecs = (input: {
   preferEstimated1rm?: boolean
 }): GymChatChartSpec[] => {
   const specs: GymChatChartSpec[] = []
-  const setQuery = input.queries.find(query => query.id === 'q1' && !query.error)
-  const bucketQuery = input.queries.find(query => query.id === 'q2' && !query.error)
+  const setQuery = input.queries.find((query) => query.id === 'q1' && !query.error)
+  const bucketQuery = input.queries.find((query) => query.id === 'q2' && !query.error)
   const setRows = setQuery?.previewRows ?? []
   const bucketRows = bucketQuery?.previewRows ?? []
   const uniqueExercises = collectUniqueExercises(setRows.length ? setRows : bucketRows)
   const singleExercise = uniqueExercises.size <= 1
   if (setQuery && setRows.length && singleExercise) {
     const metricKey = resolveSetBreakdownMetricKey(Boolean(input.preferEstimated1rm), setRows)
-    if (setRows.some(row => row.set_number != null) && setRows.some(row => row[metricKey] != null)) {
+    if (
+      setRows.some((row) => row.set_number != null) &&
+      setRows.some((row) => row[metricKey] != null)
+    ) {
       specs.push({
         type: 'line',
         queryId: setQuery.id,
@@ -1156,7 +1254,10 @@ export const buildSetBreakdownChartSpecs = (input: {
   }
   if (bucketQuery && bucketRows.length && singleExercise) {
     const metricKey = resolveSetBreakdownMetricKey(Boolean(input.preferEstimated1rm), bucketRows)
-    if (bucketRows.some(row => row.bucket_label != null) && bucketRows.some(row => row[metricKey] != null)) {
+    if (
+      bucketRows.some((row) => row.bucket_label != null) &&
+      bucketRows.some((row) => row[metricKey] != null)
+    ) {
       specs.push({
         type: 'bar',
         queryId: bucketQuery.id,

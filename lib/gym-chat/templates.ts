@@ -31,9 +31,19 @@ export type GymChatTemplate = {
 export const TEMPLATES: Record<GymChatTemplateName, GymChatTemplate> = {
   momentum_dropoff: {
     name: 'momentum_dropoff',
-    description: 'Diagnose where performance drops within a workout and relate it to workload trends.',
+    description:
+      'Diagnose where performance drops within a workout and relate it to workload trends.',
     intentTypeHints: ['diagnostic', 'trend'],
-    keywordHints: ['momentum', 'fatigue', 'drop off', 'drop-off', 'dropoff', 'fade', 'early sets', 'late sets'],
+    keywordHints: [
+      'momentum',
+      'fatigue',
+      'drop off',
+      'drop-off',
+      'dropoff',
+      'fade',
+      'early sets',
+      'late sets',
+    ],
     defaultTimeWindow: '90 days',
     queryBlueprints: [
       {
@@ -43,11 +53,13 @@ export const TEMPLATES: Record<GymChatTemplateName, GymChatTemplate> = {
       },
       {
         role: 'session_momentum_trend',
-        mustMeasure: 'Summarize per-session volume or intensity to spot sessions with the steepest drop-off.',
+        mustMeasure:
+          'Summarize per-session volume or intensity to spot sessions with the steepest drop-off.',
       },
       {
         role: 'workload_context',
-        mustMeasure: 'Weekly or monthly workload totals to relate drop-off to overall fatigue trends.',
+        mustMeasure:
+          'Weekly or monthly workload totals to relate drop-off to overall fatigue trends.',
       },
     ],
     explainChecklist: [
@@ -80,7 +92,8 @@ export const TEMPLATES: Record<GymChatTemplateName, GymChatTemplate> = {
     queryBlueprints: [
       {
         role: 'set_table',
-        mustMeasure: 'Per-set performance with set_number, weight, reps, volume, and estimated 1RM.',
+        mustMeasure:
+          'Per-set performance with set_number, weight, reps, volume, and estimated 1RM.',
       },
       {
         role: 'set_bucket_comparison',
@@ -100,9 +113,19 @@ export const TEMPLATES: Record<GymChatTemplateName, GymChatTemplate> = {
   },
   plateau_vs_progress: {
     name: 'plateau_vs_progress',
-    description: 'Classify exercises as progressing, plateaued, or regressing based on recent trends.',
+    description:
+      'Classify exercises as progressing, plateaued, or regressing based on recent trends.',
     intentTypeHints: ['comparison', 'diagnostic', 'planning'],
-    keywordHints: ['plateau', 'stall', 'stalled', 'stagnate', 'stagnating', 'progress', 'regress', 'flat'],
+    keywordHints: [
+      'plateau',
+      'stall',
+      'stalled',
+      'stagnate',
+      'stagnating',
+      'progress',
+      'regress',
+      'flat',
+    ],
     defaultTimeWindow: '12 months',
     queryBlueprints: [
       {
@@ -126,7 +149,15 @@ export const TEMPLATES: Record<GymChatTemplateName, GymChatTemplate> = {
     name: 'workload_consistency',
     description: 'Evaluate weekly/monthly workload consistency and gaps that affect planning.',
     intentTypeHints: ['trend', 'planning', 'diagnostic'],
-    keywordHints: ['consistency', 'consistent', 'inconsistent', 'workload', 'volume', 'frequency', 'adherence'],
+    keywordHints: [
+      'consistency',
+      'consistent',
+      'inconsistent',
+      'workload',
+      'volume',
+      'frequency',
+      'adherence',
+    ],
     defaultTimeWindow: '12 months',
     queryBlueprints: [
       {
@@ -176,7 +207,8 @@ export const TEMPLATES: Record<GymChatTemplateName, GymChatTemplate> = {
     queryBlueprints: [
       {
         role: 'window_totals',
-        mustMeasure: 'Compare total sessions, sets, and volume between recent and prior windows with deltas.',
+        mustMeasure:
+          'Compare total sessions, sets, and volume between recent and prior windows with deltas.',
       },
       {
         role: 'exercise_breakdown',
@@ -184,7 +216,8 @@ export const TEMPLATES: Record<GymChatTemplateName, GymChatTemplate> = {
       },
       {
         role: 'adherence_metrics',
-        mustMeasure: 'Longest streak, longest gap, and recent missed weeks/months based on session dates.',
+        mustMeasure:
+          'Longest streak, longest gap, and recent missed weeks/months based on session dates.',
       },
     ],
     explainChecklist: [
@@ -198,7 +231,17 @@ export const TEMPLATES: Record<GymChatTemplateName, GymChatTemplate> = {
     name: 'body_part_balance',
     description: 'Compare workload across body parts to detect imbalances.',
     intentTypeHints: ['comparison', 'descriptive', 'planning'],
-    keywordHints: ['balance', 'imbalanced', 'imbalance', 'body part', 'muscle', 'upper', 'lower', 'push', 'pull'],
+    keywordHints: [
+      'balance',
+      'imbalanced',
+      'imbalance',
+      'body part',
+      'muscle',
+      'upper',
+      'lower',
+      'push',
+      'pull',
+    ],
     defaultTimeWindow: '90 days',
     queryBlueprints: [
       {
@@ -242,7 +285,7 @@ const scoreTemplate = (
   if (intentType && template.intentTypeHints.includes(intentType as IntentType)) {
     score += 2
   }
-  template.keywordHints.forEach(keyword => {
+  template.keywordHints.forEach((keyword) => {
     if (normalizedQuestion.includes(keyword)) {
       score += 1
     }
@@ -277,14 +320,16 @@ const scoreTemplate = (
   return score
 }
 
-export const selectTemplates = (input: TemplateSelectionInput): {
+export const selectTemplates = (
+  input: TemplateSelectionInput,
+): {
   primary: GymChatTemplateName
   secondary?: GymChatTemplateName
 } => {
   const normalized = normalizeText(input.question || '')
   const intentType = input.intentType?.toLowerCase() ?? undefined
-  const targets = new Set((input.targets ?? []).map(target => target.toLowerCase()))
-  const scored = Object.values(TEMPLATES).map(template => ({
+  const targets = new Set((input.targets ?? []).map((target) => target.toLowerCase()))
+  const scored = Object.values(TEMPLATES).map((template) => ({
     template,
     score: scoreTemplate(template, normalized, intentType, targets),
   }))
@@ -301,8 +346,9 @@ export const selectTemplates = (input: TemplateSelectionInput): {
   })()
 
   const primary = best && best.score > 0 ? best.template.name : fallback
-  const second = scored.find(entry => entry.template.name !== primary && entry.score > 0)
-  const secondary = second && second.score >= (best?.score ?? 0) - 1 ? second.template.name : undefined
+  const second = scored.find((entry) => entry.template.name !== primary && entry.score > 0)
+  const secondary =
+    second && second.score >= (best?.score ?? 0) - 1 ? second.template.name : undefined
 
   return {
     primary,

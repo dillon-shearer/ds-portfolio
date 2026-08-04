@@ -39,7 +39,8 @@ export const interpretSqlError = (error: string): SqlErrorInterpretation => {
     }
     return {
       diagnosis: `The query references a column that does not exist: "${col}".`,
-      suggestion: 'Check the schema and update the column name or qualify it with the correct table alias.',
+      suggestion:
+        'Check the schema and update the column name or qualify it with the correct table alias.',
     }
   }
   const missingRelation = error.match(/relation \"([^\"]+)\" does not exist/i)

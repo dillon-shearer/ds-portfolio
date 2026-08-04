@@ -14,9 +14,7 @@ import {
   getBootstrapData,
   type GymLift,
 } from '@/app/dashboards/gym/actions'
-import {
-  type Exercise,
-} from '@/app/dashboards/gym/catalog'
+import { type Exercise } from '@/app/dashboards/gym/catalog'
 import DayInfoSheet from './DayInfoSheet'
 import BodyPartsSheet, { ALL_BODY_PARTS, type BodyPart } from './BodyPartsSheet'
 import ExerciseManagerModal from './ExerciseManagerModal'
@@ -86,7 +84,7 @@ export default function WorkoutForm() {
 
       setAllLifts(lifts)
       setExistingDayTags(tags)
-      setFormData(fd => ({ ...fd, dayTag: dayTag ?? '' }))
+      setFormData((fd) => ({ ...fd, dayTag: dayTag ?? '' }))
 
       let activeParts: BodyPart[] = []
       if (bodyParts && bodyParts.length) {
@@ -102,13 +100,13 @@ export default function WorkoutForm() {
       setSelectedBodyParts(activeParts)
 
       setAllExRows(allExercises)
-      setAllExOptions(allExercises.map(e => e.name))
+      setAllExOptions(allExercises.map((e) => e.name))
 
-      const initialRows = allExercises.filter(r =>
-        activeParts.length ? activeParts.includes(r.bodyPartKey as BodyPart) : true
+      const initialRows = allExercises.filter((r) =>
+        activeParts.length ? activeParts.includes(r.bodyPartKey as BodyPart) : true,
       )
       setExerciseRows(initialRows)
-      setExerciseOptions(initialRows.map(r => r.name))
+      setExerciseOptions(initialRows.map((r) => r.name))
 
       bootstrappedRef.current = true
 
@@ -129,7 +127,6 @@ export default function WorkoutForm() {
   useEffect(() => {
     if (!bootstrappedRef.current) return
     fetchDayInfoFor(formData.date)
-     
   }, [formData.date])
 
   const fetchAllLifts = async () => {
@@ -154,11 +151,8 @@ export default function WorkoutForm() {
 
   const fetchDayInfoFor = async (date: string) => {
     try {
-      const [tag, parts] = await Promise.all([
-        getDayTagForDate(date),
-        getBodyPartsForDate(date),
-      ])
-      setFormData(fd => ({ ...fd, dayTag: tag ?? '' }))
+      const [tag, parts] = await Promise.all([getDayTagForDate(date), getBodyPartsForDate(date)])
+      setFormData((fd) => ({ ...fd, dayTag: tag ?? '' }))
 
       if (parts && parts.length) {
         setSelectedBodyParts(parts as BodyPart[])
@@ -172,7 +166,9 @@ export default function WorkoutForm() {
           setSelectedBodyParts([])
         }
       }
-    } catch { /* noop */ }
+    } catch {
+      /* noop */
+    }
   }
 
   useEffect(() => {
@@ -186,24 +182,22 @@ export default function WorkoutForm() {
 
   // Refresh exercise options whenever selected body parts change
   useEffect(() => {
-    const rows = allExRows.filter(r =>
-      selectedBodyParts.includes((r.bodyPartKey as BodyPart))
-    )
+    const rows = allExRows.filter((r) => selectedBodyParts.includes(r.bodyPartKey as BodyPart))
     setExerciseRows(rows)
-    setExerciseOptions(rows.map(r => r.name))
+    setExerciseOptions(rows.map((r) => r.name))
   }, [selectedBodyParts, allExRows])
 
   // If current exercise is no longer available, clear it
   useEffect(() => {
-    setFormData(fd => {
+    setFormData((fd) => {
       if (!fd.exercise) return fd
       return exerciseOptions.includes(fd.exercise) ? fd : { ...fd, exercise: '', weight: '' }
     })
   }, [exerciseOptions])
 
   const toggleBodyPart = (bp: BodyPart) => {
-    setSelectedBodyParts(curr =>
-      curr.includes(bp) ? curr.filter(x => x !== bp) : [...curr, bp]
+    setSelectedBodyParts((curr) =>
+      curr.includes(bp) ? curr.filter((x) => x !== bp) : [...curr, bp],
     )
   }
 
@@ -211,16 +205,21 @@ export default function WorkoutForm() {
     e.preventDefault()
     setStatus('submitting')
     try {
-      if (!formData.date || !formData.exercise || !formData.weight || !formData.reps || !formData.equipment) {
+      if (
+        !formData.date ||
+        !formData.exercise ||
+        !formData.weight ||
+        !formData.reps ||
+        !formData.equipment
+      ) {
         throw new Error('Please fill in all required fields')
       }
 
       const existingSets = allLifts.filter(
-        lift => lift.date === formData.date && lift.exercise === formData.exercise
+        (lift) => lift.date === formData.date && lift.exercise === formData.exercise,
       )
-      const nextSetNumber = existingSets.length > 0
-        ? Math.max(...existingSets.map(s => s.setNumber)) + 1
-        : 1
+      const nextSetNumber =
+        existingSets.length > 0 ? Math.max(...existingSets.map((s) => s.setNumber)) + 1 : 1
 
       await addGymLift({
         date: formData.date,
@@ -284,21 +283,22 @@ export default function WorkoutForm() {
 
   // ---- Derivations for selected date ----
   const liftsForSelectedDate = useMemo(
-    () => allLifts
-      .filter(l => l.date === formData.date)
-      .sort((a, b) => {
-        const ta = Date.parse(a.timestamp)
-        const tb = Date.parse(b.timestamp)
-        if (ta === tb) return a.id.localeCompare(b.id)
-        return ta - tb
-      }),
-    [allLifts, formData.date]
+    () =>
+      allLifts
+        .filter((l) => l.date === formData.date)
+        .sort((a, b) => {
+          const ta = Date.parse(a.timestamp)
+          const tb = Date.parse(b.timestamp)
+          if (ta === tb) return a.id.localeCompare(b.id)
+          return ta - tb
+        }),
+    [allLifts, formData.date],
   )
 
   const liftsByExerciseForSelectedDate = useMemo(() => {
     const acc: Record<string, GymLift[]> = {}
     for (const lift of liftsForSelectedDate) {
-      (acc[lift.exercise] ||= []).push(lift)
+      ;(acc[lift.exercise] ||= []).push(lift)
     }
     return acc
   }, [liftsForSelectedDate])
@@ -321,7 +321,10 @@ export default function WorkoutForm() {
   }, [liftsByExerciseForSelectedDate])
 
   // Volume = weight x reps per set (unilateral sets record one side; no doubling applied)
-  const totalVolumeForSelectedDate = liftsForSelectedDate.reduce((sum, lift) => sum + (lift.weight * lift.reps), 0)
+  const totalVolumeForSelectedDate = liftsForSelectedDate.reduce(
+    (sum, lift) => sum + lift.weight * lift.reps,
+    0,
+  )
   const dayTagForSelectedDate = (formData.dayTag || '').trim()
   const exerciseCount = Object.keys(liftsByExerciseForSelectedDate).length
 
@@ -346,8 +349,12 @@ export default function WorkoutForm() {
     const tag = raw.length ? raw : null
     try {
       await setDayTagForDate(formData.date, tag)
-      try { await fetchAllLifts() } catch {}
-      try { await fetchDayTags() } catch {}
+      try {
+        await fetchAllLifts()
+      } catch {}
+      try {
+        await fetchDayTags()
+      } catch {}
       const normalized = (tag || '').toLowerCase()
       if (normalized && DAYTAG_DEFAULTS[normalized]) {
         setSelectedBodyParts(DAYTAG_DEFAULTS[normalized])
@@ -429,10 +436,14 @@ export default function WorkoutForm() {
               required
             >
               <option value="">
-                {exerciseOptions.length === 0 ? 'No exercises for current selection' : 'Select exercise'}
+                {exerciseOptions.length === 0
+                  ? 'No exercises for current selection'
+                  : 'Select exercise'}
               </option>
-              {exerciseOptions.map(ex => (
-                <option key={ex} value={ex}>{ex}</option>
+              {exerciseOptions.map((ex) => (
+                <option key={ex} value={ex}>
+                  {ex}
+                </option>
               ))}
             </select>
             <div className={styles.count}>{exerciseOptions.length} available</div>
@@ -448,8 +459,10 @@ export default function WorkoutForm() {
               className={styles.select}
             >
               <option value="">Select equipment</option>
-              {EQUIPMENT_OPTIONS.map(opt => (
-                <option key={opt} value={opt}>{opt}</option>
+              {EQUIPMENT_OPTIONS.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
               ))}
             </select>
           </div>
@@ -463,7 +476,9 @@ export default function WorkoutForm() {
               onChange={(e) => setFormData({ ...formData, isUnilateral: e.target.checked })}
               className={styles.checkbox}
             />
-            <label htmlFor="unilateral" className={styles.checkboxLabel}>Unilateral set</label>
+            <label htmlFor="unilateral" className={styles.checkboxLabel}>
+              Unilateral set
+            </label>
             <span className={styles.checkboxHint}>(Flag only)</span>
           </div>
 
@@ -510,7 +525,10 @@ export default function WorkoutForm() {
           {dayTagForSelectedDate && <span className={styles.chip}>{dayTagForSelectedDate}</span>}
           <span className={styles.historyMetaText}>
             {exerciseCount} exercise{exerciseCount !== 1 ? 's' : ''} /{' '}
-            <span className={styles.historyMetaNum}>{totalVolumeForSelectedDate.toLocaleString()}</span> lbs total
+            <span className={styles.historyMetaNum}>
+              {totalVolumeForSelectedDate.toLocaleString()}
+            </span>{' '}
+            lbs total
           </span>
         </div>
 
@@ -529,14 +547,15 @@ export default function WorkoutForm() {
                     <div key={set.id} className={styles.setRow}>
                       <div className={styles.setInfo}>
                         <span className={styles.setLabel}>
-                          Set {set.setNumber}: <span className={styles.setStat}>{set.weight} lbs x {set.reps} reps</span>
+                          Set {set.setNumber}:{' '}
+                          <span className={styles.setStat}>
+                            {set.weight} lbs x {set.reps} reps
+                          </span>
                         </span>
                         {set.equipment ? (
                           <span className={styles.setBadge}>{set.equipment}</span>
                         ) : null}
-                        {set.isUnilateral ? (
-                          <span className={styles.setBadgeUni}>UNI</span>
-                        ) : null}
+                        {set.isUnilateral ? <span className={styles.setBadgeUni}>UNI</span> : null}
                       </div>
                       <div className={styles.setActions}>
                         <button
@@ -570,9 +589,9 @@ export default function WorkoutForm() {
         open={showDayInfo}
         onClose={handleCloseDayInfo}
         date={formData.date}
-        onDateChange={(date) => setFormData(fd => ({ ...fd, date }))}
+        onDateChange={(date) => setFormData((fd) => ({ ...fd, date }))}
         dayTag={formData.dayTag}
-        onDayTagChange={(tag) => setFormData(fd => ({ ...fd, dayTag: tag }))}
+        onDayTagChange={(tag) => setFormData((fd) => ({ ...fd, dayTag: tag }))}
         defaultDayTags={defaultDayTags}
         onSave={handleSaveDayInfo}
       />
@@ -595,13 +614,15 @@ export default function WorkoutForm() {
         selectedBodyParts={selectedBodyParts}
         onCatalogChange={(all) => {
           setAllExRows(all)
-          setAllExOptions(all.map(e => e.name))
+          setAllExOptions(all.map((e) => e.name))
         }}
         onRename={(oldName, newName) => {
-          setFormData(fd => (fd.exercise === oldName ? { ...fd, exercise: newName, weight: '' } : fd))
+          setFormData((fd) =>
+            fd.exercise === oldName ? { ...fd, exercise: newName, weight: '' } : fd,
+          )
         }}
         onDeleteName={(name) => {
-          setFormData(fd => (fd.exercise === name ? { ...fd, exercise: '', weight: '' } : fd))
+          setFormData((fd) => (fd.exercise === name ? { ...fd, exercise: '', weight: '' } : fd))
         }}
       />
 

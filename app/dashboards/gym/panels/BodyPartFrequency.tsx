@@ -3,18 +3,18 @@ import styles from './BodyPartFrequency.module.css'
 type BodyPartRow = { bp: string; sets: number }
 
 const CHIP_COLORS: Record<string, string> = {
-  biceps:     'var(--chart-bp-biceps)',
-  chest:      'var(--chart-bp-chest)',
-  shoulders:  'var(--chart-bp-shoulders)',
-  back:       'var(--chart-bp-back)',
-  triceps:    'var(--chart-bp-triceps)',
-  quads:      'var(--chart-bp-quads)',
+  biceps: 'var(--chart-bp-biceps)',
+  chest: 'var(--chart-bp-chest)',
+  shoulders: 'var(--chart-bp-shoulders)',
+  back: 'var(--chart-bp-back)',
+  triceps: 'var(--chart-bp-triceps)',
+  quads: 'var(--chart-bp-quads)',
   hamstrings: 'var(--chart-bp-hamstrings)',
-  core:       'var(--chart-bp-core)',
-  glutes:     'var(--chart-bp-glutes)',
-  calves:     'var(--chart-bp-calves)',
-  forearms:   'var(--chart-bp-forearms)',
-  hips:       'var(--chart-bp-hips)',
+  core: 'var(--chart-bp-core)',
+  glutes: 'var(--chart-bp-glutes)',
+  calves: 'var(--chart-bp-calves)',
+  forearms: 'var(--chart-bp-forearms)',
+  hips: 'var(--chart-bp-hips)',
 }
 
 type Props = { rows: BodyPartRow[] }

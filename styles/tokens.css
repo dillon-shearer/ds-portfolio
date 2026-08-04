@@ -6,70 +6,70 @@
 
 :root {
   /* ---------- Paper & ink ---------- */
-  --color-paper:        #EBE3D5;
-  --color-paper-2:      #FAF6EF;
-  --color-ink:          #1B1814;
-  --color-ink-2:        #4A4239;
-  --color-ink-3:        #8A7F71;
-  --color-rule:         #D8CFC2;
-  --color-rule-soft:    #F2EDE5;
+  --color-paper: #ebe3d5;
+  --color-paper-2: #faf6ef;
+  --color-ink: #1b1814;
+  --color-ink-2: #4a4239;
+  --color-ink-3: #8a7f71;
+  --color-rule: #d8cfc2;
+  --color-rule-soft: #f2ede5;
 
   /* ---------- Accent (oxblood) ---------- */
-  --color-accent:       #7A2E2E;
-  --color-accent-hover: #5C2020;
-  --color-accent-soft:  #F1E4E1;
+  --color-accent: #7a2e2e;
+  --color-accent-hover: #5c2020;
+  --color-accent-soft: #f1e4e1;
 
   /* ---------- Status ---------- */
-  --color-positive:     #4A6B3A;
-  --color-warn:         #B8893B;
+  --color-positive: #4a6b3a;
+  --color-warn: #b8893b;
 
   /* ---------- Chart palette ---------- */
   /* Body part colors - earthy, distinguishable, portfolio-consistent */
-  --chart-bp-chest:      #7A2E2E;
-  --chart-bp-back:       #4A4239;
-  --chart-bp-shoulders:  #B8893B;
-  --chart-bp-biceps:     #4A6B3A;
-  --chart-bp-triceps:    #5A7A8A;
-  --chart-bp-quads:      #5C3A1A;
-  --chart-bp-hamstrings: #1A4A3A;
-  --chart-bp-core:       #3A1A4A;
-  --chart-bp-glutes:     #9A5A3A;
-  --chart-bp-calves:     #3A6B5A;
-  --chart-bp-forearms:   #6B6B3A;
-  --chart-bp-hips:       #5A3A6B;
+  --chart-bp-chest: #7a2e2e;
+  --chart-bp-back: #4a4239;
+  --chart-bp-shoulders: #b8893b;
+  --chart-bp-biceps: #4a6b3a;
+  --chart-bp-triceps: #5a7a8a;
+  --chart-bp-quads: #5c3a1a;
+  --chart-bp-hamstrings: #1a4a3a;
+  --chart-bp-core: #3a1a4a;
+  --chart-bp-glutes: #9a5a3a;
+  --chart-bp-calves: #3a6b5a;
+  --chart-bp-forearms: #6b6b3a;
+  --chart-bp-hips: #5a3a6b;
 
   /* Generic chart series (for non-body-part charts) */
-  --chart-primary:   #7A2E2E;
-  --chart-secondary: #4A4239;
-  --chart-muted:     #D8CFC2;
-  --chart-na:        #EBE3D5;
+  --chart-primary: #7a2e2e;
+  --chart-secondary: #4a4239;
+  --chart-muted: #d8cfc2;
+  --chart-na: #ebe3d5;
 
   /* ---------- Typography ---------- */
   /* next/font injects these variables on <html>; tokens.css maps them. */
-  --font-serif: var(--next-font-serif), Georgia, "Times New Roman", serif;
-  --font-sans:  var(--next-font-sans), system-ui, -apple-system, sans-serif;
-  --font-mono:  var(--next-font-mono), ui-monospace, "Menlo", monospace;
+  --font-serif: var(--next-font-serif), Georgia, 'Times New Roman', serif;
+  --font-sans: var(--next-font-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--next-font-mono), ui-monospace, 'Menlo', monospace;
 
   /* Type scale */
-  --text-xs:   0.75rem;
-  --text-sm:   0.875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
   --text-base: 1rem;
-  --text-md:   1.125rem;
-  --text-lg:   1.25rem;
-  --text-xl:   1.5rem;
-  --text-2xl:  1.875rem;
-  --text-3xl:  2.25rem;
-  --text-4xl:  3rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 1.875rem;
+  --text-3xl: 2.25rem;
+  --text-4xl: 3rem;
 
   /* Leading */
-  --leading-tight:  1.2;
-  --leading-snug:   1.35;
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
   --leading-normal: 1.55;
-  --leading-loose:  1.75;
+  --leading-loose: 1.75;
 
   /* Tracking */
   --tracking-tight: -0.01em;
-  --tracking-wide:   0.08em;
+  --tracking-wide: 0.08em;
 
   /* ---------- Spacing (4px scale) ---------- */
   --space-1: 4px;
@@ -83,9 +83,9 @@
   --space-9: 96px;
 
   /* ---------- Layout ---------- */
-  --content-width:      680px;
+  --content-width: 680px;
   --content-width-wide: 1080px;
-  --gutter:             var(--space-5);
+  --gutter: var(--space-5);
 
   /* ---------- Radii ---------- */
   --radius-sm: 2px;
@@ -93,10 +93,10 @@
 
   /* ---------- Border weights ---------- */
   --rule-hairline: 1px;
-  --rule-medium:   2px;
+  --rule-medium: 2px;
 
   /* ---------- Motion ---------- */
-  --ease-out:      cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
   --duration-fast: 120ms;
-  --duration:      180ms;
+  --duration: 180ms;
 }

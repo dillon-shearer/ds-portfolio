@@ -18,7 +18,9 @@ export default function Pager({ page, totalPages, onPrev, onNext }: Props) {
       >
         &larr; Prev
       </button>
-      <span className={styles.count}>{page} / {Math.max(1, totalPages)}</span>
+      <span className={styles.count}>
+        {page} / {Math.max(1, totalPages)}
+      </span>
       <button
         className={styles.btn}
         onClick={onNext}

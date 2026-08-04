@@ -35,7 +35,8 @@ const buildSetsFilter = (lifts: SetsBaseCte, options?: SetFilterOptions) => {
     conditions.push(`${lifts.alias}.exercise ILIKE $${paramIndex}`)
   }
   const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
-  const policyHint = options?.allTime && !options?.sessionDate ? '/*policy:time_window=all_time*/ ' : ''
+  const policyHint =
+    options?.allTime && !options?.sessionDate ? '/*policy:time_window=all_time*/ ' : ''
   return { whereClause, params, policyHint }
 }
 
@@ -503,7 +504,10 @@ export const buildVolumeRankingPlan = (
   }
 }
 
-export const buildSessionCountPlan = (lifts: SetsBaseCte, options?: { window?: string }): CanonicalPlan => {
+export const buildSessionCountPlan = (
+  lifts: SetsBaseCte,
+  options?: { window?: string },
+): CanonicalPlan => {
   const window = options?.window ?? '12 weeks'
   return {
     queries: [
@@ -623,9 +627,7 @@ export const buildBodyPartDaySplitPlan = (
 ): CanonicalPlan => {
   const window = options?.window ?? '12 weeks'
   const limit = options?.limit && options.limit > 0 ? Math.floor(options.limit) : 200
-  const dayTagExpr = lifts.dayTagExpr
-    ? `COALESCE(${lifts.dayTagExpr}, gm.day_tag)`
-    : 'gm.day_tag'
+  const dayTagExpr = lifts.dayTagExpr ? `COALESCE(${lifts.dayTagExpr}, gm.day_tag)` : 'gm.day_tag'
   return {
     queries: [
       {
@@ -756,7 +758,8 @@ export const buildProgressiveOverloadPlan = (lifts: SetsBaseCte): CanonicalPlan 
   queries: [
     {
       id: 'q1',
-      purpose: 'Identify the longest continuous progressive overload streak using estimated 1RM per session.',
+      purpose:
+        'Identify the longest continuous progressive overload streak using estimated 1RM per session.',
       sql:
         `WITH ${lifts.cte}, session_best AS (` +
         `SELECT ${lifts.sessionDateExpr} AS session_date, ${lifts.alias}.exercise, ` +
@@ -798,13 +801,17 @@ export const buildProgressiveOverloadPlan = (lifts: SetsBaseCte): CanonicalPlan 
   ],
 })
 
-export const buildMuscleGroupComparisonPlan = (useBodyParts: boolean, lifts: SetsBaseCte): CanonicalPlan => {
+export const buildMuscleGroupComparisonPlan = (
+  useBodyParts: boolean,
+  lifts: SetsBaseCte,
+): CanonicalPlan => {
   if (!useBodyParts) {
     return {
       queries: [
         {
           id: 'q1',
-          purpose: 'Fallback: compare average weekly volume by exercise as a proxy for body-part balance.',
+          purpose:
+            'Fallback: compare average weekly volume by exercise as a proxy for body-part balance.',
           sql:
             `WITH ${lifts.cte}, base AS (` +
             `SELECT DATE_TRUNC('week', ${lifts.performedAtExpr})::date AS week_start, ` +
@@ -1018,7 +1025,7 @@ export const buildReturnEffortProgressionPlan = (lifts: SetsBaseCte): CanonicalP
         `WHERE ${lifts.performedAtExpr} >= CURRENT_DATE - ($1)::interval ` +
         `GROUP BY session_date, ${lifts.alias}.exercise` +
         '), weekly AS (' +
-        'SELECT DATE_TRUNC(\'week\', session_date::timestamp)::date AS week_start, ' +
+        "SELECT DATE_TRUNC('week', session_date::timestamp)::date AS week_start, " +
         'exercise, AVG(est_1rm) AS avg_est_1rm ' +
         'FROM session_best ' +
         'GROUP BY week_start, exercise' +
@@ -1035,7 +1042,8 @@ export const buildStalledLiftsPlan = (lifts: SetsBaseCte): CanonicalPlan => ({
   queries: [
     {
       id: 'q1',
-      purpose: 'Identify stalled lifts by calculating days since the last estimated 1RM improvement (last 12 months).',
+      purpose:
+        'Identify stalled lifts by calculating days since the last estimated 1RM improvement (last 12 months).',
       sql:
         `WITH ${lifts.cte}, session_best AS (` +
         `SELECT ${lifts.sessionDateExpr} AS session_date, ${lifts.alias}.exercise, ` +
@@ -1493,7 +1501,7 @@ export const buildExerciseVariabilityPlan = (
             'FROM aggregated ' +
             'ORDER BY stddev_volume_change DESC NULLS LAST ' +
             `LIMIT ${limit}`,
-          params: [window, ...options.exercises.map(ex => `%${ex}%`)],
+          params: [window, ...options.exercises.map((ex) => `%${ex}%`)],
         },
       ],
     }

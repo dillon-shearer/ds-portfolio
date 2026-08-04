@@ -52,10 +52,28 @@ const EXERCISE_KEYWORDS: Record<string, string[]> = {
     'glute ham',
     'nordic',
   ],
-  glutes: ['glute', 'hip thrust', 'glute bridge', 'kickback', 'pull through', 'hip extension', 'frog pump'],
+  glutes: [
+    'glute',
+    'hip thrust',
+    'glute bridge',
+    'kickback',
+    'pull through',
+    'hip extension',
+    'frog pump',
+  ],
   calves: ['calf', 'soleus'],
   hips: ['abductor', 'adductor', 'hip abduction', 'hip adduction'],
-  core: ['plank', 'crunch', 'sit up', 'sit-up', 'hanging leg raise', 'leg raise', 'ab wheel', 'ab rollout', 'core'],
+  core: [
+    'plank',
+    'crunch',
+    'sit up',
+    'sit-up',
+    'hanging leg raise',
+    'leg raise',
+    'ab wheel',
+    'ab rollout',
+    'core',
+  ],
   chest: ['bench', 'chest', 'pec', 'fly', 'incline press', 'decline press'],
   back: ['row', 'pull up', 'pull-up', 'pulldown', 'lat', 'deadlift'],
   shoulders: ['overhead press', 'shoulder press', 'lateral raise', 'rear delt', 'upright row'],
@@ -86,7 +104,7 @@ const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$
 export const normalizeMuscleName = (value: string): string | null => {
   const normalized = normalizeText(value)
   for (const [muscle, aliases] of Object.entries(MUSCLE_ALIASES)) {
-    if (aliases.some(alias => normalized === alias)) {
+    if (aliases.some((alias) => normalized === alias)) {
       return muscle
     }
   }
@@ -140,12 +158,13 @@ const applyStrictDefaults = (constraint: TargetMuscleConstraint): TargetMuscleCo
 }
 
 const normalizeConstraint = (constraint: TargetMuscleConstraint): TargetMuscleConstraint => {
-  const include = Array.from(new Set(constraint.include.map(muscle => normalizeMuscleName(muscle) ?? muscle)))
-    .filter(Boolean)
-  const exclude = Array.from(
-    new Set((constraint.exclude ?? []).map(muscle => normalizeMuscleName(muscle) ?? muscle)),
+  const include = Array.from(
+    new Set(constraint.include.map((muscle) => normalizeMuscleName(muscle) ?? muscle)),
   ).filter(Boolean)
-  const excludeFiltered = exclude.filter(muscle => !include.includes(muscle))
+  const exclude = Array.from(
+    new Set((constraint.exclude ?? []).map((muscle) => normalizeMuscleName(muscle) ?? muscle)),
+  ).filter(Boolean)
+  const excludeFiltered = exclude.filter((muscle) => !include.includes(muscle))
   return {
     include,
     exclude: excludeFiltered.length ? excludeFiltered : undefined,
@@ -168,14 +187,16 @@ export const parseTargetMuscleConstraint = (text: string): TargetMuscleConstrain
   )
 }
 
-export const detectHistoricalLiftRequest = (text: string): boolean => HISTORY_KEYWORDS.test(text || '')
+export const detectHistoricalLiftRequest = (text: string): boolean =>
+  HISTORY_KEYWORDS.test(text || '')
 
 const detectGoal = (text: string): WorkoutPlanAnalysisMeta['goal'] | undefined => {
   if (!text) return undefined
   const normalized = text.toLowerCase()
-  if (GOAL_KEYWORDS.strength.some(keyword => normalized.includes(keyword))) return 'strength'
-  if (GOAL_KEYWORDS.hypertrophy.some(keyword => normalized.includes(keyword))) return 'hypertrophy'
-  if (GOAL_KEYWORDS.endurance.some(keyword => normalized.includes(keyword))) return 'endurance'
+  if (GOAL_KEYWORDS.strength.some((keyword) => normalized.includes(keyword))) return 'strength'
+  if (GOAL_KEYWORDS.hypertrophy.some((keyword) => normalized.includes(keyword)))
+    return 'hypertrophy'
+  if (GOAL_KEYWORDS.endurance.some((keyword) => normalized.includes(keyword))) return 'endurance'
   return undefined
 }
 
@@ -214,13 +235,13 @@ export const buildExerciseNameFilters = (constraint?: TargetMuscleConstraint | n
   }
   const include = new Set<string>()
   const exclude = new Set<string>()
-  constraint.include.forEach(muscle => {
+  constraint.include.forEach((muscle) => {
     const patterns = EXERCISE_KEYWORDS[muscle] ?? [muscle]
-    patterns.forEach(pattern => include.add(`%${pattern}%`))
+    patterns.forEach((pattern) => include.add(`%${pattern}%`))
   })
-  constraint.exclude?.forEach(muscle => {
+  constraint.exclude?.forEach((muscle) => {
     const patterns = EXERCISE_KEYWORDS[muscle] ?? [muscle]
-    patterns.forEach(pattern => exclude.add(`%${pattern}%`))
+    patterns.forEach((pattern) => exclude.add(`%${pattern}%`))
   })
   return {
     include: Array.from(include),
@@ -237,7 +258,7 @@ export const resolveExercisePrimaryMuscle = (name: string): string | null => {
   const normalized = normalizeText(name)
   for (const muscle of MUSCLE_PRIORITY) {
     const keywords = EXERCISE_KEYWORDS[muscle] ?? []
-    if (keywords.some(keyword => normalized.includes(keyword))) {
+    if (keywords.some((keyword) => normalized.includes(keyword))) {
       return muscle
     }
   }
@@ -248,10 +269,12 @@ export const selectExercisesForMuscles = (
   availableExercises: ExerciseCandidate[],
   constraint: TargetMuscleConstraint,
 ) => {
-  const include = new Set(constraint.include.map(muscle => normalizeMuscleName(muscle) ?? muscle))
-  const exclude = new Set((constraint.exclude ?? []).map(muscle => normalizeMuscleName(muscle) ?? muscle))
+  const include = new Set(constraint.include.map((muscle) => normalizeMuscleName(muscle) ?? muscle))
+  const exclude = new Set(
+    (constraint.exclude ?? []).map((muscle) => normalizeMuscleName(muscle) ?? muscle),
+  )
   const strict = Boolean(constraint.strict)
-  return availableExercises.filter(exercise => {
+  return availableExercises.filter((exercise) => {
     const primary = exercise.primaryMuscle ?? resolveExercisePrimaryMuscle(exercise.name)
     if (!primary) {
       return !strict && include.size === 0
@@ -279,7 +302,8 @@ export const buildWorkoutPlanQueries = (input: {
 }): WorkoutPlanQueryPlan => {
   const window = input.window ?? '12 months'
   const deloadWindow = '12 weeks'
-  const maxExercises = input.maxExercises && input.maxExercises > 0 ? Math.floor(input.maxExercises) : 6
+  const maxExercises =
+    input.maxExercises && input.maxExercises > 0 ? Math.floor(input.maxExercises) : 6
   const { include, exclude } = buildExerciseNameFilters(input.constraint ?? undefined)
   const filterApplied = include.length > 0
   let clauseParts: string[] = []

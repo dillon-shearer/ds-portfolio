@@ -4,9 +4,18 @@
 import { sql } from '@/lib/gym-db'
 
 export type BodyPartKey =
-  | 'biceps' | 'chest' | 'shoulders' | 'back' | 'triceps'
-  | 'quads' | 'hamstrings' | 'forearms' | 'core'
-  | 'glutes' | 'calves' | 'hips'
+  | 'biceps'
+  | 'chest'
+  | 'shoulders'
+  | 'back'
+  | 'triceps'
+  | 'quads'
+  | 'hamstrings'
+  | 'forearms'
+  | 'core'
+  | 'glutes'
+  | 'calves'
+  | 'hips'
 
 export interface BodyPartRow {
   key: BodyPartKey
@@ -26,7 +35,7 @@ const clean = (s: string) => s.normalize('NFKC').trim()
 const toLower = (s: string) => clean(s).toLowerCase()
 
 export async function listBodyParts(): Promise<BodyPartRow[]> {
-  const { rows } = await sql/* sql */`
+  const { rows } = await sql /* sql */ `
     SELECT key, label
     FROM body_parts
     ORDER BY label ASC
@@ -35,7 +44,7 @@ export async function listBodyParts(): Promise<BodyPartRow[]> {
 }
 
 export async function listExercises(): Promise<Exercise[]> {
-  const { rows } = await sql/* sql */`
+  const { rows } = await sql /* sql */ `
     SELECT
       id,
       name,
@@ -56,7 +65,7 @@ export async function listExercisesForParts(parts: BodyPartKey[]): Promise<Exerc
   // Old @vercel/postgres: no sql.array/join - pass array param and cast in SQL.
   const partsParam = parts as unknown as any
 
-  const { rows } = await sql/* sql */`
+  const { rows } = await sql /* sql */ `
     SELECT
       id,
       name,
@@ -87,7 +96,7 @@ export async function upsertExercise(input: {
   let id = input.id ?? null
 
   if (id) {
-    await sql/* sql */`
+    await sql /* sql */ `
       UPDATE exercises
       SET
         name = ${name},
@@ -97,7 +106,7 @@ export async function upsertExercise(input: {
       WHERE id = ${id}
     `
   } else {
-    const { rows } = await sql/* sql */`
+    const { rows } = await sql /* sql */ `
       INSERT INTO exercises (name, body_part_key, is_active)
       VALUES (${name}, ${bp}, ${isActive})
       ON CONFLICT (name) DO UPDATE SET
@@ -113,7 +122,7 @@ export async function upsertExercise(input: {
     for (const raw of input.aliases) {
       const alias = clean(raw)
       if (!alias) continue
-      await sql/* sql */`
+      await sql /* sql */ `
         INSERT INTO exercise_aliases (exercise_id, alias)
         VALUES (${id}, ${alias})
         ON CONFLICT (alias) DO NOTHING
@@ -125,7 +134,7 @@ export async function upsertExercise(input: {
 }
 
 export async function softDeleteExercise(id: string): Promise<{ success: true }> {
-  await sql/* sql */`
+  await sql /* sql */ `
     UPDATE exercises
     SET is_active = FALSE, updated_at = NOW()
     WHERE id = ${id}
@@ -133,10 +142,13 @@ export async function softDeleteExercise(id: string): Promise<{ success: true }>
   return { success: true }
 }
 
-export async function addExerciseAlias(exerciseId: string, alias: string): Promise<{ success: true }> {
+export async function addExerciseAlias(
+  exerciseId: string,
+  alias: string,
+): Promise<{ success: true }> {
   const a = clean(alias)
   if (!a) throw new Error('Alias is required.')
-  await sql/* sql */`
+  await sql /* sql */ `
     INSERT INTO exercise_aliases (exercise_id, alias)
     VALUES (${exerciseId}, ${a})
     ON CONFLICT (alias) DO NOTHING
@@ -147,7 +159,7 @@ export async function addExerciseAlias(exerciseId: string, alias: string): Promi
 export async function removeExerciseAlias(alias: string): Promise<{ success: true }> {
   const a = clean(alias)
   if (!a) return { success: true }
-  await sql/* sql */`
+  await sql /* sql */ `
     DELETE FROM exercise_aliases
     WHERE LOWER(alias) = ${toLower(a)}
   `
@@ -158,7 +170,7 @@ export async function bodyPartForExerciseName(name: string): Promise<BodyPartKey
   const n = clean(name)
   if (!n) return null
 
-  const { rows } = await sql/* sql */`
+  const { rows } = await sql /* sql */ `
     SELECT e.body_part_key AS "bodyPartKey"
     FROM exercises e
     WHERE LOWER(e.name) = ${toLower(n)}

@@ -27,7 +27,14 @@ function titleCaseTag(tag: string) {
   return tag.replace(/\w\S*/g, (w) => w[0].toUpperCase() + w.slice(1).toLowerCase())
 }
 
-export default function RecentSessions({ rows, page, totalPages, onPrev, onNext, onJumpToDay }: Props) {
+export default function RecentSessions({
+  rows,
+  page,
+  totalPages,
+  onPrev,
+  onNext,
+  onJumpToDay,
+}: Props) {
   return (
     <div className={styles.container}>
       <div className={styles.grid}>
@@ -40,9 +47,7 @@ export default function RecentSessions({ rows, page, totalPages, onPrev, onNext,
             aria-label={`View ${formatLongDate(s.date)}`}
           >
             <p className={styles.date}>{formatLongDate(s.date)}</p>
-            {s.dayTag && (
-              <p className={styles.tag}>{titleCaseTag(s.dayTag)}</p>
-            )}
+            {s.dayTag && <p className={styles.tag}>{titleCaseTag(s.dayTag)}</p>}
             <p className={styles.meta}>
               {s.exercises.length} ex / {s.sets} sets / {s.volume.toLocaleString()} lbs
             </p>

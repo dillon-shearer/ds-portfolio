@@ -23,8 +23,9 @@
   border: var(--rule-hairline) solid;
   background: none;
   cursor: pointer;
-  transition: border-color var(--duration-fast) var(--ease-out),
-              background var(--duration-fast) var(--ease-out);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
   min-width: 64px;
   flex-shrink: 0;
 }

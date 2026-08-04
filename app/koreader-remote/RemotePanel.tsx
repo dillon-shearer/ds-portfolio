@@ -171,8 +171,7 @@ export function RemotePanel() {
       enqueue(custom.detail.action)
     }
     window.addEventListener('koreader-swipe', handleSwipe as EventListener)
-    return () =>
-      window.removeEventListener('koreader-swipe', handleSwipe as EventListener)
+    return () => window.removeEventListener('koreader-swipe', handleSwipe as EventListener)
   }, [enqueue])
 
   useEffect(
@@ -221,11 +220,7 @@ export function RemotePanel() {
 
       <StatusBar tone={status.tone} message={status.message} detail={status.detail} />
 
-      <SetupModal
-        open={isPanelOpen}
-        onClose={() => setIsPanelOpen(false)}
-        endpoint={endpoint}
-      />
+      <SetupModal open={isPanelOpen} onClose={() => setIsPanelOpen(false)} endpoint={endpoint} />
     </div>
   )
 }

@@ -30,9 +30,7 @@ export default function DashboardShell({ tabs, defaultTab, children }: Props) {
           </button>
         ))}
       </nav>
-      <div className={styles.content}>
-        {children(active)}
-      </div>
+      <div className={styles.content}>{children(active)}</div>
     </div>
   )
 }

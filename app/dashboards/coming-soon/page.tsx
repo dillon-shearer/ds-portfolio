@@ -13,7 +13,9 @@ export default function DashboardComingSoonPage() {
         <p className={styles.eyebrow}>Dashboards</p>
         <h1 className={styles.title}>Coming soon</h1>
         <p className={styles.body}>This dashboard is not yet published. Check back later.</p>
-        <Button href="/dashboards" variant="outline">Back to Dashboards</Button>
+        <Button href="/dashboards" variant="outline">
+          Back to Dashboards
+        </Button>
       </div>
     </div>
   )
