@@ -1,0 +1,27 @@
+{
+  "name": "home",
+  "route": "/",
+  "reducedMotion": true,
+  "viewports": [
+    { "width": 360, "height": 800 },
+    { "width": 1440, "height": 1000 }
+  ],
+  "states": [
+    {
+      "name": "loaded",
+      "ready": "h1",
+      "assertions": [
+        { "kind": "text", "selector": "h1", "includes": "Dillon" },
+        {
+          "kind": "eval",
+          "expression": "matchMedia('(prefers-reduced-motion: reduce)').matches",
+          "equals": true
+        }
+      ],
+      "actions": [
+        { "action": "focus", "selector": "a[href='/about'] >> visible=true" },
+        { "action": "tabs", "count": 3 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "name": "gym",
+  "route": "/dashboards/gym?__uiState=loaded",
+  "reducedMotion": true,
+  "viewports": [
+    { "width": 360, "height": 800 },
+    { "width": 1440, "height": 1000 }
+  ],
+  "states": [
+    {
+      "name": "loaded",
+      "ready": "[data-ui-ready='gym-dashboard']",
+      "assertions": [
+        { "kind": "visible", "selector": "button:has-text('Day')" },
+        {
+          "kind": "text",
+          "selector": "[data-ui-ready='gym-dashboard']",
+          "includes": "Gym Tracker"
+        },
+        {
+          "kind": "eval",
+          "expression": "matchMedia('(prefers-reduced-motion: reduce)').matches",
+          "equals": true
+        }
+      ],
+      "actions": [
+        { "action": "click", "selector": "button:has-text('Day')" },
+        { "action": "wait", "selector": "text=Last 7 Days" },
+        { "action": "tabs", "count": 3 }
+      ]
+    },
+    {
+      "name": "empty",
+      "route": "/dashboards/gym?__uiState=empty",
+      "ready": "[data-ui-ready='gym-dashboard'][data-ui-state='empty']",
+      "assertions": [{ "kind": "count", "selector": "text=Bench Press", "equals": 0 }]
+    },
+    {
+      "name": "loading",
+      "route": "/dashboards/gym?__uiState=loading",
+      "waitUntil": "commit",
+      "ready": "[data-ui-ready='gym-loading']",
+      "assertions": [
+        { "kind": "visible", "selector": "[role='status']" },
+        {
+          "kind": "eval",
+          "expression": "matchMedia('(prefers-reduced-motion: reduce)').matches",
+          "equals": true
+        }
+      ]
+    },
+    {
+      "name": "error",
+      "route": "/dashboards/gym?__uiState=error",
+      "ready": "[data-ui-ready='gym-error']",
+      "assertions": [{ "kind": "visible", "selector": "[role='alert']" }]
+    }
+  ]
+}
