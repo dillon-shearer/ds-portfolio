@@ -26,7 +26,7 @@
 }
 
 .td {
-  font-family: var(--font-serif);
+  font-family: var(--font-mono);
   font-size: var(--text-md);
   padding: var(--space-3) var(--space-4);
   color: var(--color-ink);

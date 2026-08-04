@@ -14,7 +14,7 @@
 }
 
 .name {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--text-4xl);
   font-weight: 400;
   line-height: var(--leading-tight);
@@ -24,7 +24,7 @@
 }
 
 .valueProp {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: var(--text-lg);
   font-weight: 400;
   line-height: var(--leading-normal);
@@ -54,7 +54,7 @@
 }
 
 .sectionTitle {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--text-3xl);
   font-weight: 400;
   line-height: var(--leading-tight);

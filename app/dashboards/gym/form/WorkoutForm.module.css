@@ -64,7 +64,7 @@
 }
 
 .cardTitle {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--text-xl);
   font-weight: 500;
   color: var(--color-ink);
@@ -250,7 +250,7 @@
 }
 
 .historyTitle {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--text-lg);
   font-weight: 500;
   color: var(--color-ink);

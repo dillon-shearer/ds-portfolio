@@ -11,7 +11,7 @@ import styles from './BodyDiagram.module.css'
 type Stats = Partial<Record<BodyPart, { volume: number; sets: number }>>
 type SplitKey = 'Push' | 'Pull' | 'Legs'
 
-const NA_COLOR = '#F2EDE5'
+const NA_COLOR = '#F1EFEA'
 
 function lerpHex(a: string, b: string, t: number): string {
   const p = (h: string) => {
@@ -54,6 +54,7 @@ export default function BodyDiagram({
   const [webglOK, setWebglOK] = useState(true)
   const [hoveredPart, setHoveredPart] = useState<BodyPart | null>(null)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [autoRotate, setAutoRotate] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -64,6 +65,14 @@ export default function BodyDiagram({
     } catch {
       setWebglOK(false)
     }
+  }, [])
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const updateAutoRotate = () => setAutoRotate(!mediaQuery.matches)
+    updateAutoRotate()
+    mediaQuery.addEventListener('change', updateAutoRotate)
+    return () => mediaQuery.removeEventListener('change', updateAutoRotate)
   }, [])
 
   const splitBucketFor = (p: BodyPart): SplitKey => {
@@ -100,7 +109,7 @@ export default function BodyDiagram({
     setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
   }
 
-  const BASE_COLOR = '#F0EBE2'
+  const BASE_COLOR = '#EDECE8'
   const baseMat = <meshStandardMaterial color={BASE_COLOR} roughness={0.72} metalness={0.0} />
 
   const badgeMatFor = (p: BodyPart) => {
@@ -133,7 +142,7 @@ export default function BodyDiagram({
           camera={{ position: [0, 1.4, 7], fov: 39 }}
           gl={{ antialias: true, powerPreference: 'high-performance' }}
           onCreated={({ gl }) => {
-            gl.setClearColor('#F2EDE5', 1)
+            gl.setClearColor('#F1EFEA', 1)
             gl.domElement.addEventListener('webglcontextlost', (e) => {
               e.preventDefault()
             })
@@ -152,7 +161,7 @@ export default function BodyDiagram({
             enablePan={false}
             minPolarAngle={Math.PI * 0.18}
             maxPolarAngle={Math.PI * 0.82}
-            autoRotate
+            autoRotate={autoRotate}
             autoRotateSpeed={2.0}
             target={[0, 0.15, 0]}
           />

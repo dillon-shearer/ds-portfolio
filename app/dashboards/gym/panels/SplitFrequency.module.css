@@ -30,7 +30,7 @@
 }
 
 .count {
-  font-family: var(--font-serif);
+  font-family: var(--font-mono);
   font-size: var(--text-2xl);
   font-weight: 400;
   color: var(--color-ink);

@@ -6,18 +6,18 @@
 
 :root {
   /* ---------- Paper & ink ---------- */
-  --color-paper: #ebe3d5;
-  --color-paper-2: #faf6ef;
-  --color-ink: #1b1814;
-  --color-ink-2: #4a4239;
-  --color-ink-3: #8a7f71;
-  --color-rule: #d8cfc2;
-  --color-rule-soft: #f2ede5;
+  --color-paper: #fafaf8;
+  --color-paper-2: #ffffff;
+  --color-ink: #111110;
+  --color-ink-2: #44403b;
+  --color-ink-3: #6f6b64;
+  --color-rule: #e3e1db;
+  --color-rule-soft: #f1efea;
 
   /* ---------- Accent (oxblood) ---------- */
   --color-accent: #7a2e2e;
   --color-accent-hover: #5c2020;
-  --color-accent-soft: #f1e4e1;
+  --color-accent-soft: #f3e7e4;
 
   /* ---------- Status ---------- */
   --color-positive: #4a6b3a;
@@ -40,14 +40,14 @@
 
   /* Generic chart series (for non-body-part charts) */
   --chart-primary: #7a2e2e;
-  --chart-secondary: #4a4239;
-  --chart-muted: #d8cfc2;
-  --chart-na: #ebe3d5;
+  --chart-secondary: #44403b;
+  --chart-muted: #d9d6ce;
+  --chart-na: #eceae4;
 
   /* ---------- Typography ---------- */
   /* next/font injects these variables on <html>; tokens.css maps them. */
-  --font-serif: var(--next-font-serif), Georgia, 'Times New Roman', serif;
-  --font-sans: var(--next-font-sans), system-ui, -apple-system, sans-serif;
+  --font-display: var(--next-font-display), system-ui, sans-serif;
+  --font-sans: var(--next-font-sans), system-ui, sans-serif;
   --font-mono: var(--next-font-mono), ui-monospace, 'Menlo', monospace;
 
   /* Type scale */
@@ -59,16 +59,16 @@
   --text-xl: 1.5rem;
   --text-2xl: 1.875rem;
   --text-3xl: 2.25rem;
-  --text-4xl: 3rem;
+  --text-4xl: clamp(2.75rem, 6vw, 4rem);
 
   /* Leading */
-  --leading-tight: 1.2;
-  --leading-snug: 1.35;
-  --leading-normal: 1.55;
-  --leading-loose: 1.75;
+  --leading-tight: 1.1;
+  --leading-snug: 1.3;
+  --leading-normal: 1.5;
+  --leading-loose: 1.7;
 
   /* Tracking */
-  --tracking-tight: -0.01em;
+  --tracking-tight: -0.02em;
   --tracking-wide: 0.08em;
 
   /* ---------- Spacing (4px scale) ---------- */
@@ -81,10 +81,11 @@
   --space-7: 48px;
   --space-8: 64px;
   --space-9: 96px;
+  --space-10: 128px;
 
   /* ---------- Layout ---------- */
-  --content-width: 680px;
-  --content-width-wide: 1080px;
+  --content-width: 720px;
+  --content-width-wide: 1100px;
   --gutter: var(--space-5);
 
   /* ---------- Radii ---------- */

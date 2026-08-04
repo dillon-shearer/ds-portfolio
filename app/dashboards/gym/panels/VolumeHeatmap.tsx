@@ -11,7 +11,7 @@ type Mode = 'week' | 'month' | 'year'
 type Cell = { date: string; volume: number; label?: string }
 
 // Portfolio color scale: paper-tone to oxblood
-const PORTFOLIO_PALETTE = ['#EBE3D5', '#D8CFC2', '#8A7F71', '#4A4239', '#7A2E2E']
+const PORTFOLIO_PALETTE = ['#ECEAE4', '#EFE0DD', '#D9AFA9', '#B97B72', '#98524A', '#7A2E2E']
 
 function interpolatePortfolioPalette(bucket: number): string {
   const idx = Math.max(0, Math.min(PORTFOLIO_PALETTE.length - 1, bucket))
@@ -23,7 +23,7 @@ export default function VolumeHeatmap({
   mode = 'month',
   gap = 4,
   padding = 12,
-  naColor = '#EBE3D5',
+  naColor = '#ECEAE4',
   minYearSegWidth = 10,
   fillParent = true,
 }: {
@@ -89,16 +89,18 @@ export default function VolumeHeatmap({
     return (1 - t) * arr[lo] + t * arr[hi]
   }
 
-  const q25 = quantile(nonZero, 0.25)
-  const q50 = quantile(nonZero, 0.5)
-  const q75 = quantile(nonZero, 0.75)
+  const q20 = quantile(nonZero, 0.2)
+  const q40 = quantile(nonZero, 0.4)
+  const q60 = quantile(nonZero, 0.6)
+  const q80 = quantile(nonZero, 0.8)
 
   const bucketFor = (v: number) => {
-    if (nonZero.length <= 1) return 3
-    if (v <= q25) return 1
-    if (v <= q50) return 2
-    if (v <= q75) return 3
-    return 4
+    if (nonZero.length <= 1) return 5
+    if (v <= q20) return 1
+    if (v <= q40) return 2
+    if (v <= q60) return 3
+    if (v <= q80) return 4
+    return 5
   }
 
   const colorFor = (d: Cell) => {

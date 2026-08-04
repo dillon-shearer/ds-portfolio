@@ -8,10 +8,11 @@ type Props = {
 }
 
 const LEGEND = [
-  { color: '#EBE3D5' },
-  { color: '#D8CFC2' },
-  { color: '#8A7F71' },
-  { color: '#4A4239' },
+  { color: '#ECEAE4' },
+  { color: '#EFE0DD' },
+  { color: '#D9AFA9' },
+  { color: '#B97B72' },
+  { color: '#98524A' },
   { color: '#7A2E2E' },
 ]
 
@@ -19,7 +20,7 @@ export default function VolumeHeatmap({ mode, data }: Props) {
   return (
     <div className={styles.wrapper}>
       <div style={{ flex: 1, minHeight: 0 }}>
-        <VolumeHeatmapInner mode={mode} data={data} fillParent naColor="#EBE3D5" />
+        <VolumeHeatmapInner mode={mode} data={data} fillParent naColor="#ECEAE4" />
       </div>
       <div className={styles.legend}>
         <span className={styles.legendLabel}>Volume</span>

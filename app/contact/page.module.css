@@ -11,7 +11,7 @@
 }
 
 .successMsg {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: var(--text-md);
   color: var(--color-positive);
   padding: var(--space-4) 0;
@@ -20,7 +20,7 @@
 }
 
 .errorMsg {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: var(--text-md);
   color: var(--color-accent);
   padding: var(--space-4) 0;

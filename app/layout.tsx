@@ -1,27 +1,28 @@
 import type { Metadata } from 'next'
-import { Source_Serif_4, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google'
+import { Inter, JetBrains_Mono, Schibsted_Grotesk } from 'next/font/google'
 import { SiteChrome } from '@/components/SiteChrome'
 import { SITE } from '@/content/site'
 import '@/styles/tokens.css'
 import './globals.css'
 
-const sourceSerif = Source_Serif_4({
+const schibstedGrotesk = Schibsted_Grotesk({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--next-font-serif',
+  weight: ['500', '600', '700'],
+  variable: '--next-font-display',
 })
 
-const ibmPlexSans = IBM_Plex_Sans({
+const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   weight: ['400', '500'],
   variable: '--next-font-sans',
 })
 
-const ibmPlexMono = IBM_Plex_Mono({
+const jetBrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   display: 'swap',
-  weight: ['400'],
+  weight: ['400', '500'],
   variable: '--next-font-mono',
 })
 
@@ -37,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${sourceSerif.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable}`}
+      className={`${schibstedGrotesk.variable} ${inter.variable} ${jetBrainsMono.variable}`}
     >
       <body>
         <SiteChrome>{children}</SiteChrome>

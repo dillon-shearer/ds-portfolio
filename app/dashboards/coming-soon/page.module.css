@@ -13,7 +13,7 @@
 }
 
 .title {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--text-4xl);
   font-weight: 400;
   line-height: var(--leading-tight);
@@ -23,7 +23,7 @@
 }
 
 .body {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: var(--text-md);
   line-height: var(--leading-loose);
   color: var(--color-ink-2);

@@ -13,7 +13,7 @@
   border: var(--rule-hairline) solid color-mix(in srgb, var(--color-paper) 22%, transparent);
   border-radius: var(--radius-sm);
 
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--text-3xl);
   line-height: var(--leading-tight);
 
@@ -43,7 +43,7 @@
 }
 
 .label {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: var(--text-3xl);
 }
 
