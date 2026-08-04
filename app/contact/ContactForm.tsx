@@ -60,7 +60,7 @@ export function ContactForm() {
       <div className={styles.fields}>
         <Input label="Name" name="name" required />
         <Input label="Email" name="email" type="email" required />
-        <Input label="Message" name="message" as="textarea" required />
+        <Input label="Message" name="message" as="textarea" rows={6} required />
       </div>
 
       <Button type="submit" variant="primary" disabled={status === 'sending'}>

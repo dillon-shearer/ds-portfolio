@@ -6,6 +6,14 @@ const RATE_LIMIT_MAX = 5
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000
 const submissionBuckets = new Map<string, { count: number; resetAt: number }>()
 
+const escapeHtml = (s: string) =>
+  s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+
 function isAllowedOrigin(origin: string | null) {
   if (!origin) return false
   const allowed = [
@@ -83,6 +91,21 @@ export async function submitContactForm(formData: FormData): Promise<FormResult>
     return { error: 'send' }
   }
 
+  const escapedName = escapeHtml(name)
+  const escapedEmail = escapeHtml(email)
+  const escapedMessage = escapeHtml(message)
+  const html = `
+    <h2>New Contact Form Submission</h2>
+    <p><strong>Name:</strong> ${escapedName}</p>
+    <p><strong>Email:</strong> ${escapedEmail}</p>
+    <p><strong>Message:</strong></p>
+    <div style="padding:15px;margin:10px 0;border-left:3px solid lightgrey;">
+      ${escapedMessage.replace(/\n/g, '<br>')}
+    </div>
+    <hr>
+    <p><small>Sent from datawithdillon.com contact form</small></p>
+  `
+
   try {
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -93,18 +116,8 @@ export async function submitContactForm(formData: FormData): Promise<FormResult>
       body: JSON.stringify({
         from: 'contact@datawithdillon.com',
         to: 'dillon@datawithdillon.com',
-        subject: `New message from ${name}`,
-        html: `
-          <h2>New Contact Form Submission</h2>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Message:</strong></p>
-          <div style="padding:15px;margin:10px 0;border-left:3px solid lightgrey;">
-            ${message.replace(/\n/g, '<br>')}
-          </div>
-          <hr>
-          <p><small>Sent from datawithdillon.com contact form</small></p>
-        `,
+        subject: `New message from ${name.replace(/[\r\n]/g, ' ')}`,
+        html,
         reply_to: email,
       }),
     })
