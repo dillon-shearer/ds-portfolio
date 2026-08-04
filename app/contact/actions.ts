@@ -94,6 +94,17 @@ export async function submitContactForm(formData: FormData): Promise<FormResult>
   const escapedName = escapeHtml(name)
   const escapedEmail = escapeHtml(email)
   const escapedMessage = escapeHtml(message)
+  const html = `
+    <h2>New Contact Form Submission</h2>
+    <p><strong>Name:</strong> ${escapedName}</p>
+    <p><strong>Email:</strong> ${escapedEmail}</p>
+    <p><strong>Message:</strong></p>
+    <div style="padding:15px;margin:10px 0;border-left:3px solid lightgrey;">
+      ${escapedMessage.replace(/\n/g, '<br>')}
+    </div>
+    <hr>
+    <p><small>Sent from datawithdillon.com contact form</small></p>
+  `
 
   try {
     const response = await fetch('https://api.resend.com/emails', {
@@ -106,17 +117,7 @@ export async function submitContactForm(formData: FormData): Promise<FormResult>
         from: 'contact@datawithdillon.com',
         to: 'dillon@datawithdillon.com',
         subject: `New message from ${name.replace(/[\r\n]/g, ' ')}`,
-        html: `
-          <h2>New Contact Form Submission</h2>
-          <p><strong>Name:</strong> ${escapedName}</p>
-          <p><strong>Email:</strong> ${escapedEmail}</p>
-          <p><strong>Message:</strong></p>
-          <div style="padding:15px;margin:10px 0;border-left:3px solid lightgrey;">
-            ${escapedMessage.replace(/\n/g, '<br>')}
-          </div>
-          <hr>
-          <p><small>Sent from datawithdillon.com contact form</small></p>
-        `,
+        html,
         reply_to: email,
       }),
     })
