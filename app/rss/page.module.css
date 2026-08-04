@@ -10,8 +10,80 @@
   margin-top: var(--space-5);
 }
 
+.feedUrl {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: var(--space-5) 0;
+  padding: var(--space-3) var(--space-4);
+  overflow-x: auto;
+  background-color: var(--color-paper-2);
+  border: var(--rule-hairline) solid var(--color-rule);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: var(--leading-normal);
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+
 .readers {
   margin-top: var(--space-6);
-  display: flex;
-  flex-direction: column;
+  list-style: none;
+  border-top: var(--rule-hairline) solid var(--color-rule);
+}
+
+.reader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-4);
+  align-items: start;
+  padding: var(--space-5) 0;
+  border-bottom: var(--rule-hairline) solid var(--color-rule);
+}
+
+.readerName {
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  font-weight: 500;
+  line-height: var(--leading-normal);
+  color: var(--color-ink);
+}
+
+.readerDescription {
+  margin-top: var(--space-1);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--color-ink-2);
+}
+
+.readerAction {
+  padding-top: var(--space-1);
+}
+
+.readerLink {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.readerLink:hover {
+  color: var(--color-accent-hover);
+}
+
+@media (max-width: 719px) {
+  .reader {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .readerAction {
+    padding-top: 0;
+  }
 }

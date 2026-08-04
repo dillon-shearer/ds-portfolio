@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
-import { PageHeader, Card, InlineLink } from '@/components/ui'
-import { READERS, FEED } from '@/content/rss'
+import { PageHeader } from '@/components/ui'
+import { READERS } from '@/content/rss'
+import { SITE } from '@/content/site'
 import styles from './page.module.css'
 
 export const metadata: Metadata = {
@@ -9,6 +10,8 @@ export const metadata: Metadata = {
 }
 
 export default function RssPage() {
+  const feedUrl = `${SITE.url}/rss/feed`
+
   return (
     <div className="page-wrapper">
       <PageHeader
@@ -24,39 +27,30 @@ export default function RssPage() {
           algorithm deciding what you see.
         </p>
         <p>To subscribe, copy the feed URL below and paste it into your RSS reader:</p>
-        <p>
-          <InlineLink href={`${FEED.siteUrl}/rss/feed`}>{`${FEED.siteUrl}/rss/feed`}</InlineLink>
-        </p>
+        <code className={styles.feedUrl}>{feedUrl}</code>
         <p>Don&apos;t have an RSS reader yet? Here are a few good ones:</p>
       </div>
 
-      <div className={styles.readers}>
+      <ul className={styles.readers}>
         {READERS.map((r) => (
-          <Card
-            key={r.name}
-            title={r.name}
-            description={r.description}
-            action={
+          <li key={r.name} className={styles.reader}>
+            <div>
+              <h2 className={styles.readerName}>{r.name}</h2>
+              <p className={styles.readerDescription}>{r.description}</p>
+            </div>
+            <div className={styles.readerAction}>
               <a
                 href={r.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 'var(--text-xs)',
-                  textTransform: 'uppercase',
-                  letterSpacing: 'var(--tracking-wide)',
-                  color: 'var(--color-accent)',
-                  textDecoration: 'underline',
-                  textUnderlineOffset: '2px',
-                }}
+                className={styles.readerLink}
               >
                 Visit site
               </a>
-            }
-          />
+            </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   )
 }

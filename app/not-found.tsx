@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { InlineLink } from '@/components/ui'
 import styles from './not-found.module.css'
 
 export default function NotFound() {
@@ -9,21 +9,9 @@ export default function NotFound() {
       <p className={styles.message}>
         This page doesn&apos;t exist. It may have moved or been removed.
       </p>
-      <Link
-        href="/"
-        style={{
-          fontFamily: 'var(--font-sans)',
-          fontSize: 'var(--text-sm)',
-          fontWeight: 500,
-          textTransform: 'uppercase',
-          letterSpacing: 'var(--tracking-wide)',
-          color: 'var(--color-accent)',
-          textDecoration: 'underline',
-          textUnderlineOffset: '2px',
-        }}
-      >
-        Back to home
-      </Link>
+      <span className={styles.homeLink}>
+        <InlineLink href="/">Back to home</InlineLink>
+      </span>
     </div>
   )
 }

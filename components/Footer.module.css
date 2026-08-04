@@ -57,6 +57,17 @@
   border-top: var(--rule-hairline) solid var(--color-rule);
 }
 
+.metaLink {
+  color: var(--color-ink-3);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.metaLink:hover {
+  color: var(--color-accent);
+}
+
 @media (min-width: 720px) {
   .columns {
     grid-template-columns: repeat(3, 1fr);

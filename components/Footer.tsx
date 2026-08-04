@@ -75,12 +75,16 @@ export function Footer() {
           <span aria-hidden="true">/</span>
           <a
             href={SOCIALS.sourceRepo}
-            className={styles.columnLink}
+            className={styles.metaLink}
             target="_blank"
             rel="noopener noreferrer"
           >
             View source
           </a>
+          <span aria-hidden="true">/</span>
+          <Link href="/rss" className={styles.metaLink}>
+            RSS
+          </Link>
           <span aria-hidden="true">/</span>
           <span>Built with Next.js</span>
         </div>
