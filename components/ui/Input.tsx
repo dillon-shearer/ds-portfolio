@@ -6,6 +6,7 @@ interface InputProps {
   type?: string
   required?: boolean
   as?: 'input' | 'textarea'
+  rows?: number
   placeholder?: string
   defaultValue?: string
 }
@@ -16,6 +17,7 @@ export function Input({
   type = 'text',
   required,
   as = 'input',
+  rows,
   placeholder,
   defaultValue,
 }: InputProps) {
@@ -33,6 +35,7 @@ export function Input({
           id={id}
           name={name}
           required={required}
+          rows={rows}
           placeholder={placeholder}
           defaultValue={defaultValue}
           className={fieldClass}
