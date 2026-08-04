@@ -73,4 +73,5 @@
 
 .separator {
   color: var(--color-ink-3);
+  padding: 0 var(--space-1);
 }
