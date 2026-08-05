@@ -23,7 +23,7 @@ Body prose max-width: 60–75ch. Hyphenation on. `hanging-punctuation: first las
 
 ## Components
 
-Eight primitives in `components/ui/`. No others without updating this file first.
+Seven primitives in `components/ui/`. No others without updating this file first.
 
 | Name | File | Variants | Use when | Never use for |
 |---|---|---|---|---|
@@ -32,11 +32,8 @@ Eight primitives in `components/ui/`. No others without updating this file first
 | Card | Card.tsx | none | Certs, resumes, capabilities | Cards within cards |
 | Input | Input.tsx | input, textarea | Contact form only | none |
 | Badge | Badge.tsx | none | Skill tags, status | More than 3 per card |
-| Rule | Rule.tsx | hairline, medium | Section dividers | Decorative |
 | PageHeader | PageHeader.tsx | rule={false} | Every page top | Mid-page headings |
 | DashboardCard | DashboardCard.tsx | none | Dashboard list entries | Nested cards |
-| Table | Table.tsx | none | Tabular data | Layout |
-| CodeBlock | CodeBlock.tsx | none | Code samples | Long prose |
 
 ## Layout
 

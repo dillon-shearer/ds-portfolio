@@ -13,11 +13,6 @@ export const KOREADER_ACTIONS = {
     label: 'Previous Page',
     path: '/koreader/event/GotoViewRel/-1',
   },
-  refresh: {
-    id: 'refresh',
-    label: 'Refresh Display',
-    path: '/koreader/event/RefreshView',
-  },
 } as const
 
 export type KoreaderActionId = keyof typeof KOREADER_ACTIONS

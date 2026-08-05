@@ -4,15 +4,14 @@ type Props = {
   label: string
   value: string | number
   sub?: string
-  accent?: boolean
   className?: string
 }
 
-export default function StatWidget({ label, value, sub, accent, className }: Props) {
+export default function StatWidget({ label, value, sub, className }: Props) {
   return (
     <div className={[styles.widget, className].filter(Boolean).join(' ')}>
       <p className={styles.label}>{label}</p>
-      <p className={[styles.value, accent ? styles.accent : ''].join(' ')}>
+      <p className={styles.value}>
         {typeof value === 'number' ? value.toLocaleString() : value}
       </p>
       {sub && <p className={styles.sub}>{sub}</p>}

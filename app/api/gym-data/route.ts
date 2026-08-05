@@ -28,18 +28,6 @@ function checkRateLimit(ip: string) {
   return true
 }
 
-function extractToken(req: Request, searchParams: URLSearchParams) {
-  const queryToken = searchParams.get('key') || searchParams.get('token')
-  if (queryToken) return queryToken
-  const headerToken = req.headers.get('x-lift-token')
-  if (headerToken) return headerToken
-  const authHeader = req.headers.get('authorization')
-  if (authHeader?.toLowerCase().startsWith('bearer ')) {
-    return authHeader.slice(7).trim()
-  }
-  return null
-}
-
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const day = searchParams.get('day')
