@@ -17,6 +17,7 @@ const inter = Inter({
   display: 'swap',
   weight: ['400', '500'],
   variable: '--next-font-sans',
+  preload: false,
 })
 
 const jetBrainsMono = JetBrains_Mono({
@@ -24,6 +25,7 @@ const jetBrainsMono = JetBrains_Mono({
   display: 'swap',
   weight: ['400', '500'],
   variable: '--next-font-mono',
+  preload: false,
 })
 
 export const metadata: Metadata = {
