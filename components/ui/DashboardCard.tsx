@@ -35,13 +35,7 @@ export function DashboardCard({
         <p className={styles.description}>{description}</p>
         {longDescription ? <p className={styles.longDescription}>{longDescription}</p> : null}
         {tech && tech.length > 0 ? (
-          <ul className={styles.tech}>
-            {tech.map((item) => (
-              <li key={item} className={styles.tag}>
-                {item}
-              </li>
-            ))}
-          </ul>
+          <p className={styles.tech}>{tech.join(', ')}</p>
         ) : null}
       </div>
     </li>
