@@ -63,7 +63,7 @@ values exactly.
 | --- | --- | --- |
 | `--font-display` | `var(--next-font-display), system-ui, sans-serif` | Schibsted Grotesk, weights 500/600/700; headings and display |
 | `--font-sans` | `var(--next-font-sans), system-ui, sans-serif` | Inter, weights 400/500; body and UI |
-| `--font-mono` | `var(--next-font-mono), ui-monospace, 'Menlo', monospace` | JetBrains Mono, weights 400/500; labels, metadata, numbers, and code |
+| `--font-mono` | `var(--next-font-sans), system-ui, sans-serif` | Inter (shared with `--font-sans`); labels, metadata, numbers, and code. Token name kept for historical reasons; no separate monospace face is loaded. |
 
 | Token | Value | Token | Value |
 | --- | --- | --- | --- |
@@ -78,8 +78,9 @@ values exactly.
 
 - Headings use display, weight 600, tight tracking, tight leading, and sentence case.
 - Body copy uses sans at base or md with a maximum measure of 68ch.
-- Eyebrows, labels, metadata, and dashboard numbers use mono. Labels are uppercase,
-  xs, and wide-tracked. Separate metadata terms with ` / `.
+- Eyebrows, labels, metadata, and dashboard numbers use `--font-mono` (which now
+  resolves to Inter, the same face as `--font-sans`). Labels are uppercase, xs, and
+  wide-tracked. Separate metadata terms with ` / `.
 
 ### Spacing, layout, and motion
 

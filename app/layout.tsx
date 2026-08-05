@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, JetBrains_Mono, Schibsted_Grotesk } from 'next/font/google'
+import { Inter, Schibsted_Grotesk } from 'next/font/google'
 import { SiteChrome } from '@/components/SiteChrome'
 import { SITE } from '@/content/site'
 import '@/styles/tokens.css'
@@ -17,14 +17,6 @@ const inter = Inter({
   display: 'swap',
   weight: ['400', '500'],
   variable: '--next-font-sans',
-  preload: false,
-})
-
-const jetBrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  display: 'swap',
-  weight: ['400', '500'],
-  variable: '--next-font-mono',
   preload: false,
 })
 
@@ -57,7 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${schibstedGrotesk.variable} ${inter.variable} ${jetBrainsMono.variable}`}
+      className={`${schibstedGrotesk.variable} ${inter.variable}`}
     >
       <body>
         <SiteChrome>{children}</SiteChrome>

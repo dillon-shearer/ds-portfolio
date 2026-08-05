@@ -48,7 +48,7 @@
   /* next/font injects these variables on <html>; tokens.css maps them. */
   --font-display: var(--next-font-display), system-ui, sans-serif;
   --font-sans: var(--next-font-sans), system-ui, sans-serif;
-  --font-mono: var(--next-font-mono), ui-monospace, 'Menlo', monospace;
+  --font-mono: var(--next-font-sans), system-ui, sans-serif;
 
   /* Type scale */
   --text-xs: 0.75rem;
