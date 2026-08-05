@@ -6,23 +6,38 @@ export const BIO_PARAGRAPHS: string[] = [
   "I believe the best data work happens when you combine technical rigor with genuine curiosity about the problems you're solving. I'm always learning something new, whether that's mastering a new tool, diving deeper into a domain, or finding better ways to communicate complex insights to diverse stakeholders.",
 ]
 
+export const ABOUT_PAGE = {
+  metadata: {
+    title: 'About',
+    description:
+      'Data-centric software engineer building data systems, analytics, and applications. Currently focused on healthcare and life sciences.',
+  },
+  eyebrow: 'ABOUT',
+  title: 'Dillon Shearer',
+  lead: 'Data-centric software engineer building data systems, analytics, and applications. Currently focused on healthcare and life sciences.',
+  resume: {
+    heading: 'Resume',
+    intro: 'One resume, kept current.',
+    formatLabel: 'PDF',
+    downloadLabel: 'Download',
+  },
+  certifications: {
+    heading: 'Certifications',
+  },
+} as const
+
 export const RESUMES: { role: string; description: string; href: string }[] = [
   {
-    role: 'Data Engineer',
-    description: 'Pipelines, infrastructure, and data reliability.',
-    href: '/resumes/Dillon_Shearer_Resume.pdf',
-  },
-  {
-    role: 'Data Analyst',
-    description: 'Analytics, dashboards, and business intelligence.',
+    role: 'Resume',
+    description: 'Data engineering and analytics, one document.',
     href: '/resumes/Dillon_Shearer_Resume.pdf',
   },
 ]
 
-export const CERTIFICATIONS: { title: string; meta: string; credentialId: string }[] = [
+export const CERTIFICATIONS: { title: string; meta: string; credential: string }[] = [
   {
     title: 'Protecting Human Research Participants',
-    meta: 'Apr 2025 / PHRP Online Training, Inc.',
-    credentialId: '3004648',
+    meta: 'APR 2025 / PHRP ONLINE TRAINING, INC.',
+    credential: 'Credential ID: 3004648',
   },
 ]
