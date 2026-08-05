@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState, useCallback } from 'react'
+import dynamic from 'next/dynamic'
 import type { GymLift } from './actions'
 import { bodyPartForExercise, type BodyPart } from '@/lib/gym/body-parts'
 import { epley1RM, setVolume } from '@/lib/gym/metrics'
@@ -17,9 +18,12 @@ import ExercisePRsTable from './panels/ExercisePRsTable'
 import VolumeHeatmap from './panels/VolumeHeatmapWrapper'
 import RecentSessions from './panels/RecentSessions'
 import DailyView from './panels/DailyView'
-import FloatingChatWidget from '@/components/dashboard/FloatingChatWidget'
-import WorkoutForm from './form/WorkoutForm'
 import styles from './GymDashboard.module.css'
+
+const FloatingChatWidget = dynamic(() => import('@/components/dashboard/FloatingChatWidget'), {
+  ssr: false,
+})
+const WorkoutForm = dynamic(() => import('./form/WorkoutForm'), { ssr: false })
 
 type RangeMode = 'day' | 'week' | 'month' | 'year'
 type SortKey = 'exercise' | 'bestWeight' | 'best1RM' | 'bestSetDate'
