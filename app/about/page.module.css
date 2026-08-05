@@ -54,7 +54,6 @@
 .resumeRow {
   grid-template-columns: calc(var(--space-8) + var(--space-4)) minmax(0, 1fr) auto;
   border-top: var(--rule-hairline) solid var(--color-rule);
-  border-bottom: var(--rule-hairline) solid var(--color-rule);
 }
 
 .certificationRow {
