@@ -1,10 +1,10 @@
 'use server'
 
 import { headers } from 'next/headers'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 const RATE_LIMIT_MAX = 5
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000
-const submissionBuckets = new Map<string, { count: number; resetAt: number }>()
 
 const escapeHtml = (s: string) =>
   s
@@ -33,19 +33,6 @@ function getClientIp(headerList: Headers): string {
     if (first) return first
   }
   return headerList.get('x-real-ip') ?? 'unknown'
-}
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now()
-  const entry = submissionBuckets.get(ip)
-  if (entry && entry.resetAt > now) {
-    if (entry.count >= RATE_LIMIT_MAX) return false
-    entry.count += 1
-    submissionBuckets.set(ip, entry)
-    return true
-  }
-  submissionBuckets.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS })
-  return true
 }
 
 export type FormResult =
@@ -81,7 +68,8 @@ export async function submitContactForm(formData: FormData): Promise<FormResult>
   }
 
   const ip = getClientIp(headerList)
-  if (!checkRateLimit(ip)) {
+  const rateLimit = await checkRateLimit('contact', ip, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS)
+  if (!rateLimit.allowed) {
     return { error: 'rate-limit' }
   }
 

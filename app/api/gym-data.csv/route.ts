@@ -1,6 +1,19 @@
 import { NextResponse } from 'next/server'
 import { getGymLifts } from '@/app/dashboards/gym/actions'
 import { enrich } from '@/lib/gym/metrics'
+import { checkRateLimit } from '@/lib/rate-limit'
+
+const RATE_LIMIT_MAX = 20
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000
+
+function getClientIp(req: Request) {
+  const forwarded = req.headers.get('x-forwarded-for')
+  if (forwarded) {
+    const first = forwarded.split(',')[0]?.trim()
+    if (first) return first
+  }
+  return req.headers.get('x-real-ip') ?? 'unknown'
+}
 
 // very small CSV helper
 const csvEscape = (v: unknown) => {
@@ -18,6 +31,12 @@ export async function GET(req: Request) {
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean)
+
+  const ip = getClientIp(req)
+  const rateLimit = await checkRateLimit('gym-data', ip, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS)
+  if (!rateLimit.allowed) {
+    return new NextResponse('Too many requests', { status: 429 })
+  }
 
   let rows = enrich(await getGymLifts())
   if (day) {

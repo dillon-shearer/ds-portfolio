@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server'
 import { getGymLifts } from '@/app/dashboards/gym/actions'
 import { enrich, type OutRow } from '@/lib/gym/metrics'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 const RATE_LIMIT_MAX = 20
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000
-const rateBuckets = new Map<string, { count: number; resetAt: number }>()
 
 function getClientIp(req: Request) {
   const forwarded = req.headers.get('x-forwarded-for')
@@ -13,19 +13,6 @@ function getClientIp(req: Request) {
     if (first) return first
   }
   return req.headers.get('x-real-ip') ?? 'unknown'
-}
-
-function checkRateLimit(ip: string) {
-  const now = Date.now()
-  const bucket = rateBuckets.get(ip)
-  if (bucket && bucket.resetAt > now) {
-    if (bucket.count >= RATE_LIMIT_MAX) return false
-    bucket.count += 1
-    rateBuckets.set(ip, bucket)
-    return true
-  }
-  rateBuckets.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS })
-  return true
 }
 
 export async function GET(req: Request) {
@@ -42,8 +29,18 @@ export async function GET(req: Request) {
     .filter(Boolean)
 
   const ip = getClientIp(req)
-  if (!checkRateLimit(ip)) {
-    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+  const rateLimit = await checkRateLimit('gym-data', ip, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_MS)
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      {
+        status: 429,
+        headers: {
+          'x-ratelimit-limit': RATE_LIMIT_MAX.toString(),
+          'x-ratelimit-remaining': rateLimit.remaining.toString(),
+        },
+      },
+    )
   }
 
   let rows = enrich(await getGymLifts())
@@ -92,10 +89,7 @@ export async function GET(req: Request) {
         'content-disposition': `attachment; filename="${day ? `gym-lifts-${day}` : 'gym-lifts'}.json"`,
         'cache-control': 'private, max-age=0, must-revalidate',
         'x-ratelimit-limit': RATE_LIMIT_MAX.toString(),
-        'x-ratelimit-remaining': Math.max(
-          RATE_LIMIT_MAX - (rateBuckets.get(ip)?.count ?? 0),
-          0,
-        ).toString(),
+        'x-ratelimit-remaining': rateLimit.remaining.toString(),
       },
     },
   )
