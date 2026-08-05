@@ -1,16 +1,18 @@
 # UI Primitives
 
-Seven primitives. No others without updating `STYLE.md` first.
+The public primitive inventory is exported from `components/ui/index.ts`.
+Update this table and `.claude/STYLE.md` when adding an export.
 
-| Name       | File           | Variants                   | Use when                     | Never use for                |
-| ---------- | -------------- | -------------------------- | ---------------------------- | ---------------------------- |
-| Badge      | Badge.tsx      | -                          | Skill tags (max 3 per card)  | Status indicators with color |
-| Button     | Button.tsx     | primary, outline, ghost    | CTAs and form submits        | Navigation                   |
-| InlineLink | Link.tsx       | -                          | Body text links              | Buttons                      |
-| NavLink    | Link.tsx       | -                          | Header/footer nav only       | Body links                   |
-| Card       | Card.tsx       | -                          | Certs, resumes, capabilities | Cards within cards           |
-| Input      | Input.tsx      | input (default), textarea  | Contact form fields          | Search, dropdowns            |
-| PageHeader | PageHeader.tsx | -                          | Top of every page            | Mid-page headings            |
+| Export | File | Use when | Do not use for |
+| --- | --- | --- | --- |
+| `Badge` | `Badge.tsx` | Short tags, up to three per card | Color-coded status |
+| `Button` | `Button.tsx` | CTAs, form submits, and actions | Navigation that should use `NavLink` |
+| `InlineLink` | `Link.tsx` | Body-text links | Buttons |
+| `NavLink` | `Link.tsx` | Header, footer, and mobile navigation | Body-text links |
+| `Card` | `Card.tsx` | Certifications, resumes, and capabilities | Nested cards or index lists |
+| `Input` | `Input.tsx` | Contact-form fields and textareas | Search or select controls |
+| `PageHeader` | `PageHeader.tsx` | Top of a page | Mid-page headings |
+| `DashboardCard` | `DashboardCard.tsx` | Numbered dashboard index rows | General card layouts |
 
 ## Import
 

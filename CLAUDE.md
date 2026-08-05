@@ -6,25 +6,18 @@ Next.js 15 App Router / TypeScript / CSS Modules / Vercel
 
 ```bash
 npm run dev        # dev server at http://localhost:3000
-npm run build      # production build (also used for type-check - no test framework)
+npm run lint       # ESLint
+npm run check:ascii # enforce ASCII-only tracked text files
+npx tsc --noEmit   # TypeScript type check
 ```
 
-## Required env vars
+CI lives in `.github/workflows/ci.yml` and runs `npm run check:ascii`, `npm run lint`,
+and `npm run build` with dummy environment values on pushes and pull requests.
 
-```
-RESEND_API_KEY=re_...
-NEXT_PUBLIC_SITE_URL=https://datawithdillon.com
-```
+## Environment
 
-## Required env vars (gym dashboard)
-
-```
-DATABASE_URL=<Neon pooled connection>
-DATABASE_URL_UNPOOLED=<Neon direct connection>
-GYM_CHAT_DATABASE_URL_READONLY=<Neon readonly>
-OPENAI_API_KEY=<OpenAI key for gym chat>
-LIFT_PASSWORD=<password for Log Workout tab>
-```
+Copy `.env.example` to `.env.local` and replace the placeholders. It documents the
+public URL, contact form, gym database, gym chat, and local fallback variables.
 
 ## Key files
 
@@ -38,8 +31,11 @@ LIFT_PASSWORD=<password for Log Workout tab>
 
 ```
 app/             Next.js App Router pages
-components/ui/   Shared UI primitives (Button, Card, PageHeader, DashboardCard, ...)
+components/ui/   Shared UI primitives (Badge, Button, InlineLink, NavLink, Card, Input, PageHeader, DashboardCard)
 components/      Layout components (Header, Footer, MobileDrawer)
+content/         Structured site, home, about, dashboard, RSS, and contact content
+docs/            Locked design spec and feature-parity reference
+scripts/         Repository checks including check-ascii.mjs
 styles/          tokens.css only - all other styles are CSS Modules co-located with components
 .claude/         Agent guidance (STYLE.md, AGENTS.md, HANDOFF.md)
 ```
@@ -59,7 +55,7 @@ styles/          tokens.css only - all other styles are CSS Modules co-located w
 
 ## Gotchas
 
-- **Nav changes:** edit `NAV_ITEMS` in `content/site.ts` - the single source consumed by Header and MobileDrawer. Footer uses `FOOTER_NAV` (same file), which deliberately omits Dashboards. All marketing copy, nav, socials, and structured entries live in `content/` (site, home, about, dashboards, rss, contact) - pages consume them; edit data files, not JSX, for copy changes
+- **Nav and copy changes:** edit `NAV_ITEMS` in `content/site.ts`; Header, MobileDrawer, and Footer all consume it. All marketing copy, nav, socials, and structured entries live in `content/` (site, home, about, dashboards, rss, contact). Update data files instead of JSX for copy changes.
 - **Hidden-route pattern:** noindex via per-route `export const metadata = { robots: { index: false, follow: false } }` PLUS an `X-Robots-Tag: noindex, nofollow` entry in `next.config.ts` `headers()`. Deliberately NO `app/robots.ts` entry - listing the path there would advertise it. Add the route to `NAKED_PATHS` in `components/SiteChrome.tsx` to suppress Header and Footer for full-bleed pages. Do not add the route to nav, footer, dashboards list, or RSS.
 - **Root `app/layout.tsx` does NOT render `<Header />` or `<Footer />` directly** - they live inside `components/SiteChrome.tsx`, which conditionally renders them based on pathname (`NAKED_PATHS` array). Don't move them back into the root layout; that re-introduces the chrome on `/koreader-remote` and any future naked routes.
 - **CSS precedence:** page-level CSS modules load before the root bundle in Next.js 15 - page-level overrides silently lose to component rules. Use component props or inline styles instead. See `.claude/STYLE.md`.
@@ -68,8 +64,8 @@ styles/          tokens.css only - all other styles are CSS Modules co-located w
 - **R3F Canvas height:** `height: 100%` on a Canvas requires the parent to have explicit `height:`, not just `min-height:` - with only `min-height` the canvas renders at 0px
 - **R3F rotation:** never use both a `useFrame` spin group AND `OrbitControls autoRotate` - they conflict and visually cancel; use only OrbitControls
 - **R3F Environment (drei):** loads HDRI from CDN and can cause WebGL context instability; use directional lights only for simple scenes
-- **R3F setClearColor:** takes a hardcoded hex string, not a CSS variable - MUST always equal `--color-rule-soft` (currently `#F2EDE5`). If you change `--color-rule-soft`, update `NA_COLOR` and `gl.setClearColor` in `app/dashboards/gym/panels/BodyDiagram.tsx` to match. The canvas background must be identical to the panel background or a visible inner-panel border appears.
-- **Dashboard panels:** no borders; background `--color-rule-soft`; `--space-4` gap between all panels. `--color-rule-soft` (`#F2EDE5`) is the PANEL color (lighter); `--color-paper` (`#EBE3D5`) is the PAGE background (darker/sandy). This is intentionally inverted - panels lift out lighter than the page. Do not swap them.
+- **R3F setClearColor:** takes a hardcoded hex string, not a CSS variable. It must equal `--color-rule-soft` (currently `#F1EFEA`). If that token changes, update `NA_COLOR` and `gl.setClearColor` in `app/dashboards/gym/panels/BodyDiagram.tsx`; an unmatched canvas background creates a visible inner-panel border.
+- **Dashboard panels:** no borders; background `--color-rule-soft`; `--space-4` gap between all panels. `--color-rule-soft` (`#F1EFEA`) is the darker panel color, while `--color-paper` (`#FAFAF8`) is the lighter page background. This inversion is intentional. Do not swap them.
 - **Dashboard control buttons:** inactive time range buttons, Download, inactive tab, Back button (`.navBtn`), and nav arrows (`.navArrow`) all use `background: var(--color-rule-soft)` - same as panels. Do not use `background: none` or `--color-paper-2` for these.
 - **DailyView panel pattern:** `DailyView/index.module.css` uses the same pattern as the main dashboard - `.root { gap: var(--space-4) }`, `.kpiItem { background: var(--color-rule-soft); padding: var(--space-5) }`, no border separators. If you touch the day view, verify these are intact.
 - **Footer margin-top:** set to `--space-5` (24px) - don't increase it; the old `--space-9` (96px) was intentionally reduced
@@ -82,12 +78,12 @@ styles/          tokens.css only - all other styles are CSS Modules co-located w
 - **FloatingChatWidget panel height:** `.panel` uses `height: min(560px, calc(100dvh - 100px))` - explicit `height` (not `max-height`) is required for `.messagesOuter` (`flex: 1`) to expand. The 100px reserves space for the trigger button (44px) + gap (12px) + bottom offset (24px) + buffer below the panel; `80dvh` alone can push the input row off the bottom of the viewport.
 - **FloatingChatWidget - ReactMarkdown wraps message content in `<p class="mdP">` with built-in `margin-bottom`:** plain user/assistant text rendered through `<MarkdownContent>` inherits `.mdP { margin: 0 0 var(--space-2) }`, producing visibly asymmetric padding inside `.messageUser`/`.messageAssistant` bubbles. The override `.message > :last-child.mdP { margin-bottom: 0 }` (specificity 0,3,0) beats `.mdP` (0,1,0) and trims the trailing margin. Same applies to `.mdUl`/`.mdOl`.
 - **Turbopack CSS Module HMR is stale-prone:** new CSS rules (especially `position: absolute`, new classes, new selectors) often don't apply after edits even though TSX hot-reloads. Symptom: new elements appear in the DOM with default browser styling (e.g. an absolutely-positioned button rendering at top-left of its container instead of where CSS says). Fix: full `npm run dev` restart. `npm run build` is not affected.
-- **Gym dashboard mobile:** responsive breakpoints implemented at 720px (phone) and 1080px (tablet). See `docs/superpowers/specs/2026-05-28-gym-dashboard-mobile-design.md` before touching responsive layout.
-- **Specs and plans live under `docs/superpowers/`:** designs in `docs/superpowers/specs/YYYY-MM-DD-feature-name.md`, execution plans in `docs/superpowers/plans/YYYY-MM-DD-feature-name.md`. The `superpowers:subagent-driven-development` skill is the standard flow for executing a plan task-by-task.
+- **Gym dashboard mobile:** responsive breakpoints are 720px and 1080px. Follow the current rules in `docs/design-spec.md` and `.claude/STYLE.md` when changing responsive layout.
+- **Design docs:** current design and parity references live directly in `docs/`, especially `docs/design-spec.md` and `docs/feature-parity.md`.
 
 ## DB migrations
 
-No migration framework. Pattern: commit one-shot SQL in `db/migrations/YYYY-MM-DD-name.sql`, run via a throwaway `run-migration.mjs` that loads `.env.local` and picks `DATABASE_URL_UNPOOLED` (owner role) - see `db/migrations/2026-05-31-gym-data-unification.sql` for the latest example and `docs/superpowers/plans/2026-05-31-gym-data-unification.md` Task 1 for the runner script. Use `GYM_CHAT_DATABASE_URL_READONLY` (the `gym_chat_ro` role) when verifying grants. Delete the runner after use; only the SQL file gets committed.
+No migration framework. Commit one-shot SQL in `db/migrations/YYYY-MM-DD-name.sql` and use a throwaway runner that loads `.env.local` and selects `DATABASE_URL_UNPOOLED` when owner access is needed. `db/migrations/2026-05-31-gym-data-unification.sql` is the current reference. Use `GYM_CHAT_DATABASE_URL_READONLY` (the `gym_chat_ro` role) when verifying grants. Delete the runner after use; only the SQL file gets committed.
 
 ## Gym Chat
 
