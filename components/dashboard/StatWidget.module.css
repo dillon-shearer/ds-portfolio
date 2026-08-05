@@ -21,9 +21,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-.accent {
-  color: var(--color-accent);
-}
 
 .sub {
   font-family: var(--font-mono);

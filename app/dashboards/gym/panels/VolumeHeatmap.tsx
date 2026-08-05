@@ -184,7 +184,7 @@ export default function VolumeHeatmap({
               ry={rx}
               fill={colorFor(d)}
               onMouseEnter={() => (isReal ? setHoveredCell(d) : setHoveredCell(null))}
-              style={{ cursor: isReal ? 'default' : 'default' }}
+              style={{ cursor: 'default' }}
             />
           )
         })}

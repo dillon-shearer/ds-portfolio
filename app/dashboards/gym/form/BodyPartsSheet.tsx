@@ -7,8 +7,6 @@ import styles from './BodyPartsSheet.module.css'
 export { ALL_BODY_PARTS }
 export type { BodyPart }
 
-const LAST_USED_KEY = 'gymLastUsedBodyParts'
-
 type Props = {
   open: boolean
   onClose: () => void
@@ -36,17 +34,6 @@ export default function BodyPartsSheet({
       el.style.overflow = prev
     }
   }, [open])
-
-  // Cache last-used body parts whenever the selection changes while open
-  useEffect(() => {
-    if (!open) return
-    if (typeof window === 'undefined') return
-    try {
-      localStorage.setItem(LAST_USED_KEY, JSON.stringify(selected))
-    } catch {
-      /* noop */
-    }
-  }, [selected, open])
 
   if (!open) return null
 

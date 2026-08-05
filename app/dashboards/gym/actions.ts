@@ -387,27 +387,6 @@ export async function deleteGymLift(id: string) {
   return { success: true }
 }
 
-/** Recent lifts - cast date defensively for ordering */
-export async function getRecentLifts(limit: number = 10): Promise<GymLift[]> {
-  const { rows } = await sql /* sql */ `
-    SELECT
-      id,
-      date,
-      exercise,
-      weight,
-      reps,
-      set_number AS "setNumber",
-      timestamp,
-      day_tag AS "dayTag",
-      is_unilateral AS "isUnilateral",
-      equipment
-    FROM gym_lifts
-    ORDER BY (date::date) DESC, (timestamp::timestamptz) DESC, id DESC
-    LIMIT ${limit}
-  `
-  return rows as GymLift[]
-}
-
 /* ========================= ONE-POST BOOTSTRAP ========================= */
 
 export async function getBootstrapData(date: string): Promise<{
