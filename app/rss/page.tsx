@@ -27,7 +27,13 @@ export default function RssPage() {
           algorithm deciding what you see.
         </p>
         <p>To subscribe, copy the feed URL below and paste it into your RSS reader:</p>
-        <code className={styles.feedUrl}>{feedUrl}</code>
+        <code
+          className={styles.feedUrl}
+          tabIndex={0}
+          aria-label="RSS feed URL. Scroll horizontally to view the full address."
+        >
+          {feedUrl}
+        </code>
         <p>Don&apos;t have an RSS reader yet? Here are a few good ones:</p>
       </div>
 

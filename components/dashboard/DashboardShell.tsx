@@ -16,7 +16,7 @@ export default function DashboardShell({ tabs, defaultTab, children }: Props) {
 
   return (
     <div className={styles.shell}>
-      <nav className={styles.tabBar} aria-label="Dashboard sections">
+      <nav className={styles.tabBar} role="tablist" aria-label="Dashboard sections">
         {tabs.map((tab) => (
           <button
             key={tab.key}

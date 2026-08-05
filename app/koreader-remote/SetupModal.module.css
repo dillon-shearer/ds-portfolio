@@ -81,6 +81,11 @@
   border-bottom-color: var(--color-paper);
 }
 
+.input:focus-visible {
+  outline: var(--rule-medium) solid var(--color-paper);
+  outline-offset: var(--space-1);
+}
+
 .input::placeholder {
   color: color-mix(in srgb, var(--color-paper) 30%, transparent);
 }

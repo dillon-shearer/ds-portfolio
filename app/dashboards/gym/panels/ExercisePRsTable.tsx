@@ -50,7 +50,7 @@ export default function ExercisePRsTable({
 
   return (
     <div className={styles.container}>
-      <div className={styles.tableWrapper}>
+      <div className={styles.tableWrapper} tabIndex={0} aria-label="Exercise personal records table">
         <table className={styles.table}>
           <thead>
             <tr>

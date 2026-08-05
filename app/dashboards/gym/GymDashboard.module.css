@@ -138,7 +138,7 @@
 
 @media (max-width: 1080px) {
   .mainGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

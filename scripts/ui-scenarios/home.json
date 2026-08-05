@@ -11,7 +11,11 @@
       "name": "loaded",
       "ready": "h1",
       "assertions": [
-        { "kind": "text", "selector": "h1", "includes": "Dillon" },
+        {
+          "kind": "text",
+          "selector": "h1",
+          "includes": "I do data work for healthcare and life science teams."
+        },
         {
           "kind": "eval",
           "expression": "matchMedia('(prefers-reduced-motion: reduce)').matches",
