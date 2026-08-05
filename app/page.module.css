@@ -1,9 +1,7 @@
 .hero {
-  min-height: calc(100dvh - var(--space-8));
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding-bottom: var(--space-8);
 }
 
 .eyebrow {
@@ -85,7 +83,7 @@
 }
 
 .section {
-  padding: var(--space-10) 0 var(--space-8);
+  padding: var(--space-8) 0;
 }
 
 .sectionTitle {
@@ -155,10 +153,6 @@
 }
 
 @media (max-width: 719px) {
-  .hero {
-    min-height: auto;
-  }
-
   .statement {
     margin-top: var(--space-6);
   }
