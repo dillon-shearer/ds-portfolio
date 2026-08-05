@@ -125,7 +125,7 @@ export default function VolumeHeatmap({
   }
 
   const totalGapX = Math.max(0, (cols - 1) * gap)
-  const segW = cols > 0 ? (innerW - totalGapX) / cols : 0
+  const segW = cols > 0 ? Math.max(0, (innerW - totalGapX) / cols) : 0
 
   const totalGapY = Math.max(0, (rows - 1) * gap)
   let computedHeight: number
@@ -133,7 +133,7 @@ export default function VolumeHeatmap({
 
   if (fillParent && heightFromParent > 0) {
     const innerH = Math.max(0, heightFromParent - padding * 2)
-    segH = rows > 0 ? (innerH - totalGapY) / rows : 0
+    segH = rows > 0 ? Math.max(0, (innerH - totalGapY) / rows) : 0
     computedHeight = heightFromParent
   } else {
     const targetSegH =
@@ -146,7 +146,7 @@ export default function VolumeHeatmap({
     computedHeight = Math.ceil(padding * 2 + rows * segH + totalGapY)
   }
 
-  const rx = Math.min(2, Math.min(segW, segH) / 4)
+  const rx = Math.max(0, Math.min(2, Math.min(segW, segH) / 4))
 
   return (
     <div

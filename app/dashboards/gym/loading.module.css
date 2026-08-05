@@ -1,12 +1,37 @@
 .state {
   display: grid;
-  min-height: var(--space-10);
+  min-height: 1200px;
   place-items: center;
   gap: var(--space-4);
   padding: var(--space-7) var(--gutter);
   color: var(--color-ink-2);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
+}
+
+.skeleton {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+  align-self: start;
+}
+
+.skeleton span {
+  display: block;
+  min-height: 180px;
+  background: var(--color-rule-soft);
+}
+
+.skeleton span:last-child {
+  grid-column: 1 / -1;
+  min-height: 460px;
+}
+
+@media (max-width: 720px) {
+  .skeleton {
+    grid-template-columns: 1fr;
+  }
 }
 
 .spinner {
