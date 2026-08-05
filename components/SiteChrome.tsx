@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { Header } from './Header'
 import { Footer } from './Footer'
 
-const NAKED_PATHS = ['/koreader-remote']
+const NAKED_PATHS: string[] = []
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? ''

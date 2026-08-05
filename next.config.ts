@@ -5,16 +5,6 @@ const nextConfig: NextConfig = {
   // triggers a Turbopack race where .next/types/validator.ts is checked before
   // it is written, failing the build on Windows.
   eslint: { ignoreDuringBuilds: true },
-  async headers() {
-    return [
-      {
-        source: '/koreader-remote',
-        headers: [
-          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
-        ],
-      },
-    ]
-  },
 }
 
 export default nextConfig

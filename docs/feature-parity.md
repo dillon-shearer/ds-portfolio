@@ -21,7 +21,6 @@ Rules for this document: ASCII only. No em dashes, smart quotes, or emoji.
 | /dashboards/gym | page | Gym tracker, force-dynamic |
 | /rss | page | Human-readable RSS explainer, unlinked from nav |
 | /rss/feed | route | RSS 2.0 XML, cache s-maxage=3600 |
-| /koreader-remote | page | Hidden, naked chrome, noindex (metadata + X-Robots-Tag header) |
 | /api/gym-data | route | JSON export, auth-free by design |
 | /api/gym-data.csv | route | CSV export, auth-free by design |
 | /api/gym-chat | route | OpenAI chat, SSE streaming optional |
@@ -35,7 +34,7 @@ next.config.ts. Do not restore.
 
 - [ ] Fonts via next/font/google mapped to CSS vars consumed in tokens.css
 - [ ] Root metadata: title "Data With Dillon" + template "%s | Data With Dillon", description
-- [ ] SiteChrome: NAKED_PATHS = ['/koreader-remote'] renders no Header/Footer/main
+- [ ] SiteChrome: NAKED_PATHS (currently empty) renders no Header/Footer/main for listed pathnames
 - [ ] Header: sticky, wordmark link to / (aria-label "Data With Dillon, home"),
       desktop nav (Home, About, Dashboards, Contact), hamburger at <720px
 - [ ] MobileDrawer: role=dialog aria-modal, focus trap (Tab/Shift+Tab), ESC close,
@@ -184,30 +183,14 @@ next.config.ts. Do not restore.
       params, policy notes, Show SQL, preview table
 - [ ] NO follow-up ideas row (intentionally removed - do not restore)
 
-## 7. KOReader remote (/koreader-remote)
-
-- [ ] Naked chrome, noindex metadata + header, viewport locked (no user scale)
-- [ ] Two large buttons Prev/Next + swipe gestures (>=40px horizontal,
-      half-screen zones) via CustomEvent
-- [ ] Endpoint config in localStorage['dwd:koreader:endpoint']; setup modal
-      auto-opens when unset; one-time intro (dwd:koreader:intro:v1)
-- [ ] Connection probes: 3 warm probes 250ms apart, then 3s polling; status
-      bar tones with glyphs, role=status aria-live=polite
-- [ ] Serial command queue, 150ms spacing, disable while active, clear on
-      failure, post-send prefetch
-- [ ] Wake lock: native navigator.wakeLock with re-acquire, nosleep.js
-      fallback behind first pointerdown
-- [ ] Transport: no-cors GETs to /koreader/event/GotoViewRel/1|-1, 1500ms
-      timeout, 1 retry
-
-## 8. RSS
+## 7. RSS
 
 - [ ] /rss page: PageHeader (eyebrow "Subscribe"), explainer prose, feed URL
       link, 3 reader cards (Feedly, NetNewsWire, Reeder)
 - [ ] /rss/feed: RSS 2.0 XML, single "Site launched" item (27 May 2026),
       application/xml, s-maxage 3600
 
-## 9. API contracts
+## 8. API contracts
 
 - [ ] GET /api/gym-data: params day/from/to/page/limit(1-500, default 200)/
       exclude; enriched fields volume, oneRM_est, day_of_week, iso_week,
@@ -223,7 +206,7 @@ next.config.ts. Do not restore.
       conversation trim head 2 + tail 46 with bridge summary; body_parts and
       exercise catalog injected into system prompt at request start
 
-## 10. Stack, tooling, environment
+## 9. Stack, tooling, environment
 
 - Next.js 15.5.18 (exact pin) + React 19.1.0, TypeScript strict, Turbopack
   dev and build, npm (package-lock v3)
@@ -245,7 +228,7 @@ next.config.ts. Do not restore.
 - public/: resumes/Dillon_Shearer_Resume.pdf, ds.jpg (unreferenced),
   favicon.ico only (no OG image, no manifest, no metadataBase)
 
-## 11. Known defects and dead code (dispositions set during redesign)
+## 10. Known defects and dead code (dispositions set during redesign)
 
 Pre-existing issues. Each redesign ticket states which of these it fixes;
 none of these are parity requirements.
@@ -277,7 +260,7 @@ none of these are parity requirements.
     Rule (unused import in app/page.tsx), lib/gym-chat/conversation.ts,
     getRecentLifts, five unused 'use server' exports in gym/catalog.ts
     (publicly reachable endpoints with no UI), extractToken in
-    /api/gym-data (auth never wired), koreader refresh action,
+    /api/gym-data (auth never wired),
     localStorage gymLastUsedBodyParts written-never-read, public/file.svg,
     globe.svg, window.svg, public/ds.jpg, StatWidget accent prop,
     VolumeHeatmap dead cursor ternary.

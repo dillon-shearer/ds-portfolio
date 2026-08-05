@@ -50,14 +50,13 @@ styles/          tokens.css only - all other styles are CSS Modules co-located w
 | `/dashboards` | Dashboard list |
 | `/dashboards/coming-soon` | Placeholder for unhosted dashboards |
 | `/dashboards/gym` | Gym tracker dashboard (analytics, log workout, AI chat) |
-| `/koreader-remote` | Hidden full-bleed dark utility (KOReader page-turn remote). Not linked anywhere; reachable to anyone with the URL. See the hidden-route pattern in Gotchas. |
 | `/rss` | RSS feed |
 
 ## Gotchas
 
 - **Nav and copy changes:** edit `NAV_ITEMS` in `content/site.ts`; Header, MobileDrawer, and Footer all consume it. All marketing copy, nav, socials, and structured entries live in `content/` (site, home, about, dashboards, rss, contact). Update data files instead of JSX for copy changes.
 - **Hidden-route pattern:** noindex via per-route `export const metadata = { robots: { index: false, follow: false } }` PLUS an `X-Robots-Tag: noindex, nofollow` entry in `next.config.ts` `headers()`. Deliberately NO `app/robots.ts` entry - listing the path there would advertise it. Add the route to `NAKED_PATHS` in `components/SiteChrome.tsx` to suppress Header and Footer for full-bleed pages. Do not add the route to nav, footer, dashboards list, or RSS.
-- **Root `app/layout.tsx` does NOT render `<Header />` or `<Footer />` directly** - they live inside `components/SiteChrome.tsx`, which conditionally renders them based on pathname (`NAKED_PATHS` array). Don't move them back into the root layout; that re-introduces the chrome on `/koreader-remote` and any future naked routes.
+- **Root `app/layout.tsx` does NOT render `<Header />` or `<Footer />` directly** - they live inside `components/SiteChrome.tsx`, which conditionally renders them based on pathname (`NAKED_PATHS` array). Don't move them back into the root layout; that re-introduces the chrome on any future naked routes.
 - **CSS precedence:** page-level CSS modules load before the root bundle in Next.js 15 - page-level overrides silently lose to component rules. Use component props or inline styles instead. See `.claude/STYLE.md`.
 - No `border-radius` > 2px, no `box-shadow`, no gradients - see `.claude/STYLE.md`
 - No em dashes or en dashes anywhere in copy
