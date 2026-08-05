@@ -17,7 +17,7 @@ export const ABOUT_PAGE = {
   lead: 'Data-centric software engineer building data systems, analytics, and applications. Currently focused on healthcare and life sciences.',
   resume: {
     heading: 'Resume',
-    intro: 'One resume, kept current.',
+    intro: 'This is the current version.',
     formatLabel: 'PDF',
     downloadLabel: 'Download',
   },
@@ -29,7 +29,7 @@ export const ABOUT_PAGE = {
 export const RESUMES: { role: string; description: string; href: string }[] = [
   {
     role: 'Resume',
-    description: 'Data engineering and analytics, one document.',
+    description: 'Covers data engineering and analytics.',
     href: '/resumes/Dillon_Shearer_Resume.pdf',
   },
 ]
