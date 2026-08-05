@@ -4,7 +4,7 @@ const compat = new FlatCompat({ baseDirectory: import.meta.dirname })
 
 const config = [
   {
-    ignores: ['.next/**', 'node_modules/**', 'brain/**', '.claude/**'],
+    ignores: ['.next/**', 'node_modules/**', 'brain/**', '.claude/**', 'data/**'],
   },
   ...compat.extends('next/core-web-vitals'),
 ]

@@ -810,7 +810,7 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
         </div>
       )
     })
-  }, [messages, handleSuggestedQuestion, handleSubmit, isLoading])
+  }, [messages, copiedId, handleSubmit, isLoading])
 
   const showStart = messages.length === 0
 

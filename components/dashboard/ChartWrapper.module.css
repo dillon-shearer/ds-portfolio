@@ -11,7 +11,7 @@
 }
 
 .emptyText {
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: var(--text-xs);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;

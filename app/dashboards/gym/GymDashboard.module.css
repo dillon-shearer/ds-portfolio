@@ -17,7 +17,7 @@
 }
 
 .navBtn {
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
   letter-spacing: var(--tracking-wide);
@@ -35,7 +35,7 @@
 }
 
 .navArrow {
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: var(--text-sm);
   color: var(--color-ink-3);
   background: var(--color-rule-soft);
@@ -67,7 +67,7 @@
 }
 
 .downloadBtn {
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
   letter-spacing: var(--tracking-wide);
@@ -199,7 +199,7 @@
 }
 
 .modal {
-  background: var(--color-paper);
+  background: var(--color-paper-2);
   border: var(--rule-hairline) solid var(--color-rule);
   width: 100%;
   max-width: 360px;
@@ -214,7 +214,7 @@
 }
 
 .modalTitle {
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
   letter-spacing: var(--tracking-wide);
@@ -240,7 +240,7 @@
 }
 
 .modalLabel {
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
   letter-spacing: var(--tracking-wide);
@@ -255,7 +255,7 @@
 }
 
 .modalOpt {
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
   letter-spacing: var(--tracking-wide);
@@ -283,20 +283,20 @@
 }
 
 .modalCancel {
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
   color: var(--color-ink-3);
-  background: none;
+  background: var(--color-rule-soft);
   border: var(--rule-hairline) solid var(--color-rule);
   padding: var(--space-2) var(--space-4);
   cursor: pointer;
 }
 
 .modalDownload {
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
   letter-spacing: var(--tracking-wide);

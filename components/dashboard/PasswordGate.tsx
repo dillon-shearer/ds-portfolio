@@ -41,8 +41,11 @@ export default function PasswordGate({ children, storageKey = 'gym-gate' }: Prop
   return (
     <div className={styles.gate}>
       <form onSubmit={handleSubmit} className={styles.form}>
-        <p className={styles.label}>Password required</p>
+        <label className={styles.label} htmlFor="gym-password">
+          Password required
+        </label>
         <input
+          id="gym-password"
           type="password"
           value={input}
           onChange={(e) => setInput(e.target.value)}
