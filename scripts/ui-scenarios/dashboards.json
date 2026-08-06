@@ -1,0 +1,33 @@
+{
+  "name": "dashboards",
+  "route": "/dashboards?__uiState=loaded",
+  "reducedMotion": true,
+  "viewports": [
+    { "width": 390, "height": 700 },
+    { "width": 700, "height": 700 },
+    { "width": 1440, "height": 700 }
+  ],
+  "states": [
+    {
+      "name": "loaded",
+      "ready": "[data-dashboard-index]",
+      "assertions": [
+        { "kind": "visible", "selector": "text=Gym Tracker" },
+        {
+          "kind": "text",
+          "selector": "[data-dashboard-stats]",
+          "includes": "412 SESSIONS / 18,240 SETS / LAST LOGGED 2026-08-05"
+        }
+      ]
+    },
+    {
+      "name": "fallback",
+      "route": "/dashboards?__uiState=fallback",
+      "ready": "[data-dashboard-index]",
+      "assertions": [
+        { "kind": "visible", "selector": "text=Gym Tracker" },
+        { "kind": "count", "selector": "[data-dashboard-stats]", "equals": 0 }
+      ]
+    }
+  ]
+}
