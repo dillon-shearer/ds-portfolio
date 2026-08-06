@@ -1,0 +1,38 @@
+{
+  "name": "resume",
+  "route": "/resume",
+  "reducedMotion": true,
+  "viewports": [
+    { "width": 390, "height": 844 },
+    { "width": 1440, "height": 700 }
+  ],
+  "states": [
+    {
+      "name": "loaded",
+      "ready": "h1",
+      "assertions": [
+        {
+          "kind": "text",
+          "selector": "h1",
+          "includes": "Dillon Shearer"
+        },
+        {
+          "kind": "visible",
+          "selector": "h2#summary-heading"
+        },
+        {
+          "kind": "visible",
+          "selector": "a[href='/resumes/Dillon_Shearer_Resume.pdf']"
+        },
+        {
+          "kind": "eval",
+          "expression": "matchMedia('(prefers-reduced-motion: reduce)').matches",
+          "equals": true
+        }
+      ],
+      "actions": [
+        { "action": "tabs", "count": 3 }
+      ]
+    }
+  ]
+}

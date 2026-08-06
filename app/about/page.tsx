@@ -31,9 +31,14 @@ export default function AboutPage() {
                 <h3 className={styles.rowTitle}>{r.role}</h3>
                 <p className={styles.rowDescription}>{r.description}</p>
               </div>
-              <Button href={r.href} variant="outline" download>
-                {ABOUT_PAGE.resume.downloadLabel}
-              </Button>
+              <div className={styles.resumeActions}>
+                <Button href={r.htmlHref} variant="outline">
+                  View HTML
+                </Button>
+                <Button href={r.href} variant="outline" download>
+                  {ABOUT_PAGE.resume.downloadLabel}
+                </Button>
+              </div>
             </li>
           ))}
         </ul>

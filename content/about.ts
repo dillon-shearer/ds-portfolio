@@ -26,11 +26,12 @@ export const ABOUT_PAGE = {
   },
 } as const
 
-export const RESUMES: { role: string; description: string; href: string }[] = [
+export const RESUMES: { role: string; description: string; href: string; htmlHref: string }[] = [
   {
     role: 'Resume',
     description: 'Covers data engineering and analytics.',
     href: '/resumes/Dillon_Shearer_Resume.pdf',
+    htmlHref: '/resume',
   },
 ]
 
