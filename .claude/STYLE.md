@@ -121,7 +121,7 @@ The eight public UI exports live in `components/ui/index.ts`.
 
 - Buttons are rectangular, at most 2px radius, and use mono uppercase xs labels.
 - Prose links use a 1px underline and change to accent on hover.
-- Index rows use a mono number, display title, sans description, mono tags, and a 1px rule.
+- Index rows use a mono number, display title, sans description, mono tags, an optional mono stats line, and a 1px rule.
 - Forms use `--color-paper-2`, a 1px `--color-rule` border, 2px radius, and visible accent focus.
 - Tables use mono numerals, right-aligned numeric columns, and hairline row rules.
 
