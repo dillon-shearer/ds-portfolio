@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, Schibsted_Grotesk } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
 import { SiteChrome } from '@/components/SiteChrome'
 import { SITE } from '@/content/site'
 import '@/styles/tokens.css'
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body>
         <SiteChrome>{children}</SiteChrome>
+        <Analytics />
       </body>
     </html>
   )
