@@ -13,7 +13,10 @@ const routes = [
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const lastModified = new Date()
+
   return routes.map((route) => ({
     url: new URL(route, SITE.url).toString(),
+    lastModified,
   }))
 }
