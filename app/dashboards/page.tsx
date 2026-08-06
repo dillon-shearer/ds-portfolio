@@ -29,6 +29,7 @@ export default function DashboardsPage() {
             href={d.href}
             longDescription={d.longDescription}
             tech={d.tech}
+            caseStudy={d.caseStudy}
           />
         ))}
       </ol>

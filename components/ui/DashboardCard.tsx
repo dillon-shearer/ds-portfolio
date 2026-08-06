@@ -9,6 +9,7 @@ interface DashboardCardProps {
   href: string
   longDescription?: string
   tech?: string[]
+  caseStudy?: { href: string; label: string }
 }
 
 export function DashboardCard({
@@ -19,6 +20,7 @@ export function DashboardCard({
   href,
   longDescription,
   tech,
+  caseStudy,
 }: DashboardCardProps) {
   return (
     <li className={styles.row}>
@@ -34,8 +36,11 @@ export function DashboardCard({
         <p className={styles.tool}>{tool}</p>
         <p className={styles.description}>{description}</p>
         {longDescription ? <p className={styles.longDescription}>{longDescription}</p> : null}
-        {tech && tech.length > 0 ? (
-          <p className={styles.tech}>{tech.join(', ')}</p>
+        {tech && tech.length > 0 ? <p className={styles.tech}>{tech.join(', ')}</p> : null}
+        {caseStudy ? (
+          <Link href={caseStudy.href} className={styles.caseStudyLink}>
+            {caseStudy.label}
+          </Link>
         ) : null}
       </div>
     </li>

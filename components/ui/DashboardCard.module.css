@@ -68,6 +68,24 @@
   margin-top: var(--space-4);
 }
 
+.caseStudyLink {
+  display: inline-block;
+  margin-top: var(--space-5);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  text-decoration: underline;
+  text-decoration-thickness: var(--rule-hairline);
+  text-underline-offset: var(--space-1);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.caseStudyLink:hover {
+  color: var(--color-accent-hover);
+}
+
 @media (max-width: 719px) {
   .row {
     grid-template-columns: 1fr;
