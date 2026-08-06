@@ -1,5 +1,10 @@
 import { SOCIALS } from './site'
 
+export const CONTACT_PAGE = {
+  eyebrow: 'CONTACT',
+  title: 'Get in touch',
+} as const
+
 export const LEAD =
   "I'd love to hear from you. Send me a message and I'll respond as soon as possible."
 

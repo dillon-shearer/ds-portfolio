@@ -18,6 +18,7 @@ export const RESUME_PAGE = {
     description:
       'Resume for Dillon Shearer, a data analyst working in healthcare technology, data standards, and transformation processes.',
   },
+  eyebrow: 'RESUME / DATA ANALYST',
   name: 'Dillon Shearer',
   location: 'Newnan, Georgia, United States',
   email: 'dillshearer@outlook.com',

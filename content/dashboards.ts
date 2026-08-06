@@ -1,3 +1,8 @@
+export const DASHBOARDS_PAGE = {
+  eyebrow: 'DASHBOARDS',
+  title: 'Dashboards',
+} as const
+
 export const DASHBOARDS: {
   title: string
   tool: string
