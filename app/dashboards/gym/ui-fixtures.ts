@@ -73,6 +73,18 @@ export function gymFixtureLifts(): GymLift[] {
       equipment: 'Cable',
     },
     {
+      id: 'ui-fixture-split-squat-1',
+      date: yesterday,
+      exercise: 'Split Squat',
+      weight: 80,
+      reps: 8,
+      setNumber: 2,
+      timestamp: timestamp(yesterday, 11),
+      dayTag: 'Leg Day',
+      isUnilateral: true,
+      equipment: 'Dumbbells',
+    },
+    {
       id: 'ui-fixture-squat-1',
       date: twoDaysAgo,
       exercise: 'Back Squat',

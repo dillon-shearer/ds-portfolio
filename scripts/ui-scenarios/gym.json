@@ -17,16 +17,87 @@
           "selector": "[data-ui-ready='gym-dashboard']",
           "includes": "Gym Tracker"
         },
+        { "kind": "text", "selector": "[data-ui-ready='gym-dashboard']", "includes": "5,940" },
+        {
+          "kind": "text",
+          "selector": "[data-ui-ready='gym-dashboard']",
+          "includes": "Split Squat"
+        },
+        {
+          "kind": "text",
+          "selector": "[data-ui-ready='gym-dashboard']",
+          "includes": "2 ex / 2 sets / 2,040 lbs"
+        },
         {
           "kind": "eval",
           "expression": "matchMedia('(prefers-reduced-motion: reduce)').matches",
           "equals": true
         }
       ],
+      "network": [
+        {
+          "url": "**/api/gym-data?*",
+          "contentType": "application/json",
+          "body": {
+            "meta": {
+              "count": 1,
+              "total_count": 1,
+              "page": 1,
+              "total_pages": 1,
+              "fields": ["isUnilateral"]
+            },
+            "data": [
+              {
+                "id": "ui-fixture-split-squat-1",
+                "exercise": "Split Squat",
+                "weight": 80,
+                "reps": 8,
+                "isUnilateral": true,
+                "volume": 640
+              }
+            ]
+          }
+        },
+        {
+          "url": "**/api/gym-data.csv?*",
+          "contentType": "text/csv",
+          "body": "id,exercise,weight,reps,isUnilateral,volume\nui-fixture-split-squat-1,Split Squat,80,8,true,640"
+        },
+        {
+          "url": "**/api/gym-chat",
+          "contentType": "text/event-stream",
+          "body": "event: final\ndata: {\"assistantMessage\":\"Split Squat was logged once at 80 lb x 8 reps (640 lb-reps); is_unilateral=true.\",\"queries\":[{\"id\":\"q1\",\"purpose\":\"Return the unilateral Split Squat set.\",\"sql\":\"SELECT exercise, weight, reps, is_unilateral, volume FROM sets\",\"params\":[],\"rowCount\":1,\"durationMs\":1,\"previewRows\":[{\"exercise\":\"Split Squat\",\"weight\":80,\"reps\":8,\"is_unilateral\":true,\"volume\":640}],\"error\":null}]}\n\n"
+        }
+      ],
       "actions": [
         { "action": "click", "selector": "button:has-text('Day')" },
         { "action": "wait", "selector": "text=Last 7 Days" },
-        { "action": "tabs", "count": 3 }
+        { "action": "tabs", "count": 3 },
+        { "action": "click", "selector": "button:has-text('Download')" },
+        { "action": "click", "selector": "button:has-text('JSON')" },
+        {
+          "action": "fetch",
+          "selector": "a[href^='/api/gym-data?']",
+          "includes": "\"isUnilateral\":true"
+        },
+        { "action": "click", "selector": "button:has-text('Cancel')" },
+        { "action": "click", "selector": "button:has-text('Download')" },
+        { "action": "click", "selector": "button:has-text('CSV')" },
+        {
+          "action": "fetch",
+          "selector": "a[href^='/api/gym-data.csv?']",
+          "includes": "isUnilateral,volume\nui-fixture-split-squat-1,Split Squat,80,8,true,640"
+        },
+        { "action": "click", "selector": "button:has-text('Cancel')" },
+        { "action": "click", "selector": "button[aria-label='Open AI chat']" },
+        {
+          "action": "fill",
+          "selector": "textarea[placeholder='Ask about your training...']",
+          "value": "Show my unilateral Split Squat set"
+        },
+        { "action": "click", "selector": "button[aria-label='Send message']" },
+        { "action": "wait", "selector": "text=Split Squat was logged once" },
+        { "action": "assert", "kind": "text", "selector": "body", "includes": "is_unilateral=true" }
       ]
     },
     {

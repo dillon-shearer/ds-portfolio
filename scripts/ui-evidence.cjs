@@ -190,7 +190,9 @@ async function startIsolatedServer(port, logFile) {
   const nextCli = path.join(ROOT, 'node_modules', 'next', 'dist', 'bin', 'next')
   if (!fs.existsSync(nextCli)) {
     fs.closeSync(output)
-    throw new Error('Next.js is unavailable in this worktree. Install project dependencies before requesting --isolated.')
+    throw new Error(
+      'Next.js is unavailable in this worktree. Install project dependencies before requesting --isolated.',
+    )
   }
   const child = spawn(process.execPath, [nextCli, 'dev', '--turbopack', '--port', String(port)], {
     cwd: ROOT,
@@ -266,6 +268,35 @@ async function performAction(page, action, report) {
     report.keyboard.push({ kind: 'tabs', stops: seen })
     return
   }
+  if (action.action === 'fetch') {
+    const href = await page.locator(action.selector).getAttribute('href', { timeout })
+    if (!href) throw new Error(`${action.selector} has no href`)
+    const result = await page.evaluate(async (url) => {
+      const response = await fetch(url)
+      return {
+        status: response.status,
+        contentType: response.headers.get('content-type') || '',
+        body: await response.text(),
+      }
+    }, href)
+    if (result.status !== (action.status || 200))
+      throw new Error(`${href} returned ${result.status}, expected ${action.status || 200}`)
+    const expectedIncludes = Array.isArray(action.includes)
+      ? action.includes
+      : [action.includes].filter(Boolean)
+    for (const expected of expectedIncludes) {
+      if (!result.body.includes(expected)) throw new Error(`${href} did not include ${expected}`)
+    }
+    report.assertions.push({
+      kind: 'fetch',
+      selector: action.selector,
+      href,
+      ...result,
+      passed: true,
+    })
+    return
+  }
+  if (action.action === 'assert') return assertCondition(page, action, report)
   throw new Error(`unknown action ${JSON.stringify(action.action)}`)
 }
 
