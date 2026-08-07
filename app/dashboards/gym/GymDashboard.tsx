@@ -18,6 +18,7 @@ import ExercisePRsTable from './panels/ExercisePRsTable'
 import VolumeHeatmap from './panels/VolumeHeatmapWrapper'
 import RecentSessions from './panels/RecentSessions'
 import DailyView from './panels/DailyView'
+import DownloadModal from './DownloadModal'
 import styles from './GymDashboard.module.css'
 
 const FloatingChatWidget = dynamic(() => import('@/components/dashboard/FloatingChatWidget'), {
@@ -298,6 +299,7 @@ export default function GymDashboard({ lifts }: Props) {
   const [showDownload, setShowDownload] = useState(false)
   const [dlRange, setDlRange] = useState<'current' | 'all'>('current')
   const [dlFormat, setDlFormat] = useState<'json' | 'csv'>('csv')
+  const closeDownload = useCallback(() => setShowDownload(false), [])
 
   const buildDownloadUrl = () => {
     const base = dlFormat === 'json' ? '/api/gym-data' : '/api/gym-data.csv'
@@ -485,88 +487,15 @@ export default function GymDashboard({ lifts }: Props) {
             </PasswordGate>
           )}
 
-          {/* Download modal */}
-          {showDownload && (
-            <div className={styles.modalBackdrop} onClick={() => setShowDownload(false)}>
-              <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                <div className={styles.modalHeader}>
-                  <p className={styles.modalTitle}>Download Dataset</p>
-                  <button
-                    type="button"
-                    className={styles.modalClose}
-                    onClick={() => setShowDownload(false)}
-                    aria-label="Close"
-                  >
-                    &times;
-                  </button>
-                </div>
-                <div className={styles.modalBody}>
-                  <p className={styles.modalLabel}>Range</p>
-                  <div className={styles.modalRow}>
-                    <button
-                      type="button"
-                      className={[
-                        styles.modalOpt,
-                        dlRange === 'current' ? styles.modalOptActive : '',
-                      ].join(' ')}
-                      onClick={() => setDlRange('current')}
-                    >
-                      Current filter
-                    </button>
-                    <button
-                      type="button"
-                      className={[
-                        styles.modalOpt,
-                        dlRange === 'all' ? styles.modalOptActive : '',
-                      ].join(' ')}
-                      onClick={() => setDlRange('all')}
-                    >
-                      All time
-                    </button>
-                  </div>
-                  <p className={styles.modalLabel}>Format</p>
-                  <div className={styles.modalRow}>
-                    <button
-                      type="button"
-                      className={[
-                        styles.modalOpt,
-                        dlFormat === 'csv' ? styles.modalOptActive : '',
-                      ].join(' ')}
-                      onClick={() => setDlFormat('csv')}
-                    >
-                      CSV
-                    </button>
-                    <button
-                      type="button"
-                      className={[
-                        styles.modalOpt,
-                        dlFormat === 'json' ? styles.modalOptActive : '',
-                      ].join(' ')}
-                      onClick={() => setDlFormat('json')}
-                    >
-                      JSON
-                    </button>
-                  </div>
-                </div>
-                <div className={styles.modalFooter}>
-                  <button
-                    type="button"
-                    className={styles.modalCancel}
-                    onClick={() => setShowDownload(false)}
-                  >
-                    Cancel
-                  </button>
-                  <a
-                    href={buildDownloadUrl()}
-                    onClick={() => setShowDownload(false)}
-                    className={styles.modalDownload}
-                  >
-                    Download
-                  </a>
-                </div>
-              </div>
-            </div>
-          )}
+          <DownloadModal
+            open={showDownload}
+            range={dlRange}
+            format={dlFormat}
+            downloadHref={buildDownloadUrl()}
+            onClose={closeDownload}
+            onRangeChange={setDlRange}
+            onFormatChange={setDlFormat}
+          />
         </div>
       )}
     </DashboardShell>
