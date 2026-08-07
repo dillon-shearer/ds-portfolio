@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Schibsted_Grotesk } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SiteChrome } from '@/components/SiteChrome'
-import { SITE } from '@/content/site'
+import { SITE, SOCIALS } from '@/content/site'
 import '@/styles/tokens.css'
 import './globals.css'
 
@@ -47,6 +47,30 @@ export const metadata: Metadata = {
   },
 }
 
+const personId = `${SITE.url}#person`
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': personId,
+      name: SITE.author,
+      url: SITE.url,
+      sameAs: [SOCIALS.github, SOCIALS.linkedin],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE.url}#website`,
+      name: SITE.title,
+      url: SITE.url,
+      publisher: {
+        '@id': personId,
+      },
+    },
+  ],
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
@@ -56,6 +80,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SiteChrome>{children}</SiteChrome>
         <Analytics />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </body>
     </html>
   )

@@ -4,6 +4,7 @@ export interface NavItem {
 }
 
 export const SITE = {
+  author: 'Dillon Shearer',
   title: 'Data With Dillon',
   description:
     'Data engineer and analyst building analytics, pipelines, and AI tooling for healthcare and life-science teams.',
