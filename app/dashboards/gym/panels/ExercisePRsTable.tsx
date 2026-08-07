@@ -24,7 +24,7 @@ type Props = {
 
 function SortIndicator({ active, dir }: { active: boolean; dir: 'asc' | 'desc' }) {
   if (!active) return null
-  return <span>{dir === 'asc' ? ' \u2191' : ' \u2193'}</span>
+  return <span aria-hidden="true">{dir === 'asc' ? ' \u2191' : ' \u2193'}</span>
 }
 
 export default function ExercisePRsTable({
@@ -40,17 +40,22 @@ export default function ExercisePRsTable({
   const col = (key: SortKey, label: string, className?: string) => (
     <th
       className={[styles.th, className].filter(Boolean).join(' ')}
-      onClick={() => onSort(key)}
-      style={{ cursor: 'pointer' }}
+      aria-sort={sortKey === key ? (sortDir === 'asc' ? 'ascending' : 'descending') : 'none'}
     >
-      {label}
-      <SortIndicator active={sortKey === key} dir={sortDir} />
+      <button type="button" className={styles.sortButton} onClick={() => onSort(key)}>
+        {label}
+        <SortIndicator active={sortKey === key} dir={sortDir} />
+      </button>
     </th>
   )
 
   return (
     <div className={styles.container}>
-      <div className={styles.tableWrapper} tabIndex={0} aria-label="Exercise personal records table">
+      <div
+        className={styles.tableWrapper}
+        tabIndex={0}
+        aria-label="Exercise personal records table"
+      >
         <table className={styles.table}>
           <thead>
             <tr>

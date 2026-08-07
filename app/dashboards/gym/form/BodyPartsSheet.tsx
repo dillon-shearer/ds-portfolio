@@ -75,10 +75,8 @@ export default function BodyPartsSheet({
             {ALL_BODY_PARTS.map((bp) => {
               const active = selected.includes(bp)
               return (
-                <button
+                <label
                   key={bp}
-                  type="button"
-                  onClick={() => onToggle(bp)}
                   className={[styles.option, active ? styles.optionActive : ''].join(' ')}
                 >
                   <span className={styles.optionLabel}>{bp}</span>
@@ -87,10 +85,8 @@ export default function BodyPartsSheet({
                     checked={active}
                     onChange={() => onToggle(bp)}
                     className={styles.checkbox}
-                    aria-label={`Toggle ${bp}`}
-                    onClick={(e) => e.stopPropagation()}
                   />
-                </button>
+                </label>
               )
             })}
           </div>
