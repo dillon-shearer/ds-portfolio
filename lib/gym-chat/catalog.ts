@@ -16,7 +16,28 @@ export type CatalogAllowlist = {
   columnUnion: Set<string>
 }
 
+export type GymExerciseCatalogEntry = {
+  id: string
+  name: string
+  bodyPartKey: string | null
+  aliases: string[]
+}
+
+export type GymExerciseCatalogMatch = {
+  entry: GymExerciseCatalogEntry
+  matchedBy: 'name' | 'alias'
+}
+
 const NORMALIZE = (value: string) => value.trim().toLowerCase()
+const normalizeExerciseCatalogText = (value: string) =>
+  value
+    .trim()
+    .toLocaleLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .replace(/\s+/g, ' ')
+
+const exerciseTokens = (value: string) =>
+  normalizeExerciseCatalogText(value).split(' ').filter(Boolean)
 const TABLE_CACHE_TTL_MS = 5 * 60 * 1000
 const ERROR_CACHE_TTL_MS = 60 * 1000
 const GYM_TABLES = new Set([
@@ -163,6 +184,10 @@ let cachedContext = buildCatalogContext(FALLBACK_TABLES)
 let cachedAllowlist = buildAllowlist(FALLBACK_TABLES)
 let cacheExpiresAt = 0
 let loadingPromise: Promise<GymCatalogTable[]> | null = null
+
+let cachedExerciseCatalog: GymExerciseCatalogEntry[] = []
+let exerciseCatalogCacheExpiresAt = 0
+let exerciseCatalogLoadingPromise: Promise<GymExerciseCatalogEntry[]> | null = null
 
 function buildAllowlist(tables: GymCatalogTable[]): CatalogAllowlist {
   const tableSet = new Set<string>()
@@ -322,6 +347,46 @@ async function fetchCatalogFromDatabase(): Promise<GymCatalogTable[] | null> {
   return groupRowsIntoTables(rows)
 }
 
+type ExerciseCatalogRow = {
+  id: string
+  name: string
+  body_part_key: string | null
+  alias: string | null
+}
+
+const groupExerciseCatalogRows = (rows: ExerciseCatalogRow[]): GymExerciseCatalogEntry[] => {
+  const entries = new Map<string, GymExerciseCatalogEntry>()
+  rows.forEach((row) => {
+    if (!row.id || !row.name) return
+    const entry = entries.get(row.id) ?? {
+      id: row.id,
+      name: row.name,
+      bodyPartKey: row.body_part_key ?? null,
+      aliases: [],
+    }
+    if (row.alias && !entry.aliases.includes(row.alias)) entry.aliases.push(row.alias)
+    entries.set(row.id, entry)
+  })
+  return Array.from(entries.values()).sort((a, b) => a.name.localeCompare(b.name))
+}
+
+async function fetchExerciseCatalogFromDatabase(): Promise<GymExerciseCatalogEntry[]> {
+  const connectionString = resolveConnectionString()
+  if (!connectionString) return []
+
+  const rows = await runCatalogQuery<ExerciseCatalogRow>(
+    connectionString,
+    `
+      SELECT e.id::text, e.name, e.body_part_key, a.alias
+      FROM exercises e
+      LEFT JOIN exercise_aliases a ON a.exercise_id = e.id
+      WHERE e.is_active = true
+      ORDER BY e.name, a.alias
+    `,
+  )
+  return groupExerciseCatalogRows(rows)
+}
+
 const updateCache = (tables: GymCatalogTable[]) => {
   cachedTables = tables
   cachedContext = buildCatalogContext(tables)
@@ -364,6 +429,108 @@ export const getCatalogContext = () => cachedContext
 export const getCatalogTables = () => cachedTables
 export const getCatalogAllowlist = (): CatalogAllowlist => cachedAllowlist
 export const getFallbackCatalog = () => FALLBACK_TABLES
+
+export const getGymExerciseCatalog = () => cachedExerciseCatalog
+
+export const resolveGymExercise = (
+  input: string,
+  entries: GymExerciseCatalogEntry[] = cachedExerciseCatalog,
+): GymExerciseCatalogMatch | null => {
+  const normalized = normalizeExerciseCatalogText(input)
+  if (!normalized) return null
+
+  const matches: GymExerciseCatalogMatch[] = []
+  entries.forEach((entry) => {
+    if (normalizeExerciseCatalogText(entry.name) === normalized) {
+      matches.push({ entry, matchedBy: 'name' })
+      return
+    }
+    if (entry.aliases.some((alias) => normalizeExerciseCatalogText(alias) === normalized)) {
+      matches.push({ entry, matchedBy: 'alias' })
+    }
+  })
+
+  return matches.length === 1 ? matches[0] : null
+}
+
+export const suggestGymExerciseNames = (
+  input: string,
+  entries: GymExerciseCatalogEntry[] = cachedExerciseCatalog,
+  maxResults = 3,
+) => {
+  const normalized = normalizeExerciseCatalogText(input)
+  if (!normalized || maxResults <= 0) return []
+  const exactMatch = resolveGymExercise(normalized, entries)
+  if (exactMatch) return [exactMatch.entry.name]
+
+  const inputTokens = exerciseTokens(normalized)
+  if (!inputTokens.length) return []
+
+  const scored = entries.flatMap((entry) => {
+    const forms = [entry.name, ...entry.aliases].map((value) => normalizeExerciseCatalogText(value))
+    const matchingForms = forms.filter((form) => {
+      const candidateTokens = exerciseTokens(form)
+      return inputTokens.every((token) => candidateTokens.includes(token))
+    })
+    if (!matchingForms.length) return []
+    const bestForm = matchingForms.sort((a, b) => {
+      const aExact = a === normalized ? 0 : 1
+      const bExact = b === normalized ? 0 : 1
+      return aExact - bExact || a.length - b.length
+    })[0]
+    return [{ entry, score: bestForm === normalized ? 0 : bestForm.startsWith(normalized) ? 1 : 2 }]
+  })
+
+  return scored
+    .sort((a, b) => a.score - b.score || a.entry.name.localeCompare(b.entry.name))
+    .slice(0, maxResults)
+    .map(({ entry }) => entry.name)
+}
+
+export const getGymExerciseCatalogContext = (
+  entries: GymExerciseCatalogEntry[] = cachedExerciseCatalog,
+) => {
+  if (!entries.length) {
+    return 'No active exercise catalog rows are available. Do not invent exercise names or aliases.'
+  }
+  return entries
+    .map((entry) => {
+      const aliases = entry.aliases.length ? `; aliases: ${entry.aliases.join(', ')}` : ''
+      const muscle = entry.bodyPartKey ? `; body_part_key: ${entry.bodyPartKey}` : ''
+      return `- ${entry.name} (exercise_id: ${entry.id}${muscle}${aliases})`
+    })
+    .join('\n')
+}
+
+export async function loadGymExerciseCatalog(options?: { force?: boolean }) {
+  const now = Date.now()
+  if (!options?.force && now < exerciseCatalogCacheExpiresAt) {
+    return cachedExerciseCatalog
+  }
+  if (exerciseCatalogLoadingPromise) return exerciseCatalogLoadingPromise
+
+  exerciseCatalogLoadingPromise = (async () => {
+    try {
+      const entries = await fetchExerciseCatalogFromDatabase()
+      if (entries.length) {
+        cachedExerciseCatalog = entries
+        exerciseCatalogCacheExpiresAt = Date.now() + TABLE_CACHE_TTL_MS
+      } else {
+        exerciseCatalogCacheExpiresAt = Date.now() + ERROR_CACHE_TTL_MS
+      }
+    } catch (error) {
+      exerciseCatalogCacheExpiresAt = Date.now() + ERROR_CACHE_TTL_MS
+      console.error('gym-chat exercise catalog: failed to load.', error)
+    }
+    return cachedExerciseCatalog
+  })()
+
+  try {
+    return await exerciseCatalogLoadingPromise
+  } finally {
+    exerciseCatalogLoadingPromise = null
+  }
+}
 
 // Body-parts pre-fetch - loads distinct body_part values from gym_day_meta
 // so the model knows the exact strings to use in WHERE clauses.
