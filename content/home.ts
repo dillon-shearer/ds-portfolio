@@ -16,48 +16,40 @@ export const HERO = {
   },
 }
 
-export const WORK_SECTION_TITLE = 'The work'
-
-export const CAPABILITY_SIGNAL = {
-  title: 'Capability signal',
-  description: 'A deterministic visual trace generated from the four capability records below.',
-  recordLabel: 'records',
-  source: 'Source: The work',
-  mode: 'Mode: Derived',
+export const WORK_SECTION = {
+  eyebrow: 'The work',
+  title: 'From source to delivery',
+  description: 'I work from the source data through the finished output.',
+  ariaLabel: 'Professional data work from source ingestion through delivery',
 }
 
-export const CAPABILITIES: {
-  eyebrow: string
+export const WORK_LIFECYCLE: {
   title: string
   description: string
   tags: string[]
 }[] = [
   {
-    eyebrow: 'Core Work',
-    title: 'Data pipelines',
+    title: 'Ingest and validate',
     description:
-      'Scheduled ingestion, data quality checks, and the boring reliability that makes everything downstream work. Mostly Python and SQL.',
+      'I build scheduled pipelines, monitor jobs, and add data quality checks before anyone depends on the output.',
     tags: ['Python', 'SQL', 'PostgreSQL'],
   },
   {
-    eyebrow: 'Process',
-    title: 'Documentation and standards',
+    title: 'Standardize and document',
     description:
-      'Data dictionaries, SOPs, and terminology standards that keep teams on the same page. The work nobody prioritizes until something breaks.',
+      'I define terminology, maintain data dictionaries, and write SOPs so teams use the same data the same way.',
     tags: ['SNOMED', 'LOINC', 'OMOP'],
   },
   {
-    eyebrow: 'Analysis',
-    title: 'Analytics and reporting',
+    title: 'Analyze and report',
     description:
-      'Recurring reports and operational dashboards in Tableau and Power BI. Turning pipeline output into something a researcher can actually read.',
+      'I turn trusted data into analysis, dashboards, and recurring reports that researchers and operators can use.',
     tags: ['Tableau', 'Power BI', 'Recharts'],
   },
   {
-    eyebrow: 'When needed',
-    title: 'Whatever the project needs',
+    title: 'Ship',
     description:
-      'Web apps, data quality testing, one-off tooling. Whatever sits between the pipeline and a finished product, I cover it.',
+      'I build the application or internal tool that closes the gap between the data and the person who needs it.',
     tags: ['React', 'Next.js', 'Claude API'],
   },
 ]

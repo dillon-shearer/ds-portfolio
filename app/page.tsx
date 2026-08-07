@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import { Badge, Button, InlineLink } from '@/components/ui'
-import { CAPABILITIES, HERO, WORK_SECTION_TITLE } from '@/content/home'
+import { HERO, WORK_LIFECYCLE, WORK_SECTION } from '@/content/home'
 import { SITE, SOCIALS } from '@/content/site'
-import { CapabilitySignal } from './CapabilitySignal'
 import styles from './page.module.css'
 
 export const metadata: Metadata = {
@@ -17,7 +16,6 @@ export default function HomePage() {
         <p className={styles.eyebrow}>{HERO.eyebrow}</p>
         <div className={styles.heroGrid}>
           <h1 className={styles.statement}>{HERO.statement}</h1>
-          <CapabilitySignal />
           <p className={styles.support}>{HERO.support}</p>
           <div className={styles.meta}>
             <span>{HERO.meta.currently}</span>
@@ -50,16 +48,23 @@ export default function HomePage() {
       </section>
 
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>{WORK_SECTION_TITLE}</h2>
-        <ol className={styles.workIndex}>
-          {CAPABILITIES.map((cap, index) => (
-            <li key={cap.title} className={styles.workItem}>
-              <span className={styles.indexNumber}>{String(index + 1).padStart(2, '0')}</span>
+        <header className={styles.workHeader}>
+          <p className={styles.workEyebrow}>{WORK_SECTION.eyebrow}</p>
+          <h2 className={styles.sectionTitle}>{WORK_SECTION.title}</h2>
+          <p className={styles.workLead}>{WORK_SECTION.description}</p>
+        </header>
+        <ol className={styles.workLifecycle} aria-label={WORK_SECTION.ariaLabel}>
+          {WORK_LIFECYCLE.map((stage, index) => (
+            <li key={stage.title} className={styles.lifecycleStep}>
+              <div className={styles.stageMeta} aria-hidden="true">
+                <span className={styles.stageDot} />
+                <span className={styles.indexNumber}>{String(index + 1).padStart(2, '0')}</span>
+              </div>
               <div className={styles.workContent}>
-                <h3 className={styles.workTitle}>{cap.title}</h3>
-                <p className={styles.workDescription}>{cap.description}</p>
+                <h3 className={styles.workTitle}>{stage.title}</h3>
+                <p className={styles.workDescription}>{stage.description}</p>
                 <div className={styles.tags}>
-                  {cap.tags.map((tag) => (
+                  {stage.tags.map((tag) => (
                     <Badge key={tag}>{tag}</Badge>
                   ))}
                 </div>
