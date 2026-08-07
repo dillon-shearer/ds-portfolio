@@ -12,7 +12,7 @@ Model configuration: `resolveModel()` default `gpt-4o`, temperature `0.2`
 
 This suite measures whether gym chat can associate user language with the correct exercise and retain the original analytical intent after a clarification. It is intentionally weighted toward incline-press variants because broad labels such as “incline press” can refer to barbell, dumbbell, or machine movements.
 
-This is a findings-only baseline. A failed case is not a proposed prompt or code change.
+This records the P5-T48 findings baseline and the P5-T57 prompt-level regression contract. The baseline remains unchanged so before/after behavior can be compared.
 
 ## Pass criteria
 
@@ -273,6 +273,22 @@ The route does carry forward user, assistant, tool-call, and tool-result message
 
 The main history weakness is semantic rather than transport loss: there is no structured pending intent such as `{metric: progression, window: 90 days, unresolvedExercise: incline press}`. The model must infer that state from raw transcript/tool messages, including failed or over-broad prior SQL. A later clarification can therefore inherit the metric/window but still anchor to the wrong or unresolved exercise.
 
+## P5-T57 prompt regression contract
+
+The system prompt now requires an exact exercise identity before any metric query. An ambiguous phrase must produce one short variant clarification and no query; a variant-only reply fills the unresolved exercise field in the pending intent while preserving metric, time window, comparison operands, and response shape. Exact zero-row results remain scoped to the selected canonical exercise and must not trigger broad filters or unrelated static suggestions.
+
+The P5-T48 cases exercise this contract as follows:
+
+| Cases | Required prompt behavior |
+| --- | --- |
+| S1, S2, S4 | Clarify an ambiguous incline/bench phrase before querying, or use an already unambiguous canonical/alias identity. |
+| M1, M2, M3, M7 | After the variant reply, query only that exact variant while retaining progression, best-set, set-count, or volume intent and the original time window. |
+| M4 | Treat the machine variant as the selector; do not reuse fuzzy suggestions that drop the incline identity. |
+| M5 | Resolve "that exercise" to the previously bound canonical identity while allowing the explicitly changed metric to replace only the metric field. |
+| M6 | Keep both bound exercise identities when the follow-up changes only the comparison metric. |
+
+Evidence for a rerun should record, per case, whether a pre-clarification metric query occurred, the exact exercise parameter(s), retained metric/window/comparison fields, row counts, and any suggestions. A passing rerun must show no metric query while an exercise is unresolved and no broad or unrelated fallback after an exact zero-row result.
+
 ## Follow-up scope suggested by the baseline
 
-Future tickets should separately cover: database-backed canonical/alias resolution before exercise-filtered analysis; a disambiguation rule for multiple canonical matches; structured retention of pending metric/window/comparison intent across clarification turns; and regression automation around this document's request contract. This ticket intentionally implements none of those changes.
+Future tickets may separately cover database-backed canonical/alias resolution and regression automation around live model transcripts; this ticket intentionally keeps the change at the system-prompt contract layer.
