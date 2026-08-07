@@ -54,7 +54,7 @@ function ChartTooltip({ active, payload }: any) {
 }
 
 export default function CumulativeVolumeChart({ dayLifts }: Props) {
-  const { cumSeries, bpStops, legendBPs } = useMemo(() => {
+  const { cumSeries, legendBPs } = useMemo(() => {
     const seq = [...dayLifts].sort((a, b) => {
       const ta = new Date(a.timestamp).getTime() || 0
       const tb = new Date(b.timestamp).getTime() || 0
@@ -70,52 +70,18 @@ export default function CumulativeVolumeChart({ dayLifts }: Props) {
       return { idx: i + 1, cumVol: cum, bp, ex: l.exercise }
     })
 
-    const stops: { key: string; offset: number; color: string }[] = []
-    const n = series.length
-    if (n > 0) {
-      let prevBP = series[0].bp
-      stops.push({ key: 'start', offset: 0, color: BP_COLORS[prevBP] })
-      for (let i = 1; i < n; i++) {
-        const cur = series[i].bp
-        if (cur !== prevBP) {
-          const off = n > 1 ? (i / (n - 1)) * 100 : 100
-          stops.push({ key: `a-${i}`, offset: off, color: BP_COLORS[prevBP] })
-          stops.push({ key: `b-${i}`, offset: off, color: BP_COLORS[cur] })
-          prevBP = cur
-        }
-      }
-      stops.push({ key: 'end', offset: 100, color: BP_COLORS[prevBP] })
-    }
-
     const bpSet = new Set<BodyPart>()
     for (const p of series) {
       if (p.bp !== 'other') bpSet.add(p.bp)
     }
 
-    return { cumSeries: series, bpStops: stops, legendBPs: Array.from(bpSet) }
+    return { cumSeries: series, legendBPs: Array.from(bpSet) }
   }, [dayLifts])
 
   return (
     <div>
       <ChartWrapper height={240} isEmpty={cumSeries.length === 0} emptyMessage="No sets logged">
         <AreaChart data={cumSeries} margin={{ top: 10, right: 8, bottom: 24, left: 40 }}>
-          <defs>
-            <linearGradient id="bpStroke" x1="0" y1="0" x2="1" y2="0">
-              {bpStops.map((s) => (
-                <stop key={s.key} offset={`${s.offset}%`} stopColor={s.color} />
-              ))}
-            </linearGradient>
-            <linearGradient id="bpFill" x1="0" y1="0" x2="1" y2="0">
-              {bpStops.map((s) => (
-                <stop
-                  key={`${s.key}-f`}
-                  offset={`${s.offset}%`}
-                  stopColor={s.color}
-                  stopOpacity={0.15}
-                />
-              ))}
-            </linearGradient>
-          </defs>
           <CartesianGrid stroke="var(--color-rule-soft)" strokeOpacity={0.5} />
           <XAxis
             dataKey="idx"
@@ -133,9 +99,9 @@ export default function CumulativeVolumeChart({ dayLifts }: Props) {
           <Area
             type="monotone"
             dataKey="cumVol"
-            stroke="url(#bpStroke)"
+            stroke="var(--chart-primary)"
             strokeWidth={2}
-            fill="url(#bpFill)"
+            fill="var(--color-accent-soft)"
             dot={(props: any) => {
               const { cx, cy, payload } = props
               const color = BP_COLORS[payload.bp as BodyPart | 'other'] || BP_COLORS.other

@@ -16,7 +16,7 @@ export default function Pager({ page, totalPages, onPrev, onNext }: Props) {
         disabled={page <= 1}
         aria-label="Previous page"
       >
-        &larr; Prev
+        Prev
       </button>
       <span className={styles.count}>
         {page} / {Math.max(1, totalPages)}
@@ -27,7 +27,7 @@ export default function Pager({ page, totalPages, onPrev, onNext }: Props) {
         disabled={page >= totalPages}
         aria-label="Next page"
       >
-        Next &rarr;
+        Next
       </button>
     </div>
   )

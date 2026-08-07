@@ -177,7 +177,7 @@ export default function BodyDiagram({
           </span>
           {partStats ? (
             <span className={styles.tooltipStats}>
-              {partStats.sets} sets &middot; {Math.round(partStats.volume).toLocaleString()} lbs
+              {partStats.sets} sets / {Math.round(partStats.volume).toLocaleString()} lbs
             </span>
           ) : (
             <span className={styles.tooltipStats}>No sets logged</span>
