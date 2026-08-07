@@ -21,6 +21,13 @@ export const FEED = {
   siteUrl: SITE.url,
   items: [
     {
+      title: 'How this site is built',
+      description:
+        'A short colophon covering the Next.js application, typed content, Studio Ledger design system, CI gates, and Vercel deployment.',
+      pubDate: 'Thu, 06 Aug 2026 00:00:00 +0000',
+      link: `${SITE.url}/colophon`,
+    },
+    {
       title: GYM_TRACKER_CASE_STUDY.rssTitle,
       description: GYM_TRACKER_CASE_STUDY.rssDescription,
       pubDate: GYM_TRACKER_CASE_STUDY.rssPubDate,

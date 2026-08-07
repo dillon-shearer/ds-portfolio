@@ -4,6 +4,7 @@ import { SITE } from '@/content/site'
 const routes = [
   '/',
   '/about',
+  '/colophon',
   '/resume',
   '/contact',
   '/dashboards',
