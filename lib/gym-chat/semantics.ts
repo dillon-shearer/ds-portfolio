@@ -1,3 +1,175 @@
+import type { GymChatPendingExercise, GymChatPendingIntent } from '@/types/gym-chat'
+
+const EXERCISE_PHRASE =
+  /\b((?:(?:barbell|dumbbell|incline|flat|decline|machine|cable|seated|standing|chest|bench|close[- ]grip|wide[- ]grip|romanian|front|back|hack|preacher|ez[- ]bar|single[- ]arm|single[- ]leg|smith)\s+){0,5}(?:press|squat|deadlift|row|curl|fly|raise|extension|pulldown|pull[- ]?up|push[- ]?up|lunge|thrust|clean|snatch|crunch|plank|dip|carry))\b/gi
+
+const extractExercisePhrases = (text: string): string[] => {
+  const phrases: string[] = []
+  for (const match of text.matchAll(EXERCISE_PHRASE)) {
+    const phrase = match[1]?.replace(/\s+/g, ' ').trim()
+    if (phrase && !phrases.some((item) => item.toLowerCase() === phrase.toLowerCase())) {
+      phrases.push(phrase)
+    }
+  }
+  return phrases
+}
+
+const extractTimeWindow = (text: string): string | undefined => {
+  const match = text.match(
+    /\b(?:last|past|previous|over the last|over the past)\s+(\d+)\s+(day|days|week|weeks|month|months|year|years)\b/i,
+  )
+  if (match) return `${match[1]} ${match[2].toLowerCase()}`
+  const simpleMatch = text.match(/\b(?:last|past|previous)\s+(day|week|month|year)\b/i)
+  if (simpleMatch) return `last ${simpleMatch[1].toLowerCase()}`
+  if (/\b(?:all[- ]time|ever|of all time)\b/i.test(text)) return 'all_time'
+  if (/\bthis\s+month\b/i.test(text)) return 'this month'
+  if (/\bthis\s+week\b/i.test(text)) return 'this week'
+  return undefined
+}
+
+const extractMetric = (text: string): string | undefined => {
+  if (/\b(?:progress(?:ed|ion)?|improv(?:e|ed|ement)|trend|overload)\b/i.test(text)) {
+    return 'progression'
+  }
+  if (/\b(?:best|top|heaviest)\b|personal record|\bPR\b/i.test(text)) {
+    return 'best_set'
+  }
+  if (/\b(?:how many|number of|set count|count of)\s+sets?\b/i.test(text)) {
+    return 'set_count'
+  }
+  if (/\bvolume\b/i.test(text)) return 'volume'
+  if (/\bsessions?\b/i.test(text)) return 'session_count'
+  return undefined
+}
+
+const extractComparison = (text: string): string | undefined => {
+  if (/\b(?:compare|comparison|versus|vs\.?|which one|between)\b/i.test(text)) {
+    return text.trim().replace(/[?.!]+$/, '')
+  }
+  return undefined
+}
+
+const extractProgressionRequest = (text: string): string | undefined => {
+  if (/\b(?:progress(?:ed|ion)?|improv(?:e|ed|ement)|trend|overload)\b/i.test(text)) {
+    return text.trim().replace(/[?.!]+$/, '')
+  }
+  return undefined
+}
+
+const extractResponseShape = (text: string): string | undefined => {
+  if (/\b(?:chart|graph|plot)\b/i.test(text)) return 'chart'
+  if (/\btable\b/i.test(text)) return 'table'
+  return undefined
+}
+
+const cloneExercises = (exercises: GymChatPendingExercise[] | undefined) =>
+  exercises?.map((exercise) => ({ ...exercise })) ?? []
+
+const hasExplicitVariant = (phrase: string) =>
+  /\b(?:barbell|dumbbell|machine|cable|smith|ez[- ]bar)\b/i.test(phrase)
+
+/**
+ * Carry the analytical request separately from the prose/tool transcript.
+ * A variant-only reply fills selected exercise identity and leaves the other
+ * pending fields untouched.
+ */
+export const buildPendingGymChatIntent = (
+  previous: GymChatPendingIntent | null | undefined,
+  message: string,
+): GymChatPendingIntent | undefined => {
+  const exercises = cloneExercises(previous?.exercises)
+  const extractedExercises = extractExercisePhrases(message)
+  const metric = extractMetric(message)
+  // "Which one progressed more?" changes the metric, not the comparison
+  // operands established on the previous turn.
+  const comparison = previous && !extractedExercises.length ? undefined : extractComparison(message)
+  const progression = extractProgressionRequest(message)
+  const timeWindow = extractTimeWindow(message)
+  const responseShape = extractResponseShape(message)
+  const hasAnalyticalChange = Boolean(
+    metric || comparison || progression || timeWindow || responseShape,
+  )
+
+  if (extractedExercises.length) {
+    if (previous && !hasAnalyticalChange && exercises.length) {
+      extractedExercises.forEach((selected, index) => {
+        const target = exercises[index] ?? exercises[0]
+        target.selected = selected
+      })
+    } else {
+      exercises.splice(
+        0,
+        exercises.length,
+        ...extractedExercises.map((requested) => ({
+          requested,
+          ...(hasExplicitVariant(requested) ? { selected: requested } : {}),
+        })),
+      )
+    }
+  }
+
+  const next: GymChatPendingIntent = {
+    exercises,
+    ...(metric || previous?.metric ? { metric: metric ?? previous?.metric } : {}),
+    ...(comparison || previous?.comparison
+      ? { comparison: comparison ?? previous?.comparison }
+      : {}),
+    ...(progression || (previous?.progression && (!metric || metric === 'progression'))
+      ? { progression: progression ?? previous?.progression }
+      : {}),
+    ...(timeWindow || previous?.timeWindow
+      ? { timeWindow: timeWindow ?? previous?.timeWindow }
+      : {}),
+    ...(responseShape || previous?.responseShape
+      ? { responseShape: responseShape ?? previous?.responseShape }
+      : {}),
+  }
+
+  if (
+    !next.exercises.length &&
+    !next.metric &&
+    !next.comparison &&
+    !next.progression &&
+    !next.timeWindow &&
+    !next.responseShape
+  ) {
+    return undefined
+  }
+  return next
+}
+
+export const normalizePendingGymChatIntent = (value: unknown): GymChatPendingIntent | undefined => {
+  if (!value || typeof value !== 'object') return undefined
+  const candidate = value as Partial<GymChatPendingIntent>
+  const exercises = Array.isArray(candidate.exercises)
+    ? candidate.exercises.reduce<GymChatPendingExercise[]>((result, item) => {
+        if (!item || typeof item !== 'object') return result
+        const exercise = item as GymChatPendingExercise
+        if (typeof exercise.requested !== 'string' || !exercise.requested.trim()) return result
+        result.push({
+          requested: exercise.requested.trim(),
+          ...(typeof exercise.selected === 'string' && exercise.selected.trim()
+            ? { selected: exercise.selected.trim() }
+            : {}),
+        })
+        return result
+      }, [])
+    : []
+  const textField = (field: keyof Omit<GymChatPendingIntent, 'exercises'>) =>
+    typeof candidate[field] === 'string' && candidate[field]?.trim()
+      ? candidate[field]?.trim()
+      : undefined
+  const normalized: GymChatPendingIntent = {
+    exercises,
+    ...(textField('metric') ? { metric: textField('metric') } : {}),
+    ...(textField('comparison') ? { comparison: textField('comparison') } : {}),
+    ...(textField('progression') ? { progression: textField('progression') } : {}),
+    ...(textField('timeWindow') ? { timeWindow: textField('timeWindow') } : {}),
+    ...(textField('responseShape') ? { responseShape: textField('responseShape') } : {}),
+  }
+  return normalized.exercises.length || Object.keys(normalized).length > 1 ? normalized : undefined
+}
+
 const SEMANTIC_MAPPINGS = [
   {
     phrase: 'volume',

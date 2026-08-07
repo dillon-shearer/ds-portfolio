@@ -10,7 +10,11 @@ import {
   loadGymCatalog,
 } from '@/lib/gym-chat/catalog'
 import { getCapabilitiesContext } from '@/lib/gym-chat/capabilities'
-import { SEMANTIC_HINTS } from '@/lib/gym-chat/semantics'
+import {
+  buildPendingGymChatIntent,
+  normalizePendingGymChatIntent,
+  SEMANTIC_HINTS,
+} from '@/lib/gym-chat/semantics'
 import {
   MAX_PREVIEW_ROWS,
   QUERY_TIMEOUT_MS,
@@ -19,6 +23,7 @@ import {
 import { suggestExerciseNames } from '@/lib/gym-chat/response-utils'
 import {
   GYM_CHAT_EXERCISE_INTENT_CONTRACT,
+  GYM_CHAT_PENDING_INTENT_CONTRACT,
   runGymChatConversation,
   isLlmRequestError,
   type OpenAIMessage,
@@ -146,7 +151,10 @@ const executeQuery = async (client: Queryable, sql: string, params: unknown[]) =
   }
 }
 
-const buildSystemPrompt = (timezone: string): string => {
+const buildSystemPrompt = (
+  timezone: string,
+  pendingIntent?: GymChatConversationState['pendingIntent'],
+): string => {
   const catalogContext = getCatalogContext()
   const capabilities = getCapabilitiesContext()
   const semanticHints = SEMANTIC_HINTS
@@ -165,6 +173,8 @@ ${semanticHints}
 ${bodyPartsContext ? `\n## Available Body Part Values\n${bodyPartsContext}` : ''}
 
 ${GYM_CHAT_EXERCISE_INTENT_CONTRACT}
+${GYM_CHAT_PENDING_INTENT_CONTRACT}
+${pendingIntent ? `\n## Pending intent JSON\n${JSON.stringify(pendingIntent)}` : ''}
 
 ## Tool Results
 When you call execute_gym_query, the tool returns:
@@ -216,7 +226,8 @@ const normalizeConversationState = (value: unknown): GymChatConversationState =>
     ? state.messages.filter((entry) => entry && entry.role && typeof entry.content === 'string')
     : undefined
   const sessionId = typeof state.sessionId === 'string' ? state.sessionId : undefined
-  return { sessionId, messages }
+  const pendingIntent = normalizePendingGymChatIntent(state.pendingIntent)
+  return { sessionId, messages, pendingIntent }
 }
 
 const buildConversationMessages = (
@@ -460,8 +471,9 @@ export async function POST(req: Request) {
     sendStatus('catalog', 'Loading workout catalog...')
     await Promise.all([loadGymCatalog(), loadBodyParts()]).catch(() => undefined)
 
-    const systemPrompt = buildSystemPrompt(timezone)
     const conversationState = normalizeConversationState(payload.conversationState)
+    const pendingIntent = buildPendingGymChatIntent(conversationState.pendingIntent, question)
+    const systemPrompt = buildSystemPrompt(timezone, pendingIntent)
     const history = buildConversationMessages(conversationState.messages)
     const openaiMessages: OpenAIMessage[] = [...history, { role: 'user', content: question }]
 
@@ -496,6 +508,7 @@ export async function POST(req: Request) {
 
       const updatedState: GymChatConversationState = {
         sessionId: conversationState.sessionId ?? randomUUID(),
+        pendingIntent,
         messages: trimConversationMessages(openaiMessages).map((message) => ({
           role: message.role === 'system' ? 'assistant' : message.role,
           content: message.content ?? '',
