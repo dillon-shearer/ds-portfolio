@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import { Badge, Button, InlineLink } from '@/components/ui'
 import { CAPABILITIES, HERO, WORK_SECTION_TITLE } from '@/content/home'
-import { SOCIALS } from '@/content/site'
+import { SITE, SOCIALS } from '@/content/site'
 import styles from './page.module.css'
 
 export const metadata: Metadata = {
-  title: 'Data With Dillon',
-  description: 'Data engineer and analyst working in healthcare and life science data.',
+  title: { absolute: `${SITE.author} | ${SITE.positioning}` },
+  description: SITE.description,
 }
 
 export default function HomePage() {

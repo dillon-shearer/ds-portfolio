@@ -8,7 +8,7 @@ import { dashboardUiState, GYM_STATS_FIXTURE } from './ui-fixtures'
 export const metadata: Metadata = {
   title: 'Dashboards',
   description:
-    'A collection of data visualizations and analytics dashboards built across tools and domains.',
+    "Dashboards by Dillon Shearer covering clinical data, reporting workflows, and a personal gym tracker.",
 }
 
 export const revalidate = 3600

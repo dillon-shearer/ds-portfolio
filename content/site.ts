@@ -3,11 +3,14 @@ export interface NavItem {
   href: string
 }
 
+const POSITIONING = 'Data analyst and engineer'
+
 export const SITE = {
   author: 'Dillon Shearer',
   title: 'Data With Dillon',
+  positioning: POSITIONING,
   description:
-    'Data engineer and analyst building analytics, pipelines, and AI tooling for healthcare and life-science teams.',
+    `${POSITIONING} building analytics, pipelines, and AI tooling for healthcare and life-science teams.`,
   url: 'https://datawithdillon.com',
 }
 

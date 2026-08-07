@@ -6,7 +6,8 @@ import { gymFixtureLifts, gymUiState } from './ui-fixtures'
 
 export const metadata: Metadata = {
   title: 'Gym Tracker',
-  description: 'Personal training log, volume analytics, and AI coaching.',
+  description:
+    "Dillon Shearer's personal gym dashboard for logged workouts, volume trends, and AI coaching.",
 }
 
 export const dynamic = 'force-dynamic'

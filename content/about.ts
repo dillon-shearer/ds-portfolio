@@ -1,3 +1,5 @@
+import { SITE } from './site'
+
 export const BIO_PARAGRAPHS: string[] = [
   "After graduating with my MIS degree from UWG, I wasn't sure which direction to take my career. An internship as a QA/BA at a rare disease data platform opened my eyes to the impact that clean, well-structured data can have on real lives.",
   "That experience led me to my current role as a data scientist at Answer ALS, where I've been building production ETL pipelines, analytics systems, and AI tooling for ALS research ever since.",
@@ -10,11 +12,11 @@ export const ABOUT_PAGE = {
   metadata: {
     title: 'About',
     description:
-      'Data-centric software engineer building data systems, analytics, and applications. Currently focused on healthcare and life sciences.',
+      `${SITE.positioning} building data systems, analytics, and applications focused on healthcare and life sciences.`,
   },
   eyebrow: 'ABOUT',
   title: 'Dillon Shearer',
-  lead: 'Data-centric software engineer building data systems, analytics, and applications. Currently focused on healthcare and life sciences.',
+  lead: `${SITE.positioning} building data systems, analytics, and applications focused on healthcare and life sciences.`,
   resume: {
     heading: 'Resume',
     intro: 'This is the current version.',

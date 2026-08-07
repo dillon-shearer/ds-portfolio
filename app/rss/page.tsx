@@ -6,7 +6,8 @@ import styles from './page.module.css'
 
 export const metadata: Metadata = {
   title: 'RSS Feed',
-  description: 'Subscribe to updates from Data With Dillon via RSS.',
+  description:
+    "Subscribe to Dillon Shearer's notes on data engineering, analytics, and the work behind Data With Dillon.",
 }
 
 export default function RssPage() {

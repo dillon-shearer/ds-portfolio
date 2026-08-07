@@ -1,5 +1,7 @@
+import { SITE } from './site'
+
 export const HERO = {
-  eyebrow: 'DATA ANALYST / ENGINEER',
+  eyebrow: SITE.positioning.toUpperCase(),
   statement: 'I do data work for healthcare and life science teams.',
   support: 'Pipelines, analytics, and whatever else it takes to ship something useful.',
   meta: {

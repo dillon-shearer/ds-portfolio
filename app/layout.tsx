@@ -56,6 +56,7 @@ const jsonLd = {
       '@type': 'Person',
       '@id': personId,
       name: SITE.author,
+      jobTitle: SITE.positioning,
       url: SITE.url,
       sameAs: [SOCIALS.github, SOCIALS.linkedin],
     },

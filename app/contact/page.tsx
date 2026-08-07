@@ -9,7 +9,7 @@ import styles from './page.module.css'
 export const metadata: Metadata = {
   title: 'Contact',
   description:
-    'Get in touch with Dillon Shearer for data engineering, analytics, or healthcare data projects.',
+    'Get in touch with Dillon Shearer about data engineering, analytics, or healthcare data projects.',
 }
 
 const ELSEWHERE_LINKS = [
