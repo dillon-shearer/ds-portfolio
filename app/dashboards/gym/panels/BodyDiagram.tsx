@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, RoundedBox } from '@react-three/drei'
-import { BODY_PART_HEX, type BodyPart } from '@/lib/gym/body-parts'
+import { type BodyPart } from '@/lib/gym/body-parts'
 import styles from './BodyDiagram.module.css'
 
 type Stats = Partial<Record<BodyPart, { volume: number; sets: number }>>
@@ -34,7 +34,7 @@ const LEGEND_ITEMS = [
   { alpha: 0.65, label: 'Moderate' },
   { alpha: 1, label: 'Trained' },
 ]
-const LEGEND_SAMPLE = '#5A7A8A'
+const INTENSITY_COLOR = '#5A7A8A'
 
 export default function BodyDiagram({
   stats,
@@ -95,10 +95,9 @@ export default function BodyDiagram({
       const s = rawSets(p)
       if (s <= 0) return NA_COLOR
       const k = splitsForPart(p)
-      const base = BODY_PART_HEX[p]
-      if (s >= greenAt * k) return lerpHex(NA_COLOR, base, 1.0)
-      if (s >= yellowAt * k) return lerpHex(NA_COLOR, base, 0.65)
-      return lerpHex(NA_COLOR, base, 0.35)
+      if (s >= greenAt * k) return lerpHex(NA_COLOR, INTENSITY_COLOR, 1.0)
+      if (s >= yellowAt * k) return lerpHex(NA_COLOR, INTENSITY_COLOR, 0.65)
+      return lerpHex(NA_COLOR, INTENSITY_COLOR, 0.35)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [stats, greenAt, yellowAt, splitFactor, splitCounts],
@@ -192,7 +191,7 @@ export default function BodyDiagram({
           <div key={label} className={styles.legendItem}>
             <div
               className={styles.legendSwatch}
-              style={{ background: lerpHex(NA_COLOR, LEGEND_SAMPLE, alpha) }}
+              style={{ background: lerpHex(NA_COLOR, INTENSITY_COLOR, alpha) }}
             />
             <span className={styles.legendLabel}>{label}</span>
           </div>
