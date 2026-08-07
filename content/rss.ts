@@ -21,9 +21,9 @@ export const FEED = {
   siteUrl: SITE.url,
   items: [
     {
-      title: 'How this site is built',
+      title: 'Site notes',
       description:
-        'A short colophon covering the Next.js application, typed content, Studio Ledger design system, CI gates, and Vercel deployment.',
+        'Notes on the Next.js application, typed content, Studio Ledger design system, CI gates, and Vercel deployment.',
       pubDate: 'Thu, 06 Aug 2026 00:00:00 +0000',
       link: `${SITE.url}/colophon`,
     },

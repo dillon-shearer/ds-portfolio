@@ -15,7 +15,7 @@
         {
           "kind": "text",
           "selector": "h1",
-          "includes": "How this site is built"
+          "includes": "Site notes"
         },
         {
           "kind": "visible",

@@ -25,12 +25,12 @@ export type ColophonPage = {
 
 export const COLOPHON_PAGE = {
   metadata: {
-    title: 'Colophon',
+    title: 'Site notes',
     description:
-      'How Data With Dillon is built with Next.js, TypeScript, typed content, CSS Modules, and Vercel.',
+      'Notes on how Data With Dillon is built with Next.js, TypeScript, typed content, CSS Modules, and Vercel.',
   },
-  eyebrow: 'COLOPHON',
-  title: 'How this site is built',
+  eyebrow: 'SITE NOTES',
+  title: 'Site notes',
   lead: 'A short record of the tools, constraints, and deployment path behind Data With Dillon.',
   entries: [
     {
