@@ -1,27 +1,39 @@
 # Gym chat exercise disambiguation and context-retention eval
 
-Run date: 2026-08-07  
-Runtime: `http://localhost:3000/api/gym-chat`  
-Model configuration at inspection: `resolveModel()` defaults to `gpt-4o`; chat temperature is `0.2`.
+Task: P5-T48
 
-This is a findings-only baseline. It does not change the prompt, catalog, SQL policy, or conversation state code.
+Run date: 2026-08-07
 
-## What this measures
+Surface: live local app, `POST http://localhost:3000/api/gym-chat`
 
-The suite targets exercise-name ambiguity and the failure mode where the assistant asks for (or receives) a variant clarification but loses the original metric or time window. An overall pass requires both:
+Model configuration: `resolveModel()` default `gpt-4o`, temperature `0.2`
 
-1. The assistant distinguishes an ambiguous exercise (for example, “incline press”) or resolves a supplied canonical/alias name without inventing an unrelated exercise.
-2. In a follow-up, it keeps the original intent (best set, progression, set count, or volume) and time window while applying the clarified exercise.
+## Purpose
 
-A no-data answer can pass when the named exercise is handled correctly and the answer remains scoped. A query error, silent aggregation of ambiguous variants, unrelated suggestion, or dropped metric/window is a failure.
+This suite measures whether gym chat can associate user language with the correct exercise and retain the original analytical intent after a clarification. It is intentionally weighted toward incline-press variants because broad labels such as “incline press” can refer to barbell, dumbbell, or machine movements.
 
-## Rerun procedure
+This is a findings-only baseline. A failed case is not a proposed prompt or code change.
 
-Use the live app supplied by the owner; do not start a dev server in the owner checkout. Send non-streaming requests so the JSON response includes `assistantMessage`, `queries`, and `conversationState`.
+## Pass criteria
+
+A case passes only when all applicable conditions hold:
+
+1. An ambiguous exercise phrase is resolved from context or prompts one short, relevant clarification before querying data.
+2. A known canonical exercise or alias is associated with the intended catalog exercise; zero-row results do not produce unrelated suggestions.
+3. After a clarification, the assistant retains the original metric, time window, comparison, and requested response shape.
+4. The answer accurately distinguishes an aggregate result row from a non-zero set count and does not invent data.
+5. The request completes without an API error.
+
+## How to rerun
+
+Run against the same live chat endpoint used by the widget. For a first turn:
 
 ```powershell
 $body = @{
-  messages = @(@{ role = 'user'; content = 'How has my incline press progressed over the last 90 days?' })
+  messages = @(@{
+    role = 'user'
+    content = 'How has my incline press progressed over the last 90 days?'
+  })
   client = @{ timezone = 'America/New_York' }
 } | ConvertTo-Json -Depth 12 -Compress
 
@@ -30,105 +42,237 @@ $response = Invoke-RestMethod `
   -Method Post `
   -ContentType 'application/json' `
   -Headers @{ Accept = 'application/json' } `
-  -Body $body
-
-$response | ConvertTo-Json -Depth 12
+  -Body $body `
+  -TimeoutSec 90
 ```
 
-For a multi-turn case, send the next user turn with the previous response's `conversationState`:
+For each follow-up, send only the newest user message in `messages` and copy the previous response's `conversationState` into the next request:
 
 ```powershell
 $body = @{
   messages = @(@{ role = 'user'; content = 'I mean incline dumbbell press.' })
   client = @{ timezone = 'America/New_York' }
   conversationState = $response.conversationState
-} | ConvertTo-Json -Depth 20 -Compress
+} | ConvertTo-Json -Depth 12 -Compress
 ```
 
-Record the full JSON response for auditability. The excerpts below are intentionally short; `queries[].sql`, `params`, `rowCount`, `error`, and `exerciseSuggestions` are the main diagnostic fields.
+Start each numbered case with an empty conversation state. Record the assistant text, query parameters, row counts, errors, and exercise suggestions. Because the model runs at temperature `0.2` and the database is live, preserve the run date and compare behavior, not exact prose.
 
-## Baseline run
+## Baseline result
 
-The following 12 cases were run against the live chat in one sweep: five single-turn controls and seven multi-turn flows. The model is nondeterministic, so reruns should retain the timestamp and treat this table as a regression baseline, not a permanent expected string.
+Strict result: **3/12 passed (25%)**. Eight failed behaviorally and one failed because the captured request returned HTTP 500. A retry of the HTTP-500 control later returned 200, so the error is recorded as intermittent rather than an exercise-resolution root cause.
 
-| Case | Turns | Focus | Result |
-| --- | ---: | --- | --- |
-| S1 | 1 | Ambiguous incline-press progression | **FAIL** — broad term was queried without disambiguation |
-| S2 | 1 | Incline bench alias lookup | **FAIL** — zero result suggested only “Bench Press” |
-| S3 | 1 | Incline dumbbell canonical lookup | **PASS** — scoped answer; no-data claim was direct |
-| S4 | 1 | Flat bench control | **FAIL** — one run returned HTTP 500 |
-| S5 | 1 | General training control | **PASS** — relevant non-exercise-specific advice, no alias dependency |
-| M1 | 2 | Clarify incline press, preserve progression | **FAIL** — clarified variant was not associated with the original progression request |
-| M2 | 2 | Clarify incline press, preserve best set | **FAIL** — “barbell incline bench press” fell back to “Bench Press” |
-| M3 | 2 | Clarify incline press, preserve set count | **FAIL** — variant correction produced a no-data answer rather than a reliable association |
-| M4 | 2 | Alias correction after no result | **FAIL** — suggestions included unrelated “Cable Crunch” and did not resolve the machine variant |
-| M5 | 2 | “That exercise” follow-up | **PASS** — retained the named exercise and 90-day scope across the follow-up |
-| M6 | 2 | Variant comparison, then progression | **FAIL** — no-data comparison left the follow-up unable to assess progression |
-| M7 | 2 | Clarify incline press, preserve last-month volume | **FAIL** — time window/metric wording was not enough to make the variant query reliable |
+| ID | Turns | Focus | Result | Primary failure |
+| --- | ---: | --- | --- | --- |
+| S1 | 1 | Ambiguous incline-press progression | Fail | Broad term was queried without clarification |
+| S2 | 1 | “Incline bench press” alias | Fail | Zero rows and wrong fallback association |
+| S3 | 1 | Exact incline dumbbell canonical name | Pass | Direct answer; no conversational context required |
+| S4 | 1 | Flat-bench control | Fail | Captured request returned HTTP 500 |
+| S5 | 1 | General coaching control | Pass | Direct, relevant answer without an unnecessary query |
+| M1 | 2 | Clarify variant, retain progression/window | Fail | Variant association failed after correction |
+| M2 | 2 | Clarify variant, retain best-set intent | Fail | Exact barbell phrase mapped to no data/Bench Press suggestion |
+| M3 | 2 | Clarify variant, retain set-count intent | Fail | Broad aggregate and exact variant disagreed |
+| M4 | 2 | Correct alias after zero result | Fail | Static suggestions drifted to unrelated exercises |
+| M5 | 2 | Resolve “that exercise” | Pass | Exercise, new metric, and original 90-day window were retained |
+| M6 | 2 | Compare variants, then compare progression | Fail | Neither variant was resolved, so follow-up could not execute |
+| M7 | 2 | Clarify variant, retain “last month” | Fail | Window survived, but variant association failed |
 
-Baseline: **2/12 pass**, **10/12 fail**. One failure was a transient server error observed in the sweep; rerun it before treating the error as deterministic.
+## Cases and transcript excerpts
 
-## Transcript excerpts
+### S1 — ambiguous incline-press progression — Fail
 
-### Single-turn cases
+Prompt: “How has my incline press progressed over the last 90 days?”
 
-**S1 — FAIL.** User: “How has my incline press progressed over the last 90 days?” The assistant answered: “your incline press has shown some variability in estimated 1RM,” citing 22 rows. This silently treats the broad phrase as a queryable exercise rather than asking which incline variation the user means.
+Expected: Ask which incline-press variant is intended before combining data, unless conversation context identifies one.
 
-**S2 — FAIL.** User: “What was my best incline bench press set in the last 90 days?” The assistant answered: “It seems there are no logged sets for the ‘incline bench press’...” The response’s query had `rowCount: 0` and `exerciseSuggestions: ["Bench Press"]`; that suggestion does not preserve “incline.”
+Observed:
 
-**S3 — PASS.** User: “How many sets of incline dumbbell press did I log in the last 90 days?” The assistant answered: “You haven't logged any sets of incline dumbbell press in the last 90 days [q1].” The result stayed scoped to the named exercise and requested window.
+> Assistant: “Over the last 90 days, your incline press has shown some variability in estimated 1RM ... Your highest estimated 1RM was approximately 308.3 lbs ...”
 
-**S4 — FAIL.** User: “What was my best flat bench press in the last 90 days?” The sweep received HTTP 500. A subsequent isolated rerun returned a scoped no-data answer and suggested “bench press,” so this case should be rerun when comparing future baselines.
+The query used a broad `canonical_name ILIKE` filter and returned 22 rows. The assistant silently treated all matching data as one exercise instead of disambiguating it.
 
-**S5 — PASS.** User: “What should I change if my weekly chest volume has stalled?” The assistant gave direct training advice and issued no exercise-name query. This control confirms the failure cluster is specific to exercise association/disambiguation rather than all gym-chat requests.
+### S2 — incline-bench alias lookup — Fail
 
-### Multi-turn cases
+Prompt: “What was my best incline bench press set in the last 90 days?”
 
-**M1 — FAIL.** Turn 1 asked for incline-press progression and returned a 22-row trend. Turn 2: “I mean incline dumbbell press.” The assistant answered: “It seems there are no recorded sessions for the ‘Incline Dumbbell Press’...” with a suggestion for the same name. The original progression intent was not answered with a resolved variant; the conversation became a new no-data lookup.
+Expected: Resolve the phrase through canonical exercises/aliases or ask a targeted barbell-versus-dumbbell question.
 
-**M2 — FAIL.** Turn 1: “What was my best incline press?” → “Your best incline press was 250 lbs for 7 reps...” Turn 2: “The barbell incline bench press.” → “It seems there are no logged sets specifically for the ‘Barbell Incline Bench Press.’ However, I found a suggestion for ‘Bench Press.’” The best-set intent was not preserved through the clarification, and the alias lost the incline/barbell qualifiers.
+Observed:
 
-**M3 — FAIL.** Turn 1: “How many sets did I do on incline press?” → “You've completed a total of 55 sets on the incline press.” Turn 2: “Incline dumbbell press, not barbell.” → “It appears you haven't logged any sets for the incline dumbbell press.” The set-count question remained implicit, but the variant association did not produce a trustworthy canonical result.
+> Assistant: “It seems there are no logged sets for the ‘incline bench press’ ... If you meant a different variation or another exercise, please let me know.”
 
-**M4 — FAIL.** Turn 1: “Show my incline bench progression.” → no sessions, with suggestions “Bench Press,” “Incline Dumbbell Press,” and “Cable Crunch.” Turn 2: “Use incline chest press machine.” → no sessions, with suggestions “Bench Press,” “Incline Dumbbell Press,” and “Chest Fly.” The static suggestions include unrelated exercises and do not resolve the supplied machine variant.
+The query returned zero rows and `exerciseSuggestions: ["Bench Press"]`, dropping the incline distinction.
 
-**M5 — PASS.** Turn 1 asked for the best incline dumbbell press set in the last 90 days and received a scoped no-data answer. Turn 2: “How many total sets did that exercise have?” → “There were no recorded sets for the ‘Incline Dumbbell Press’ in the last 90 days.” The assistant retained both the exercise and the original 90-day scope.
+### S3 — exact incline dumbbell name — Pass
 
-**M6 — FAIL.** Turn 1 asked to compare incline bench press and incline dumbbell press volume and received no recorded volume for either. Turn 2: “Which one progressed more?” → “I can't assess which one has progressed more.” The comparison subjects were remembered, but the initial alias failure meant the follow-up had no usable exercise-specific evidence.
+Prompt: “How many sets of incline dumbbell press did I log in the last 90 days?”
 
-**M7 — FAIL.** Turn 1: “What was my incline press volume last month?” → “Your incline press volume for last month was 28,115 lb-reps [q1].” Turn 2: “I mean incline dumbbell press.” → “It seems there was no recorded volume for the incline dumbbell press last month.” The month and volume metric were repeated, but the clarification did not reliably map to the intended exercise association.
+Expected: Query the requested canonical exercise and answer the count directly.
 
-## Findings and root causes
+Observed:
+
+> Assistant: “You haven't logged any sets of incline dumbbell press in the last 90 days.”
+
+The assistant kept the exercise and time window intact. The query returned one aggregate row; the response interpreted its count as zero rather than confusing row count with set count.
+
+### S4 — flat-bench control — Fail
+
+Prompt: “What was my best flat bench press in the last 90 days?”
+
+Expected: Resolve to the appropriate bench-press entry or ask one relevant clarification.
+
+Observed:
+
+> API: `500 Internal Server Error`
+
+The same prompt returned 200 on a later retry with a no-data response, so this is an intermittent reliability failure in the captured baseline.
+
+### S5 — general coaching control — Pass
+
+Prompt: “What should I change if my weekly chest volume has stalled?”
+
+Expected: Give general programming guidance without querying private workout data unless the user asks for personal analysis.
+
+Observed:
+
+> Assistant: “Increase volume gradually ... Vary intensity and load ...”
+
+No SQL query was issued and the answer stayed on the requested coaching topic.
+
+### M1 — clarify variant, retain progression and window — Fail
+
+Turn 1: “How has my incline press progressed over the last 90 days?”
+
+Turn 2: “I mean incline dumbbell press.”
+
+Expected: Resolve the selected variant and answer the original 90-day progression question.
+
+Observed:
+
+> Turn 1 assistant: “Your incline press has shown some fluctuations in estimated 1RM ...”
+>
+> Turn 2 assistant: “It seems there are no recorded sessions for the ‘Incline Dumbbell Press’ in the last 90 days.”
+
+The time window and progression topic remained visible, but the correction could not associate the exact variant with logged data. The first turn also skipped the required disambiguation.
+
+### M2 — clarify variant, retain best-set intent — Fail
+
+Turn 1: “What was my best incline press?”
+
+Turn 2: “The barbell incline bench press.”
+
+Expected: Use the second turn as the exercise selector while preserving “best set.”
+
+Observed:
+
+> Turn 1 assistant: “Your best incline press was 250 lbs for 7 reps ...”
+>
+> Turn 2 assistant: “There are no logged sets specifically for the ‘Barbell Incline Bench Press.’ However, I found a suggestion for ‘Bench Press.’”
+
+The metric survived, but the supplied variant did not map to an incline canonical/alias.
+
+### M3 — clarify variant, retain set-count intent — Fail
+
+Turn 1: “How many sets did I do on incline press?”
+
+Turn 2: “Incline dumbbell press, not barbell.”
+
+Expected: Recompute the original set count for the selected variant.
+
+Observed:
+
+> Turn 1 assistant: “You've completed a total of 55 sets on the incline press.”
+>
+> Turn 2 assistant: “It appears you haven't logged any sets for the incline dumbbell press.”
+
+The count intent survived, but the broad and exact forms produced incompatible exercise associations.
+
+### M4 — alias correction after a zero result — Fail
+
+Turn 1: “Show my incline bench progression.”
+
+Turn 2: “Use incline chest press machine.”
+
+Expected: Use the correction as the exercise selector and preserve progression as the requested analysis.
+
+Observed:
+
+> Turn 1 assistant: “There are exercises like ‘Bench Press,’ ‘Incline Dumbbell Press,’ and ‘Cable Crunch’ that might be related.”
+>
+> Turn 2 assistant: “Exercises like ‘Bench Press,’ ‘Incline Dumbbell Press,’ and ‘Chest Fly’ are related.”
+
+The fallback suggestions were broad muscle-neighbor guesses rather than database-backed aliases, and the progression request never ran.
+
+### M5 — contextual “that exercise” follow-up — Pass
+
+Turn 1: “What was my best incline dumbbell press set in the last 90 days?”
+
+Turn 2: “How many total sets did that exercise have?”
+
+Expected: Resolve “that exercise” to incline dumbbell press and answer the new set-count metric over the retained 90-day window.
+
+Observed:
+
+> Turn 1 assistant: “There are no recorded sets for the ‘Incline Dumbbell Press’ in the last 90 days.”
+>
+> Turn 2 assistant: “There were no recorded sets for the ‘Incline Dumbbell Press’ in the last 90 days.”
+
+Conversation history successfully resolved “that exercise,” switched from best-set to set-count intent, and retained the original 90-day window. A no-data answer is acceptable here because both turns stayed scoped to the exact canonical exercise.
+
+### M6 — compare variants, then compare progression — Fail
+
+Turn 1: “Compare incline bench press and incline dumbbell press volume.”
+
+Turn 2: “Which one progressed more?”
+
+Expected: Keep both exercise identities and switch the comparison metric from volume to progression.
+
+Observed:
+
+> Turn 1 assistant: “There is no recorded volume for either ... If you've been performing these exercises under different names or aliases, please let me know.”
+>
+> Turn 2 assistant: “I can't assess which one has progressed more.”
+
+The follow-up retained the two-exercise comparison concept, but no alias resolution occurred and no progression query could run.
+
+### M7 — clarify variant, retain “last month” — Fail
+
+Turn 1: “What was my incline press volume last month?”
+
+Turn 2: “I mean incline dumbbell press.”
+
+Expected: Recompute last month's volume for the selected variant.
+
+Observed:
+
+> Turn 1 assistant: “Your incline press volume for last month was 28,115 lb-reps.”
+>
+> Turn 2 assistant: “There was no recorded volume for the incline dumbbell press last month.”
+
+The time window and volume metric survived, but broad versus exact naming produced incompatible results.
+
+## Findings by root-cause area
 
 ### System prompt
 
-`buildSystemPrompt()` says to use the full conversation history and ask one short question only when ambiguity remains, but it does not define an explicit exercise-resolution step before querying. It also tells the model to recover canonical names only after `rowCount = 0`. That ordering permits `canonical_name ILIKE '%incline press%'` to return mixed/partial matches and produce a confident aggregate, as in S1 and M1, instead of clarifying first.
+The prompt says to discover canonical names only after an exercise-filtered query returns zero rows. It does not require catalog resolution before a data query and does not define ambiguity as “more than one canonical exercise matches.” Consequently, broad `%incline press%` queries can return mixed variants and bypass clarification entirely (S1, M1, M3, M7).
 
-The prompt does not carry a structured “original intent + time window + resolved exercise” contract across a clarification. As a result, the second turn can become a fresh exact-name search: M1, M2, M3, and M7 retain fragments of the request but do not reliably complete the original metric against the selected variant.
+The conversation instruction says to use full history and resolve references, but it does not explicitly bind a clarification answer to the pending metric, window, and comparison operands. History retention worked for “that exercise,” “last month,” and several metric follow-ups, but it could not repair an unresolved exercise identity (M1–M7).
 
 ### Catalog aliasing
 
-`gym_lifts_v` is described as pre-joined through `exercises` and `exercise_aliases`, exposing `canonical_name` and `body_part_key`. The chat does not expose a first-class catalog lookup for a user phrase; the model must infer the mapping from schema text and query results. Exact user phrases such as “incline bench press” and “barbell incline bench press” therefore miss the canonical “Bench Press” record even when the user likely means it.
+`loadGymCatalog()` injects table and column schema, not the live rows from `exercises` or `exercise_aliases`. The model knows that alias tables exist but is not given an authoritative list of canonical names or aliases before forming its first data query.
 
-On zero rows, `route.ts` calls `suggestExerciseNames()`. That helper uses a static workout library and fuzzy/muscle fallback, not the live `exercise_aliases` table. The M4 transcript demonstrates the consequence: “Cable Crunch” appears among suggestions for “incline bench,” and the supplied machine variant still is not resolved. This is catalog-association drift, not a SQL date/CTE issue.
+`gym_lifts_v.canonical_name` resolves aliases already present in logged rows, but filtering that field with the user's raw phrase is not itself alias lookup. Exact user phrases such as “incline bench press” and “barbell incline bench press” therefore returned zero rows even while broader “incline press” returned data (S2, M2).
+
+The server's zero-row `suggestExerciseNames()` fallback reads a static workout library and uses partial/fuzzy/muscle matching, not the live `exercise_aliases` table. That explains suggestions that dropped “incline” or drifted to `Cable Crunch` and `Chest Fly` (S2, M4).
 
 ### Conversation-history handling
 
-The route extracts only the latest user message from `payload.messages`, then reconstructs prior context from `conversationState.messages`. The mechanism does preserve prior assistant/tool messages, but it stores the model’s tool-call turns and final answer rather than an explicit resolved exercise/intent state. The LLM must re-derive that state from prose on every turn.
+The route does carry forward user, assistant, tool-call, and tool-result messages in `conversationState`; the widget returns that state on later turns. The live cases show that short references and windows can survive: “that exercise” resolved to Incline Dumbbell Press in M5, and “last month” survived in M7.
 
-That design is sufficient for M5’s simple “that exercise” reference, but fragile when the second turn is a variant correction. M2 and M7 show the history still contains the original question, yet the new canonical phrase dominates the generated SQL and the original best-set/volume intent is not reliably bound to it. The failure is therefore not simply “history omitted”; it is loss of structured association during re-interpretation.
+The main history weakness is semantic rather than transport loss: there is no structured pending intent such as `{metric: progression, window: 90 days, unresolvedExercise: incline press}`. The model must infer that state from raw transcript/tool messages, including failed or over-broad prior SQL. A later clarification can therefore inherit the metric/window but still anchor to the wrong or unresolved exercise.
 
-## Follow-up tickets suggested by this evidence
+## Follow-up scope suggested by the baseline
 
-These are intentionally not implemented here:
-
-- Add a pre-query exercise disambiguation/canonical-resolution instruction and preserve the original metric/window when the user supplies the variant.
-- Make live `exercise_aliases` resolution authoritative for suggestions and avoid static muscle/fuzzy fallbacks that return unrelated exercises.
-- Consider storing a compact structured exercise-intent object alongside conversation messages, or otherwise test that the second turn reuses the original metric/window after resolving the variant.
-
-## Source anchors inspected
-
-- `app/api/gym-chat/route.ts`: `buildSystemPrompt()`, `extractLatestUserQuestion()`, `buildConversationMessages()`, `normalizeConversationState()`, and zero-row suggestion wiring.
-- `lib/gym-chat/catalog.ts`: `gym_lifts_v`, `exercises`, and `exercise_aliases` catalog descriptions and cache loading.
-- `lib/gym-chat/response-utils.ts`: `suggestExerciseNames()` static exact/partial/fuzzy/muscle fallback.
-- `lib/gym-chat/llm.ts`: `resolveModel()` and the tool-call conversation loop.
+Future tickets should separately cover: database-backed canonical/alias resolution before exercise-filtered analysis; a disambiguation rule for multiple canonical matches; structured retention of pending metric/window/comparison intent across clarification turns; and regression automation around this document's request contract. This ticket intentionally implements none of those changes.
