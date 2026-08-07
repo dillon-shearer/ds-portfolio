@@ -6,8 +6,12 @@ import { createClient, createPool } from '@vercel/postgres'
 import {
   getCatalogContext,
   getBodyPartsContext,
+  getGymExerciseCatalog,
+  getGymExerciseCatalogContext,
   loadBodyParts,
   loadGymCatalog,
+  loadGymExerciseCatalog,
+  suggestGymExerciseNames,
 } from '@/lib/gym-chat/catalog'
 import { getCapabilitiesContext } from '@/lib/gym-chat/capabilities'
 import { SEMANTIC_HINTS } from '@/lib/gym-chat/semantics'
@@ -16,7 +20,6 @@ import {
   QUERY_TIMEOUT_MS,
   validateAndRewriteSql,
 } from '@/lib/gym-chat/sql-policy'
-import { suggestExerciseNames } from '@/lib/gym-chat/response-utils'
 import {
   GYM_CHAT_EXERCISE_INTENT_CONTRACT,
   runGymChatConversation,
@@ -148,6 +151,7 @@ const executeQuery = async (client: Queryable, sql: string, params: unknown[]) =
 
 const buildSystemPrompt = (timezone: string): string => {
   const catalogContext = getCatalogContext()
+  const exerciseCatalogContext = getGymExerciseCatalogContext()
   const capabilities = getCapabilitiesContext()
   const semanticHints = SEMANTIC_HINTS
   const bodyPartsContext = getBodyPartsContext()
@@ -156,6 +160,10 @@ const buildSystemPrompt = (timezone: string): string => {
 
 ## Database Schema
 ${catalogContext}
+
+## Authoritative Exercise Catalog
+The following active exercises and aliases are loaded from the live exercises and exercise_aliases tables. Treat this list as the only valid source for exercise identity. Match the user's full phrase, including qualifiers such as incline, barbell, dumbbell, machine, seated, or standing, to one exact canonical exercise before forming a metric query. Use the listed exercise_id or canonical name in the query; never substitute a static workout-library name.
+${exerciseCatalogContext}
 
 ## Metric Definitions & Data Scope
 ${capabilities}
@@ -458,7 +466,9 @@ export async function POST(req: Request) {
     const timezone = payload.client?.timezone ?? 'UTC'
 
     sendStatus('catalog', 'Loading workout catalog...')
-    await Promise.all([loadGymCatalog(), loadBodyParts()]).catch(() => undefined)
+    await Promise.all([loadGymCatalog(), loadGymExerciseCatalog(), loadBodyParts()]).catch(
+      () => undefined,
+    )
 
     const systemPrompt = buildSystemPrompt(timezone)
     const conversationState = normalizeConversationState(payload.conversationState)
@@ -480,7 +490,7 @@ export async function POST(req: Request) {
                 if (typeof param !== 'string' || param.length < 2) continue
                 const stripped = param.replace(/%/g, '').trim()
                 if (stripped.length < 2) continue
-                const suggestions = suggestExerciseNames(stripped)
+                const suggestions = suggestGymExerciseNames(stripped, getGymExerciseCatalog())
                 if (suggestions.length) {
                   result.exerciseSuggestions = suggestions
                   break

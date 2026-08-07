@@ -102,8 +102,8 @@ const SEMANTIC_MAPPINGS = [
     sql: 'Run multiple queries: (1) WITH sets AS (SELECT COALESCE(date::date, timestamp::date) AS session_date FROM gym_lifts) SELECT COUNT(DISTINCT session_date) AS session_count FROM sets; (2) SELECT COUNT(*) AS total_sets, SUM(weight * reps) AS total_volume FROM gym_lifts; (3) SELECT exercise, COUNT(*) AS set_count FROM gym_lifts GROUP BY exercise ORDER BY set_count DESC LIMIT 5. Note: queries (2) and (3) access gym_lifts directly only because they do not reference session_date or performed_at aliases - direct gym_lifts access is only valid when no date column alias is needed. Present these as a holistic training snapshot.',
   },
   {
-    phrase: 'exercise name lookup / fuzzy search',
-    sql: "Query the canonical catalog first: SELECT name FROM exercises WHERE name ILIKE $1. Fall back to aliases: SELECT e.name FROM exercise_aliases a JOIN exercises e ON e.id = a.exercise_id WHERE a.alias ILIKE $1. Use broad wildcards (e.g., '%bench%').",
+    phrase: 'exercise name lookup / alias resolution',
+    sql: 'Use the authoritative exercise catalog and alias list supplied in the system prompt to bind an exact variant before any metric query. After the user selects a canonical variant, filter gym_lifts_v by exercise_id = $1 or canonical_name = $1. Do not use broad ILIKE/substring matching or static exercise-library suggestions as a substitute for disambiguation.',
   },
 ] as const
 
