@@ -17,7 +17,7 @@
           "selector": "[data-ui-ready='gym-dashboard']",
           "includes": "Gym Tracker"
         },
-        { "kind": "text", "selector": "[data-ui-ready='gym-dashboard']", "includes": "5,940" },
+        { "kind": "text", "selector": "[data-ui-ready='gym-dashboard']", "includes": "7,340" },
         {
           "kind": "text",
           "selector": "[data-ui-ready='gym-dashboard']",
@@ -72,6 +72,24 @@
       "actions": [
         { "action": "click", "selector": "button:has-text('Day')" },
         { "action": "wait", "selector": "text=Last 7 Days" },
+        {
+          "action": "assert",
+          "kind": "eval",
+          "expression": "Array.from(document.querySelectorAll('[data-exercise-section]')).map((element) => element.getAttribute('data-exercise-section')).join(',')",
+          "equals": "bench press,cable row"
+        },
+        {
+          "action": "assert",
+          "kind": "count",
+          "selector": "[data-exercise-section='bench press']",
+          "equals": 1
+        },
+        {
+          "action": "assert",
+          "kind": "eval",
+          "expression": "Array.from(document.querySelectorAll('[data-exercise-section=\\\"bench press\\\"] tbody tr')).map((row) => row.querySelectorAll('td')[2]?.textContent?.trim()).join(',')",
+          "equals": "8,7"
+        },
         { "action": "tabs", "count": 3 },
         { "action": "click", "selector": "button:has-text('Download')" },
         { "action": "click", "selector": "button:has-text('JSON')" },

@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import type { GymLift } from '../../actions'
 import { estimated1RM } from '@/lib/gym/metrics'
+import { groupExerciseSets, normalizeExerciseName } from '@/lib/gym/day-view'
 import styles from './ExerciseTable.module.css'
 
 type Props = {
@@ -10,31 +11,15 @@ type Props = {
 
 export default function ExerciseTable({ dayLifts, allLifts }: Props) {
   const groups = useMemo(() => {
-    const seq = [...dayLifts].sort((a, b) => {
-      const ta = new Date(a.timestamp).getTime() || 0
-      const tb = new Date(b.timestamp).getTime() || 0
-      if (ta !== tb) return ta - tb
-      if (a.exercise !== b.exercise) return a.exercise.localeCompare(b.exercise)
-      return a.setNumber - b.setNumber
-    })
-
-    const result: { exercise: string; sets: GymLift[] }[] = []
-    for (const l of seq) {
-      const last = result[result.length - 1]
-      if (last && last.exercise === l.exercise) {
-        last.sets.push(l)
-      } else {
-        result.push({ exercise: l.exercise, sets: [l] })
-      }
-    }
-    return result
+    return groupExerciseSets(dayLifts)
   }, [dayLifts])
 
   const lifetimePR = useMemo(() => {
     const pr: Record<string, number> = {}
     for (const l of allLifts) {
       const est = estimated1RM(l.weight, l.reps)
-      if (!pr[l.exercise] || est > pr[l.exercise]) pr[l.exercise] = est
+      const exercise = normalizeExerciseName(l.exercise)
+      if (!pr[exercise] || est > pr[exercise]) pr[exercise] = est
     }
     return pr
   }, [allLifts])
@@ -55,8 +40,12 @@ export default function ExerciseTable({ dayLifts, allLifts }: Props) {
 
   return (
     <div className={styles.container}>
-      {groups.map(({ exercise, sets }) => (
-        <div key={exercise} className={styles.group}>
+      {groups.map(({ exercise, normalizedExercise, sets }) => (
+        <div
+          key={normalizedExercise}
+          className={styles.group}
+          data-exercise-section={normalizedExercise}
+        >
           <p className={styles.exerciseName}>{exercise}</p>
           <div className={styles.tableWrapper}>
             <table className={styles.table}>
@@ -72,7 +61,7 @@ export default function ExerciseTable({ dayLifts, allLifts }: Props) {
               <tbody>
                 {sets.map((s, i) => {
                   const est1rm = estimated1RM(s.weight, s.reps)
-                  const pr = lifetimePR[s.exercise] || 0
+                  const pr = lifetimePR[normalizeExerciseName(s.exercise)] || 0
                   const pctPR = pr > 0 ? Math.round((est1rm / pr) * 100) : null
                   const isNearMax = pctPR !== null && pctPR >= 90
                   return (

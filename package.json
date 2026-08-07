@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint .",
     "test:gym": "node --experimental-strip-types --test scripts/test-gym-metrics.mjs",
+    "test:gym-day-view": "node --experimental-strip-types --test scripts/test-gym-day-view.mjs",
     "check:ascii": "node scripts/check-ascii.mjs",
     "format": "prettier --write ."
   },
