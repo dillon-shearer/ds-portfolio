@@ -370,7 +370,7 @@ export default function GymDashboard({ lifts }: Props) {
                       disabled={mode === 'day' && !!datasetMinDate && dayDate <= datasetMinDate}
                       aria-label={mode === 'day' ? 'Previous day' : 'Previous year'}
                     >
-                      &larr;
+                      PREV
                     </button>
                     <span className={styles.dateLabel}>
                       {mode === 'day' ? formatLongDate(dayDate) : year}
@@ -386,7 +386,7 @@ export default function GymDashboard({ lifts }: Props) {
                       disabled={mode === 'day' ? dayDate >= todayUTCKey() : year >= currentYear}
                       aria-label={mode === 'day' ? 'Next day' : 'Next year'}
                     >
-                      &rarr;
+                      NEXT
                     </button>
                   </div>
                 )}
@@ -438,7 +438,7 @@ export default function GymDashboard({ lifts }: Props) {
                       </div>
                     </div>
                     <div className={styles.sidebar}>
-                      <DashboardPanel eyebrow="Muscles Trained">
+                      <DashboardPanel eyebrow="Muscles Trained" className={styles.bodyDiagramPanel}>
                         <BodyDiagramClient stats={bodyStats} splitCounts={splitCountsPPL} />
                       </DashboardPanel>
                     </div>

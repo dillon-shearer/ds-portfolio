@@ -130,9 +130,10 @@ next.config.ts. Do not restore.
       states, aria-pressed
 - [ ] KPI row: Total Volume, Exercises/Sets/Reps, Top Body Part, Near-Max Sets
       (>= 90% lifetime 1RM)
-- [ ] Cumulative Volume by Body Part: area chart, gradient stroke/fill with
-      color stops switching at body-part changes, per-part dots, tooltip,
-      inline legend
+- [DECIDED: flat treatment] Cumulative Volume by Body Part: area chart with a
+      single flat stroke/fill, per-part dots, tooltip, and inline legend. The
+      requested gradient is omitted because the locked Studio Ledger contract
+      bans gradients; body-part color remains in the dots and legend.
 - [ ] Muscle Volume donut: inner 55 / outer 80, tooltip name/lbs/pct/sets,
       empty "No mapped exercises"
 - [ ] Sets table: grouped by exercise chronologically, Set/Weight/Reps/

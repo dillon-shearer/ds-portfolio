@@ -170,6 +170,22 @@
   top: var(--space-5);
 }
 
+.bodyDiagramPanel {
+  min-height: 518px;
+}
+
+@media (max-width: 1080px) {
+  .bodyDiagramPanel {
+    min-height: 438px;
+  }
+}
+
+@media (max-width: 720px) {
+  .bodyDiagramPanel {
+    min-height: 378px;
+  }
+}
+
 .twoCol {
   display: grid;
   grid-template-columns: 1fr 1fr;
