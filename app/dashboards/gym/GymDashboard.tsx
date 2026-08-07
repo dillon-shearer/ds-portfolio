@@ -4,7 +4,7 @@ import { useMemo, useState, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import type { GymLift } from './actions'
 import { bodyPartForExercise, type BodyPart } from '@/lib/gym/body-parts'
-import { epley1RM, setVolume } from '@/lib/gym/metrics'
+import { maxEstimated1RM, setVolume } from '@/lib/gym/metrics'
 import DashboardShell from '@/components/dashboard/DashboardShell'
 import DashboardPanel from '@/components/dashboard/DashboardPanel'
 import StatWidget from '@/components/dashboard/StatWidget'
@@ -209,14 +209,12 @@ export default function GymDashboard({ lifts }: Props) {
     const byEx = groupBy(filtered, (l) => l.exercise)
     return Array.from(byEx.entries()).map(([exercise, sets]) => {
       let bestWeight = 0
-      let best1RM = 0
       let bestSet: GymLift | undefined
+      const best1RM = maxEstimated1RM(sets)
       for (const s of sets) {
-        const oneRM = Math.round(epley1RM(s.weight, s.reps))
         if (!bestSet) {
           bestSet = s
           bestWeight = s.weight
-          best1RM = oneRM
           continue
         }
         const better =
@@ -226,7 +224,6 @@ export default function GymDashboard({ lifts }: Props) {
         if (better) {
           bestSet = s
           bestWeight = s.weight
-          best1RM = oneRM
         }
       }
       return {

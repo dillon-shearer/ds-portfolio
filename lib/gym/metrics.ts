@@ -3,8 +3,19 @@ import type { GymLift } from '@/app/dashboards/gym/actions'
 // Volume = weight x reps per set (unilateral sets record one side; no doubling applied)
 export const setVolume = (weight: number, reps: number) => weight * reps
 
-// Epley estimated 1RM. Unrounded; display sites apply Math.round.
+// Epley estimated 1RM. Keep the raw formula available for calculations that
+// need precision; user-facing metrics use estimated1RM below.
 export const epley1RM = (weight: number, reps: number) => weight * (1 + reps / 30)
+export const estimated1RM = (weight: number, reps: number) => Math.round(epley1RM(weight, reps))
+
+export const maxEstimated1RM = (lifts: Array<Pick<GymLift, 'weight' | 'reps'>>) =>
+  lifts.reduce((best, lift) => Math.max(best, estimated1RM(lift.weight, lift.reps)), 0)
+
+export const parseWeightInput = (value: string) => parseFloat(value) || 0
+
+// PostgreSQL expression matching estimated1RM above and the capability glossary.
+export const roundedEpleySql = (weightExpr: string, repsExpr: string) =>
+  `ROUND(${weightExpr} * (1 + ${repsExpr} / 30.0))`
 
 export type OutRow = GymLift & {
   volume: number
@@ -33,7 +44,7 @@ export function enrich(lifts: GymLift[]): OutRow[] {
     const month = l.date.slice(0, 7)
     const year = parseInt(l.date.slice(0, 4), 10)
     const volume = setVolume(l.weight, l.reps)
-    const oneRM_est = Math.round(epley1RM(l.weight, l.reps))
+    const oneRM_est = estimated1RM(l.weight, l.reps)
     return { ...l, volume, oneRM_est, day_of_week: dow, iso_week: iso, month, year }
   })
 }

@@ -1,4 +1,5 @@
 import { getCatalogTables } from './catalog'
+import { roundedEpleySql } from '@/lib/gym/metrics'
 
 export type SetsBaseCte = {
   alias: string
@@ -45,7 +46,7 @@ export const buildSetsBaseCte = (alias = 'sets'): SetsBaseCte => {
   const setNumberSelect = setNumberExpr ? `, ${setNumberExpr} AS set_number` : ''
   const equipmentSelect = equipmentExpr ? `, ${equipmentExpr} AS equipment` : ''
   const unilateralSelect = unilateralExpr ? `, ${unilateralExpr} AS is_unilateral` : ''
-  const est1rmExpr = 'gl.weight * (1 + gl.reps / 30.0)'
+  const est1rmExpr = roundedEpleySql('gl.weight', 'gl.reps')
   const volumeExpr = 'gl.weight * gl.reps'
   const cte =
     `${alias} AS (` +

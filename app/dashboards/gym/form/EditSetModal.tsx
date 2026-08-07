@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import type { GymLift } from '@/app/dashboards/gym/actions'
+import { parseWeightInput } from '@/lib/gym/metrics'
 import styles from './EditSetModal.module.css'
 
 export const EQUIPMENT_OPTIONS = [
@@ -121,7 +122,7 @@ export default function EditSetModal({
                 id="edit-set-weight"
                 type="number"
                 value={lift.weight}
-                onChange={(e) => onChange({ ...lift, weight: parseInt(e.target.value, 10) || 0 })}
+                onChange={(e) => onChange({ ...lift, weight: parseWeightInput(e.target.value) })}
                 className={styles.input}
                 min="0"
                 max="1500"

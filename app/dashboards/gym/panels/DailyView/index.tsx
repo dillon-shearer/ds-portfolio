@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import type { GymLift } from '../../actions'
 import { bodyPartForExercise, type BodyPart } from '@/lib/gym/body-parts'
-import { epley1RM, setVolume } from '@/lib/gym/metrics'
+import { estimated1RM, setVolume } from '@/lib/gym/metrics'
 import DashboardPanel from '@/components/dashboard/DashboardPanel'
 import StatWidget from '@/components/dashboard/StatWidget'
 import SevenDayStrip from './SevenDayStrip'
@@ -32,12 +32,12 @@ export default function DailyView({ lifts, date, onChangeDate }: Props) {
   const nearMaxSets = useMemo(() => {
     const prMap: Record<string, number> = {}
     for (const l of lifts) {
-      const est = Math.round(epley1RM(l.weight, l.reps))
+      const est = estimated1RM(l.weight, l.reps)
       if (!prMap[l.exercise] || est > prMap[l.exercise]) prMap[l.exercise] = est
     }
     return dayLifts.filter((l) => {
       const best = prMap[l.exercise] || 0
-      const cur = Math.round(epley1RM(l.weight, l.reps))
+      const cur = estimated1RM(l.weight, l.reps)
       return best > 0 && cur / best >= 0.9
     }).length
   }, [dayLifts, lifts])

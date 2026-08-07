@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import type { GymLift } from '../../actions'
-import { epley1RM } from '@/lib/gym/metrics'
+import { estimated1RM } from '@/lib/gym/metrics'
 import styles from './ExerciseTable.module.css'
 
 type Props = {
@@ -33,7 +33,7 @@ export default function ExerciseTable({ dayLifts, allLifts }: Props) {
   const lifetimePR = useMemo(() => {
     const pr: Record<string, number> = {}
     for (const l of allLifts) {
-      const est = Math.round(epley1RM(l.weight, l.reps))
+      const est = estimated1RM(l.weight, l.reps)
       if (!pr[l.exercise] || est > pr[l.exercise]) pr[l.exercise] = est
     }
     return pr
@@ -71,7 +71,7 @@ export default function ExerciseTable({ dayLifts, allLifts }: Props) {
               </thead>
               <tbody>
                 {sets.map((s, i) => {
-                  const est1rm = Math.round(epley1RM(s.weight, s.reps))
+                  const est1rm = estimated1RM(s.weight, s.reps)
                   const pr = lifetimePR[s.exercise] || 0
                   const pctPR = pr > 0 ? Math.round((est1rm / pr) * 100) : null
                   const isNearMax = pctPR !== null && pctPR >= 90
