@@ -18,6 +18,14 @@ export const HERO = {
 
 export const WORK_SECTION_TITLE = 'The work'
 
+export const CAPABILITY_SIGNAL = {
+  title: 'Capability signal',
+  description: 'A deterministic visual trace generated from the four capability records below.',
+  recordLabel: 'records',
+  source: 'Source: The work',
+  mode: 'Mode: Derived',
+}
+
 export const CAPABILITIES: {
   eyebrow: string
   title: string
