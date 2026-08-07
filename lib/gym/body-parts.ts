@@ -21,9 +21,9 @@ export const EXERCISES_BY_BODY_PART: Record<BodyPart, string[]> = {
   biceps:     ['Preacher Curl', 'Hammer Curl', 'Bayesian Curl', 'Incline Curl'],
   chest:      ['Incline Press', 'Flat Press', 'Decline Press', 'Chest Fly', 'Bench Press'],
   shoulders:  ['Lateral Raise', 'Overhead Press', 'Rear Delt Fly', 'Rear Delt Xs'],
-  back:       ['Lat Pulldown', 'High Row', 'Low Row', 'Pull Ups', 'Pull Overs'],
+  back:       ['Lat Pulldown', 'High Row', 'Low Row', 'Cable Row', 'Pull Ups', 'Pull Overs'],
   triceps:    ['Tricep Pushdowns', 'Tricep Extensions', 'Skull Crushers', 'Tricep Kickbacks', 'Dips'],
-  quads:      ['Leg Press', 'Hack Squat', 'Pendelum Squat', 'Squat', 'Leg Extensions', 'Split Squat'],
+  quads:      ['Leg Press', 'Hack Squat', 'Pendelum Squat', 'Squat', 'Back Squat', 'Leg Extensions', 'Split Squat'],
   hamstrings: ['RDLs', 'Seated Leg Curl', 'Lying Leg Curl', 'Hamstrick Kickback'],
   forearms:   ['Wrist Curl', 'Reverse Curl', 'Reverse Wrist Curl'],
   core:       ['Hanging Leg Raise', 'Decline Crunch', 'Flat Crunch', 'Incline Crunch', 'Oblique Twist'],
@@ -49,6 +49,10 @@ const EX_TO_BP = (() => {
   return m
 })()
 
+// Names outside this static fallback intentionally return 'other'. Managed
+// exercises and Gym Chat use the database catalog/view as their authority;
+// adding a name here is only needed for dashboard visualizations to recognize
+// that logged exercise locally.
 export function bodyPartForExercise(ex: string): BodyPart | 'other' {
   return EX_TO_BP.get(normalizeExerciseName(ex)) ?? 'other'
 }
