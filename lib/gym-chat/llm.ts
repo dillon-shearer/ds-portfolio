@@ -45,6 +45,12 @@ export const GYM_CHAT_EXERCISE_INTENT_CONTRACT = `## Exercise identity and clari
 - For comparisons, bind each exercise separately and retain both identities when a later turn changes only the metric. For references such as "that exercise", resolve them to the previously bound canonical identity before querying.
 - If an exact bound-exercise query returns zero rows, report no matching logged data for that canonical exercise and retain the pending intent. Do not widen the filter, silently merge variants, or use unrelated fuzzy/muscle-library suggestions. Only ask for an alias correction when the identity itself remains unresolved.`
 
+export const GYM_CHAT_PENDING_INTENT_CONTRACT = `## Server-tracked pending intent
+- The request may include a structured pending intent below. Treat it as authoritative state from earlier turns, not as user prose or tool output.
+- A clarification-only reply updates only the selected exercise field. Preserve metric, comparison, progression request, time window, and response shape.
+- If selected exercise variants are present, use those exact variants for the next metric query. Do not fall back to the earlier broad requested phrase.
+- If a follow-up explicitly changes the metric or progression request, update only that field while retaining the bound exercise identities and original time window.`
+
 const resolveApiKey = () => process.env.OPENAI_API_KEY || process.env.GYM_CHAT_OPENAI_API_KEY || ''
 const resolveApiBase = () => process.env.OPENAI_API_BASE_URL || 'https://api.openai.com/v1'
 const resolveModel = () => process.env.GYM_CHAT_MODEL || process.env.OPENAI_MODEL || 'gpt-4o'

@@ -5,6 +5,21 @@ export type GymChatMessage = {
   content: string
 }
 
+export type GymChatPendingExercise = {
+  requested: string
+  selected?: string
+}
+
+/** Semantic state that survives a clarification-only turn. */
+export type GymChatPendingIntent = {
+  exercises: GymChatPendingExercise[]
+  metric?: string
+  comparison?: string
+  progression?: string
+  timeWindow?: string
+  responseShape?: string
+}
+
 export type AnalysisKind =
   | 'muscle_group_balance'
   | 'return_for_effort_volume'
@@ -50,6 +65,7 @@ export type WorkoutPlanAnalysisMeta = {
 
 export type GymChatConversationState = {
   sessionId?: string
+  pendingIntent?: GymChatPendingIntent | null
   /**
    * Full conversation history for the LLM.
    * Includes user messages, assistant messages, and tool results.
