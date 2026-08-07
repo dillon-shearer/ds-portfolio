@@ -4,6 +4,8 @@ import styles from './Footer.module.css'
 
 export function Footer() {
   const year = new Date().getFullYear()
+  const buildSha = process.env.NEXT_PUBLIC_BUILD_SHA
+  const buildDate = process.env.NEXT_PUBLIC_BUILD_DATE
 
   return (
     <footer className={styles.footer}>
@@ -87,6 +89,14 @@ export function Footer() {
           </Link>
           <span aria-hidden="true">/</span>
           <span>Built with Next.js</span>
+          {buildSha ? (
+            <>
+              <span aria-hidden="true">/</span>
+              <span>{buildSha}</span>
+            </>
+          ) : null}
+          <span aria-hidden="true">/</span>
+          <span>{buildDate}</span>
         </div>
       </div>
     </footer>
