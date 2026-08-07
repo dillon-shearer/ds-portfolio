@@ -1,0 +1,37 @@
+{
+  "name": "colophon",
+  "route": "/colophon",
+  "reducedMotion": true,
+  "viewports": [
+    { "width": 390, "height": 844 },
+    { "width": 768, "height": 1024 },
+    { "width": 1440, "height": 1000 }
+  ],
+  "states": [
+    {
+      "name": "loaded",
+      "ready": "h1",
+      "assertions": [
+        {
+          "kind": "text",
+          "selector": "h1",
+          "includes": "How this site is built"
+        },
+        {
+          "kind": "visible",
+          "selector": "a[href='https://github.com/dillon-shearer/ds-portfolio']"
+        },
+        {
+          "kind": "text",
+          "selector": "body",
+          "includes": "Next.js 15 App Router"
+        },
+        {
+          "kind": "eval",
+          "expression": "matchMedia('(prefers-reduced-motion: reduce)').matches",
+          "equals": true
+        }
+      ]
+    }
+  ]
+}
