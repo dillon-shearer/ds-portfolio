@@ -37,6 +37,14 @@ export type GymChatLlmResult = {
   followUps?: string[]
 }
 
+export const GYM_CHAT_EXERCISE_INTENT_CONTRACT = `## Exercise identity and clarification contract
+- Treat an exercise phrase as ambiguous when it could refer to more than one canonical exercise or alias. Broad labels such as "incline press", "incline bench press", and "barbell incline bench press" must not be treated as one exact exercise unless the conversation already established the intended variant.
+- Before any metric query, bind every exercise operand to one exact canonical exercise. If the phrase is ambiguous or the alias does not identify one canonical exercise, ask one short targeted clarification (for example, barbell, dumbbell, or machine) and do not call execute_gym_query yet. A clarification question is the correct response; do not combine variants to avoid asking.
+- Never use a broad canonical_name ILIKE/substring filter as a substitute for disambiguation. Do not issue a metric query for an unresolved raw phrase, even if it would return rows. Exact canonical_name or exercise_id filters are allowed only after the exercise identity is bound.
+- Keep a pending analytical intent across a clarification turn: { exercise(s), metric, time window, comparison, and response shape }. A reply that selects a variant fills only the unresolved exercise field. Preserve the original metric, time window, comparison operands, and requested response shape unless the user explicitly changes one of them. Do not reinterpret a variant-only reply as a new standalone question.
+- For comparisons, bind each exercise separately and retain both identities when a later turn changes only the metric. For references such as "that exercise", resolve them to the previously bound canonical identity before querying.
+- If an exact bound-exercise query returns zero rows, report no matching logged data for that canonical exercise and retain the pending intent. Do not widen the filter, silently merge variants, or use unrelated fuzzy/muscle-library suggestions. Only ask for an alias correction when the identity itself remains unresolved.`
+
 const resolveApiKey = () => process.env.OPENAI_API_KEY || process.env.GYM_CHAT_OPENAI_API_KEY || ''
 const resolveApiBase = () => process.env.OPENAI_API_BASE_URL || 'https://api.openai.com/v1'
 const resolveModel = () => process.env.GYM_CHAT_MODEL || process.env.OPENAI_MODEL || 'gpt-4o'

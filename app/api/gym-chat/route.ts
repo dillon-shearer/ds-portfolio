@@ -18,6 +18,7 @@ import {
 } from '@/lib/gym-chat/sql-policy'
 import { suggestExerciseNames } from '@/lib/gym-chat/response-utils'
 import {
+  GYM_CHAT_EXERCISE_INTENT_CONTRACT,
   runGymChatConversation,
   isLlmRequestError,
   type OpenAIMessage,
@@ -42,7 +43,7 @@ const EXECUTE_GYM_QUERY_TOOL: OpenAITool = {
   function: {
     name: 'execute_gym_query',
     description:
-      "Execute one or more read-only SQL queries against the gym workout database. Returns query results with rows of data. Use this whenever you need actual workout data to answer the user's question.",
+      "Execute one or more read-only SQL queries against the gym workout database. Returns query results with rows of data. Use this whenever you need actual workout data to answer the user's question, but only after every exercise identity is bound to an exact canonical variant under the exercise clarification contract.",
     parameters: {
       type: 'object',
       properties: {
@@ -163,13 +164,15 @@ ${capabilities}
 ${semanticHints}
 ${bodyPartsContext ? `\n## Available Body Part Values\n${bodyPartsContext}` : ''}
 
+${GYM_CHAT_EXERCISE_INTENT_CONTRACT}
+
 ## Tool Results
 When you call execute_gym_query, the tool returns:
 { "queries": [ { "id": "q1", "purpose": "...", "rowCount": N, "rows": [...], "error": null | "..." } ] }
 
 - rows contains up to 20 preview rows; rowCount is the total.
 - Never cite a query with a non-null error.
-- If rowCount is 0 and the query filtered on an exercise name, run a follow-up to discover the canonical name: SELECT name FROM exercises WHERE name ILIKE $1 (or query exercise_aliases.alias). Use a broad wildcard like '%bench%'. If matches are found, list them and ask which was intended.
+- A zero-row metric query is not permission to broaden an exercise filter. If the exercise identity was unresolved, you should have asked for clarification before calling the tool; if the identity was bound exactly, report no logged data for that canonical exercise and keep the original metric and time window.
 
 ## SQL Rules
 - SELECT only. No INSERT, UPDATE, DELETE, DROP, ALTER, CREATE, UNION, VALUES, or recursive CTEs.
