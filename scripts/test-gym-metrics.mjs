@@ -46,13 +46,13 @@ test('dashboard/download metric parity and unilateral row semantics stay aligned
 
   const fixture = gymFixtureLifts()
   const unilateral = fixture.filter((candidate) => candidate.isUnilateral === true)
-  assert.equal(fixture.length, 5)
+  assert.equal(fixture.length, 6)
   assert.equal(unilateral.length, 1)
   assert.equal(unilateral[0].exercise, 'Split Squat')
   assert.equal(unilateral[0].weight * unilateral[0].reps, 640)
   assert.equal(
     fixture.reduce((total, candidate) => total + setVolume(candidate.weight, candidate.reps), 0),
-    5940,
+    7340,
   )
 
   const fixtureExport = enrich(fixture)
