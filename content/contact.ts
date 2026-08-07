@@ -6,7 +6,7 @@ export const CONTACT_PAGE = {
 } as const
 
 export const LEAD =
-  "I'd love to hear from you. Send me a message and I'll respond as soon as possible."
+  "If you're hiring for data work or want to talk about a project, send a message. It goes straight to my inbox."
 
 export const ELSEWHERE: {
   label: string

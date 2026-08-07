@@ -52,3 +52,7 @@ next-env.d.ts
 
 # Local browser evidence and its isolated Playwright support install.
 /.ui-evidence/
+
+# Local task-board and test artifacts.
+/data/
+/brain/
