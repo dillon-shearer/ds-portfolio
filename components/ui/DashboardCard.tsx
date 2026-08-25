@@ -6,7 +6,7 @@ interface DashboardCardProps {
   tool: string
   title: string
   description: string
-  href: string
+  href?: string
   longDescription?: string
   tech?: string[]
   stats?: string
@@ -31,9 +31,22 @@ export function DashboardCard({
       </span>
       <div className={styles.content}>
         <h2 className={styles.title}>
-          <Link href={href} className={styles.titleLink}>
-            {title}
-          </Link>
+          {!href ? (
+            title
+          ) : href.startsWith('http') ? (
+            <a
+              href={href}
+              className={styles.titleLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {title}
+            </a>
+          ) : (
+            <Link href={href} className={styles.titleLink}>
+              {title}
+            </Link>
+          )}
         </h2>
         <p className={styles.tool}>{tool}</p>
         <p className={styles.description}>{description}</p>
