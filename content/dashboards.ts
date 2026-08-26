@@ -33,7 +33,7 @@ export const DASHBOARDS: {
     title: 'Variant Report Tool',
     description:
       'Web app for exploring whole genome sequencing variant data in an ALS research data portal, running in production on Azure.',
-    href: 'https://neuromine-variant-reports-prod.azurewebsites.net',
+    href: 'https://neuromine-variant-reports-prod.azurewebsites.net/home',
     longDescription:
       'Generates multi-sheet Excel variant reports for a chosen gene list and participant set, runs genotype-first lookups that turn a locus or rsID into the participants carrying that variant, and plots cohort variants side by side in an embedded igv.js genome browser. Access is gated by a portal handle, so no genomic data is reachable without one.',
     tech: ['Python', 'Panel', 'Azure SQL', 'Azure Blob Storage', 'igv.js', 'Azure App Service'],
