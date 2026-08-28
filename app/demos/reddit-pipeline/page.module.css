@@ -1,0 +1,166 @@
+.description {
+  max-width: 68ch;
+  margin-top: var(--space-7);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  color: var(--color-ink-2);
+}
+
+.rule {
+  margin-top: var(--space-7);
+  border: 0;
+  border-top: var(--rule-hairline) solid var(--color-rule);
+}
+
+.carousel {
+  margin-top: var(--space-7);
+}
+
+.sectionLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  line-height: var(--leading-snug);
+  color: var(--color-ink-3);
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.navArrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-ink-3);
+  background: var(--color-rule-soft);
+  border: 0;
+  border-radius: var(--radius-sm);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.navArrow:hover:not(:disabled) {
+  color: var(--color-ink-2);
+}
+
+.navArrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.scroller {
+  display: flex;
+  gap: var(--space-4);
+  list-style: none;
+  margin-top: var(--space-3);
+  /* 2px keeps a focused child's outline at 2px offset out of the overflow clip. */
+  padding: 2px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+}
+
+.item {
+  flex: 0 0 100%;
+  min-width: 0;
+  scroll-snap-align: start;
+  background: var(--color-rule-soft);
+}
+
+.banner {
+  display: block;
+  width: 100%;
+  height: 96px;
+  object-fit: cover;
+}
+
+.itemBody {
+  padding: var(--space-5);
+}
+
+.itemHead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.logo {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+}
+
+.channelName {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  color: var(--color-ink);
+}
+
+.subreddit {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-ink-3);
+  margin-top: var(--space-3);
+}
+
+.profiles {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin-top: var(--space-4);
+}
+
+.profiles li:not(:last-child)::after {
+  content: ' / ';
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-ink-3);
+  white-space: pre;
+}
+
+.profileLink {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: var(--rule-hairline);
+  text-underline-offset: 3px;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.profileLink:hover {
+  color: var(--color-accent-hover);
+}
+
+@media (min-width: 720px) {
+  .item {
+    flex: 0 0 calc(50% - var(--space-4) / 2);
+  }
+
+  .banner {
+    height: 120px;
+  }
+}
+
+@media (min-width: 1080px) {
+  .item {
+    flex: 0 0 calc((100% - var(--space-4) * 2) / 3);
+  }
+}

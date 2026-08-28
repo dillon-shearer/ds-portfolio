@@ -9,6 +9,7 @@ const routes = [
   '/contact',
   '/demos',
   '/demos/gym',
+  '/demos/reddit-pipeline',
   '/work/gym-tracker',
   '/rss',
 ]

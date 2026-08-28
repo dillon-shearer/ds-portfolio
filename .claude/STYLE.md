@@ -106,7 +106,8 @@ values exactly.
 
 ## Component register
 
-The eight public UI exports live in `components/ui/index.ts`.
+The eight public UI exports live in `components/ui/index.ts`. Route-local layout
+primitives are listed after them and are not exported from that barrel.
 
 | Export | File | Use |
 | --- | --- | --- |
@@ -118,10 +119,12 @@ The eight public UI exports live in `components/ui/index.ts`.
 | `Input` | `Input.tsx` | Contact-form input and textarea fields |
 | `PageHeader` | `PageHeader.tsx` | Page-top eyebrow, title, lead, and optional rule |
 | `DashboardCard` | `DashboardCard.tsx` | Numbered dashboard index rows |
+| Channel card | `app/demos/reddit-pipeline/ChannelCarousel.tsx` | Route-local layout primitive: a card carrying a full-bleed banner image, a square logo, a name, and outbound links. Not a shared export; copy the pattern rather than reaching for it |
 
 - Buttons are rectangular, at most 2px radius, and use mono uppercase xs labels.
 - Prose links use a 1px underline and change to accent on hover.
 - Index rows use a mono number, display title, sans description, mono tags, an optional mono stats line, and a 1px rule.
+- Image-bearing cards keep the artwork square or full-bleed with no radius above 2px and no shadow. Banners crop with `object-fit: cover` at a capped height so a card never becomes mostly picture at 320px. Every image is a `next/image` with explicit `width` and `height`, and a logo that repeats an adjacent name takes `alt=""`.
 - Forms use `--color-paper-2`, a 1px `--color-rule` border, 2px radius, and visible accent focus.
 - Tables use mono numerals, right-aligned numeric columns, and hairline row rules.
 
