@@ -1,4 +1,4 @@
-import type { GymLift } from '@/app/dashboards/gym/actions'
+import type { GymLift } from '@/app/demos/gym/actions'
 
 // Volume = weight x reps per set (unilateral sets record one side; no doubling applied)
 export const setVolume = (weight: number, reps: number) => weight * reps

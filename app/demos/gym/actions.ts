@@ -39,7 +39,7 @@ const DAYTAG_DEFAULTS_SERVER: Record<string, string[]> = {
   'leg day': ['quads', 'hamstrings', 'hips', 'glutes', 'calves'],
 }
 
-const DASHBOARD_PATH = '/dashboards/gym'
+const DASHBOARD_PATH = '/demos/gym'
 
 /** Postgres text[] literal from string[], or null */
 function toPgTextArrayLiteral(arr: string[] | null | undefined): string | null {

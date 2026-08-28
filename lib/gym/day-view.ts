@@ -1,4 +1,4 @@
-import type { GymLift } from '@/app/dashboards/gym/actions'
+import type { GymLift } from '@/app/demos/gym/actions'
 
 export type ExerciseSetGroup = {
   exercise: string

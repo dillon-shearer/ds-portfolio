@@ -86,7 +86,7 @@ export default function GymTrackerCaseStudyPage() {
           <Link className={styles.relatedLink} href={content.dashboardLinkHref}>
             {content.dashboardLinkLabel}
           </Link>
-          <Link className={styles.relatedLink} href="/dashboards">
+          <Link className={styles.relatedLink} href="/demos">
             {content.backToDashboardsLabel}
           </Link>
         </nav>

@@ -47,9 +47,9 @@ styles/          tokens.css only - all other styles are CSS Modules co-located w
 | `/` | Home |
 | `/about` | Bio, resumes, certifications |
 | `/contact` | Contact form (Resend API) |
-| `/dashboards` | Dashboard list |
-| `/dashboards/coming-soon` | Placeholder for unhosted dashboards |
-| `/dashboards/gym` | Gym tracker dashboard (analytics, log workout, AI chat) |
+| `/demos` | Demos list (dashboards and tools) |
+| `/demos/coming-soon` | Placeholder for unhosted dashboards |
+| `/demos/gym` | Gym tracker dashboard (analytics, log workout, AI chat) |
 | `/rss` | RSS feed |
 
 ## Gotchas
@@ -63,7 +63,7 @@ styles/          tokens.css only - all other styles are CSS Modules co-located w
 - **R3F Canvas height:** `height: 100%` on a Canvas requires the parent to have explicit `height:`, not just `min-height:` - with only `min-height` the canvas renders at 0px
 - **R3F rotation:** never use both a `useFrame` spin group AND `OrbitControls autoRotate` - they conflict and visually cancel; use only OrbitControls
 - **R3F Environment (drei):** loads HDRI from CDN and can cause WebGL context instability; use directional lights only for simple scenes
-- **R3F setClearColor:** takes a hardcoded hex string, not a CSS variable. It must equal `--color-rule-soft` (currently `#F1EFEA`). If that token changes, update `NA_COLOR` and `gl.setClearColor` in `app/dashboards/gym/panels/BodyDiagram.tsx`; an unmatched canvas background creates a visible inner-panel border.
+- **R3F setClearColor:** takes a hardcoded hex string, not a CSS variable. It must equal `--color-rule-soft` (currently `#F1EFEA`). If that token changes, update `NA_COLOR` and `gl.setClearColor` in `app/demos/gym/panels/BodyDiagram.tsx`; an unmatched canvas background creates a visible inner-panel border.
 - **Dashboard panels:** no borders; background `--color-rule-soft`; `--space-4` gap between all panels. `--color-rule-soft` (`#F1EFEA`) is the darker panel color, while `--color-paper` (`#FAFAF8`) is the lighter page background. This inversion is intentional. Do not swap them.
 - **Dashboard control buttons:** inactive time range buttons, Download, inactive tab, Back button (`.navBtn`), and nav arrows (`.navArrow`) all use `background: var(--color-rule-soft)` - same as panels. Do not use `background: none` or `--color-paper-2` for these.
 - **DailyView panel pattern:** `DailyView/index.module.css` uses the same pattern as the main dashboard - `.root { gap: var(--space-4) }`, `.kpiItem { background: var(--color-rule-soft); padding: var(--space-5) }`, no border separators. If you touch the day view, verify these are intact.

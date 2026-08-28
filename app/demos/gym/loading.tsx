@@ -5,7 +5,7 @@ export default function GymLoading() {
   return (
     <div className="page-wrapper--wide" data-ui-ready="gym-loading" data-ui-state="loading">
       <PageHeader
-        eyebrow="Dashboards"
+        eyebrow="Demos"
         title="Gym Tracker"
         lead="Personal training log, volume analytics, and AI coaching."
         rule={false}

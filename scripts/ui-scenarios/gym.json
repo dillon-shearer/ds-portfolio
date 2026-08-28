@@ -1,9 +1,11 @@
 {
   "name": "gym",
-  "route": "/dashboards/gym?__uiState=loaded",
+  "route": "/demos/gym?__uiState=loaded",
   "reducedMotion": true,
   "viewports": [
     { "width": 360, "height": 800 },
+    { "width": 720, "height": 900 },
+    { "width": 1080, "height": 900 },
     { "width": 1440, "height": 1000 }
   ],
   "states": [
@@ -120,13 +122,13 @@
     },
     {
       "name": "empty",
-      "route": "/dashboards/gym?__uiState=empty",
+      "route": "/demos/gym?__uiState=empty",
       "ready": "[data-ui-ready='gym-dashboard'][data-ui-state='empty']",
       "assertions": [{ "kind": "count", "selector": "text=Bench Press", "equals": 0 }]
     },
     {
       "name": "loading",
-      "route": "/dashboards/gym?__uiState=loading",
+      "route": "/demos/gym?__uiState=loading",
       "waitUntil": "commit",
       "ready": "[data-ui-ready='gym-loading']",
       "assertions": [
@@ -140,7 +142,7 @@
     },
     {
       "name": "error",
-      "route": "/dashboards/gym?__uiState=error",
+      "route": "/demos/gym?__uiState=error",
       "ready": "[data-ui-ready='gym-error']",
       "assertions": [{ "kind": "visible", "selector": "[role='alert']" }]
     }

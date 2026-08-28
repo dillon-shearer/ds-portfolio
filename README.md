@@ -39,7 +39,7 @@ edit `content/dashboards.ts`. Navigation, site metadata, and social links live i
 
 ```text
 app/                        Next.js App Router routes and API handlers
-  dashboards/gym/           Gym tracker, forms, charts, and 3D panels
+  demos/gym/                Gym tracker, forms, charts, and 3D panels
   rss/                      RSS feed and feed endpoint
 components/
   ui/                       Shared UI primitive exports

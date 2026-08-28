@@ -10,10 +10,10 @@ export default function DashboardComingSoonPage() {
   return (
     <div className="page-wrapper">
       <div className={styles.content}>
-        <PageHeader eyebrow="Dashboards" title="Coming soon" rule={false} />
+        <PageHeader eyebrow="Demos" title="Coming soon" rule={false} />
         <p className={styles.body}>This dashboard is not yet published. Check back later.</p>
-        <Button href="/dashboards" variant="outline">
-          Back to Dashboards
+        <Button href="/demos" variant="outline">
+          Back to Demos
         </Button>
       </div>
     </div>

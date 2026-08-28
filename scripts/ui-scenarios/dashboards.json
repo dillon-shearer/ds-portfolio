@@ -1,10 +1,12 @@
 {
   "name": "dashboards",
-  "route": "/dashboards?__uiState=loaded",
+  "route": "/demos?__uiState=loaded",
   "reducedMotion": true,
   "viewports": [
     { "width": 390, "height": 700 },
     { "width": 700, "height": 700 },
+    { "width": 720, "height": 900 },
+    { "width": 1080, "height": 900 },
     { "width": 1440, "height": 700 }
   ],
   "states": [
@@ -22,7 +24,7 @@
     },
     {
       "name": "fallback",
-      "route": "/dashboards?__uiState=fallback",
+      "route": "/demos?__uiState=fallback",
       "ready": "[data-dashboard-index]",
       "assertions": [
         { "kind": "visible", "selector": "text=Gym Tracker" },

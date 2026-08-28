@@ -7,7 +7,7 @@ import {
   softDeleteExercise,
   type BodyPartKey,
   type Exercise,
-} from '@/app/dashboards/gym/catalog'
+} from '@/app/demos/gym/catalog'
 import { ALL_BODY_PARTS, type BodyPart } from './BodyPartsSheet'
 import styles from './ExerciseManagerModal.module.css'
 

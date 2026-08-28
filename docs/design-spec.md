@@ -127,7 +127,7 @@ Structure, top to bottom, left-aligned in the wide grid:
 - Links in prose: ink text, 1px underline, accent on hover.
 - Index lists replace card grids: each row = mono index number (01, 02),
   display-font title, sans description, mono tag list. 1px rule between
-  rows. Used on home (The work) and /dashboards.
+  rows. Used on home (The work) and /demos.
 - Tables and data: mono numerals, right-aligned numeric columns, hairline
   row rules.
 - Forms: white (--color-paper-2) inputs, 1px --color-rule border, 2px

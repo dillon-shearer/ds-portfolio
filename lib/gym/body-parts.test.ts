@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert'
 import { test } from 'node:test'
-import { gymFixtureLifts } from '../../app/dashboards/gym/ui-fixtures.ts'
+import { gymFixtureLifts } from '../../app/demos/gym/ui-fixtures.ts'
 import { bodyPartForExercise, type BodyPart } from './body-parts.ts'
 
 // These are the canonical body_part_key values returned by gym_lifts_v for the

@@ -1,4 +1,4 @@
-// app/dashboards/gym/panels/BodyDiagram.tsx
+// app/demos/gym/panels/BodyDiagram.tsx
 'use client'
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'

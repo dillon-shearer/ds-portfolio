@@ -6,7 +6,7 @@ import styles from './page.module.css'
 import { dashboardUiState, GYM_STATS_FIXTURE } from './ui-fixtures'
 
 export const metadata: Metadata = {
-  title: 'Dashboards',
+  title: 'Demos',
   description:
     "Dashboards by Dillon Shearer covering clinical data, reporting workflows, and a personal gym tracker.",
 }
@@ -71,8 +71,8 @@ export default async function DashboardsPage({
   return (
     <div className="page-wrapper--wide">
       <PageHeader
-        eyebrow="Dashboards"
-        title="Dashboards"
+        eyebrow="Demos"
+        title="Demos"
         lead="A collection of data visualizations and analytics dashboards built across tools and domains."
         rule={false}
       />

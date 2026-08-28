@@ -134,24 +134,24 @@ export const GYM_TRACKER_CASE_STUDY = {
     {
       label: 'Gym dashboard chart composition',
       detail: 'Recharts panels and the React Three Fiber body diagram in the dashboard.',
-      href: `${SOCIALS.sourceRepo}/blob/main/app/dashboards/gym/GymDashboard.tsx#L8-L19`,
+      href: `${SOCIALS.sourceRepo}/blob/main/app/demos/gym/GymDashboard.tsx#L8-L19`,
     },
     {
       label: 'Recharts volume chart',
       detail: 'The area chart that turns daily volume into a readable trend.',
-      href: `${SOCIALS.sourceRepo}/blob/main/app/dashboards/gym/panels/VolumeChart.tsx#L1-L5`,
+      href: `${SOCIALS.sourceRepo}/blob/main/app/demos/gym/panels/VolumeChart.tsx#L1-L5`,
     },
     {
       label: 'Three.js body diagram',
       detail: 'The 3D surface that maps training volume onto body parts.',
-      href: `${SOCIALS.sourceRepo}/blob/main/app/dashboards/gym/panels/BodyDiagram.tsx#L1-L8`,
+      href: `${SOCIALS.sourceRepo}/blob/main/app/demos/gym/panels/BodyDiagram.tsx#L1-L8`,
     },
   ],
   dashboardLinkLabel: 'Read the engineering case study',
   dashboardLinkHref: '/work/gym-tracker',
   statsAriaLabel: 'Case study facts',
   relatedAriaLabel: 'Related pages',
-  backToDashboardsLabel: 'Back to dashboards',
+  backToDashboardsLabel: 'Back to demos',
   rssTitle: 'Gym Tracker case study published',
   rssDescription:
     'A case study of the Gym Tracker AI chat boundary, including the read-only SQL policy, live catalog context, muscle-aware view, and dashboard visual layer.',

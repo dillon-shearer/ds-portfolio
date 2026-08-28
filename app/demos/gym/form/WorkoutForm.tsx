@@ -13,8 +13,8 @@ import {
   setBodyPartsForDate,
   getBootstrapData,
   type GymLift,
-} from '@/app/dashboards/gym/actions'
-import { type Exercise } from '@/app/dashboards/gym/catalog'
+} from '@/app/demos/gym/actions'
+import { type Exercise } from '@/app/demos/gym/catalog'
 import DayInfoSheet from './DayInfoSheet'
 import BodyPartsSheet, { ALL_BODY_PARTS, type BodyPart } from './BodyPartsSheet'
 import { setVolume } from '@/lib/gym/metrics'

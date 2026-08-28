@@ -1,4 +1,4 @@
-// app/dashboards/gym/catalog.ts
+// app/demos/gym/catalog.ts
 'use server'
 
 import { sql } from '@/lib/gym-db'

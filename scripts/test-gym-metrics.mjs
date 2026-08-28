@@ -9,7 +9,7 @@ import {
   roundedEpleySql,
   setVolume,
 } from '../lib/gym/metrics.ts'
-import { gymFixtureLifts } from '../app/dashboards/gym/ui-fixtures.ts'
+import { gymFixtureLifts } from '../app/demos/gym/ui-fixtures.ts'
 
 const lift = (overrides = {}) => ({
   id: 'test-lift',
@@ -60,8 +60,8 @@ test('dashboard/download metric parity and unilateral row semantics stay aligned
   assert.equal(fixtureExport.find((candidate) => candidate.isUnilateral)?.volume, 640)
 
   const [form, modal, jsonRoute, csvRoute, chatBuilder] = await Promise.all([
-    readFile(new URL('../app/dashboards/gym/form/WorkoutForm.tsx', import.meta.url), 'utf8'),
-    readFile(new URL('../app/dashboards/gym/form/EditSetModal.tsx', import.meta.url), 'utf8'),
+    readFile(new URL('../app/demos/gym/form/WorkoutForm.tsx', import.meta.url), 'utf8'),
+    readFile(new URL('../app/demos/gym/form/EditSetModal.tsx', import.meta.url), 'utf8'),
     readFile(new URL('../app/api/gym-data/route.ts', import.meta.url), 'utf8'),
     readFile(new URL('../app/api/gym-data.csv/route.ts', import.meta.url), 'utf8'),
     readFile(new URL('../lib/gym-chat/sql-builders.ts', import.meta.url), 'utf8'),
@@ -87,8 +87,8 @@ test('Gym Chat SQL uses the rounded Epley definition documented by capabilities'
       readFile(new URL('../lib/gym-chat/sql-builders.ts', import.meta.url), 'utf8'),
       readFile(new URL('../lib/gym-chat/capabilities.ts', import.meta.url), 'utf8'),
       readFile(new URL('../lib/gym-chat/semantics.ts', import.meta.url), 'utf8'),
-      readFile(new URL('../app/dashboards/gym/form/EditSetModal.tsx', import.meta.url), 'utf8'),
-      readFile(new URL('../app/dashboards/gym/GymDashboard.tsx', import.meta.url), 'utf8'),
+      readFile(new URL('../app/demos/gym/form/EditSetModal.tsx', import.meta.url), 'utf8'),
+      readFile(new URL('../app/demos/gym/GymDashboard.tsx', import.meta.url), 'utf8'),
       readFile(new URL('../app/api/gym-data/route.ts', import.meta.url), 'utf8'),
       readFile(new URL('../app/api/gym-data.csv/route.ts', import.meta.url), 'utf8'),
     ])

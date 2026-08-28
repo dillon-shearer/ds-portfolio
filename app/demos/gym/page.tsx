@@ -42,7 +42,7 @@ export default async function GymTrackerPage({
       style={{ paddingBottom: '32px' }}
     >
       <PageHeader
-        eyebrow="Dashboards"
+        eyebrow="Demos"
         title="Gym Tracker"
         lead="Personal training log, volume analytics, and AI coaching."
         rule={false}

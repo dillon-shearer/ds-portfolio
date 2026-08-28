@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import type { GymLift } from '@/app/dashboards/gym/actions'
+import type { GymLift } from '@/app/demos/gym/actions'
 import { parseWeightInput } from '@/lib/gym/metrics'
 import styles from './EditSetModal.module.css'
 

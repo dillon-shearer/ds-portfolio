@@ -1,8 +1,8 @@
 import { GYM_TRACKER_CASE_STUDY } from './gym-tracker'
 
 export const DASHBOARDS_PAGE = {
-  eyebrow: 'DASHBOARDS',
-  title: 'Dashboards',
+  eyebrow: 'DEMOS',
+  title: 'Demos',
 } as const
 
 export const DASHBOARDS: {
@@ -19,7 +19,7 @@ export const DASHBOARDS: {
     title: 'Gym Tracker',
     description:
       'Personal training log with volume analytics, split tracking, exercise PRs, and an AI coaching assistant.',
-    href: '/dashboards/gym',
+    href: '/demos/gym',
     longDescription:
       'A personal training dashboard built on top of every workout I log. It tracks weekly volume, splits, body part frequency, and exercise PRs, and includes an interactive 3D body diagram plus an AI coach that answers questions directly against the lift database.',
     tech: ['Next.js', 'PostgreSQL', 'Recharts', 'React Three Fiber', 'OpenAI'],
@@ -41,7 +41,7 @@ export const DASHBOARDS: {
   {
     tool: 'TypeScript + BullMQ',
     title: 'Reddit to Short-Form Video Pipeline',
-    href: '/dashboards/reddit-pipeline',
+    href: '/demos/reddit-pipeline',
     description:
       'Local pipeline that turns Reddit stories into narrated, captioned short-form videos and posts them on a schedule.',
     longDescription:

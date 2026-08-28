@@ -45,7 +45,7 @@ For client requests, add a `network` entry to a state to fulfill or abort a rout
 
 ## Gym fixture seam
 
-`/dashboards/gym?__uiState=loaded|empty|loading|error` is available only when `NODE_ENV` is not `production`. It uses in-memory deterministic fixtures for loaded and empty data, holds the server response behind the real loading boundary for the spinner capture, and enters the route error boundary for error evidence. Production ignores the query parameter and retains its normal database behavior.
+`/demos/gym?__uiState=loaded|empty|loading|error` is available only when `NODE_ENV` is not `production`. It uses in-memory deterministic fixtures for loaded and empty data, holds the server response behind the real loading boundary for the spinner capture, and enters the route error boundary for error evidence. Production ignores the query parameter and retains its normal database behavior.
 
 The checked-in gym scenario covers Dashboard, its Day view using fixture data, and loaded, empty, loading, and error states at both required widths. It never reads the live gym database.
 

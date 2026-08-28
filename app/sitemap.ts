@@ -7,8 +7,8 @@ const routes = [
   '/colophon',
   '/resume',
   '/contact',
-  '/dashboards',
-  '/dashboards/gym',
+  '/demos',
+  '/demos/gym',
   '/work/gym-tracker',
   '/rss',
 ]

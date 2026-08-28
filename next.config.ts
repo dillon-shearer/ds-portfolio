@@ -13,6 +13,19 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_BUILD_DATE: buildDate,
     ...(buildSha ? { NEXT_PUBLIC_BUILD_SHA: buildSha } : {}),
   },
+  // /dashboards was the public prefix until P5-T62 and is still indexed and
+  // printed on the resume, so the old URLs redirect permanently.
+  async redirects() {
+    return [
+      { source: '/dashboards', destination: '/demos', permanent: true },
+      { source: '/dashboards/gym', destination: '/demos/gym', permanent: true },
+      {
+        source: '/dashboards/coming-soon',
+        destination: '/demos/coming-soon',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 export default nextConfig

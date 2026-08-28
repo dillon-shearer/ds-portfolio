@@ -9,11 +9,8 @@ this file, they win.
 
 ### Route
 
-The page is one segment under the dashboards list page. This document writes
-that as `<list>/reddit-pipeline`, where `<list>` is whatever the list route is
-called at build time: `/dashboards/reddit-pipeline` today, and
-`/demos/reddit-pipeline` if the rename ticket lands first. The route moves with
-the list, exactly like `/dashboards/gym` does.
+The page is one segment under the demos list page: `/demos/reddit-pipeline`.
+The route moves with the list, exactly like `/demos/gym` does.
 
 It is deliberately not a `/work/...` case study. `/work/gym-tracker` is the
 long-form pattern with a stat grid and numbered sections; this is a short
@@ -166,11 +163,11 @@ export type RedditPipelineOverview = {
 }
 
 export const REDDIT_PIPELINE: RedditPipelineOverview = {
-  route: '/dashboards/reddit-pipeline',
+  route: '/demos/reddit-pipeline',
   metadataTitle: 'Reddit to short-form video pipeline',
   metadataDescription:
     'The channels my Reddit to short-form video pipeline posts to, with post counts and the most recent video on each.',
-  eyebrow: 'Dashboards',
+  eyebrow: 'Demos',
   title: 'Reddit to short-form video pipeline',
   lead: 'A local pipeline that turns Reddit stories into narrated, captioned short-form videos and posts them on a schedule.',
   description:

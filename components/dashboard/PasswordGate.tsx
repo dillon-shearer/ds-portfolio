@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { verifyLiftPassword } from '@/app/dashboards/gym/actions'
+import { verifyLiftPassword } from '@/app/demos/gym/actions'
 import styles from './PasswordGate.module.css'
 
 type Props = {

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getGymLifts } from '@/app/dashboards/gym/actions'
+import { getGymLifts } from '@/app/demos/gym/actions'
 import { enrich } from '@/lib/gym/metrics'
 import { checkRateLimit } from '@/lib/rate-limit'
 
