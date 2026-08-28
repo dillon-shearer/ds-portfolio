@@ -41,6 +41,7 @@ export const DASHBOARDS: {
   {
     tool: 'TypeScript + BullMQ',
     title: 'Reddit to Short-Form Video Pipeline',
+    href: '/dashboards/reddit-pipeline',
     description:
       'Local pipeline that turns Reddit stories into narrated, captioned short-form videos and posts them on a schedule.',
     longDescription:

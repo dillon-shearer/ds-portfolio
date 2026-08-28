@@ -151,3 +151,10 @@ no "leverage". ASCII only: no em dashes, en dashes, smart quotes,
 ellipsis characters, arrows, interpuncts, or emoji. Existing site copy is
 kept verbatim where a ticket says so; anything rewritten follows these
 rules.
+
+## Page specs
+
+Per-page design specs that build on this document live alongside it:
+
+- `docs/reddit-pipeline-overview.md` - Reddit pipeline overview page and its
+  per-channel carousel (P5-T61).
