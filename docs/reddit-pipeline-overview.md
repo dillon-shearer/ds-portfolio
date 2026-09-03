@@ -215,7 +215,11 @@ appositive-count phrasing, no buzzwords, ASCII only.
 
 ## 5. Data source decision
 
-**Decision: no data. The page is static content plus artwork.**
+**Superseded 2026-09-02 by section 6 (P5-T66).** The reasoning below still
+holds for why a hand-refreshed snapshot was rejected; the conclusion that the
+page carries no numbers at all no longer does.
+
+**Original decision: no data. The page is static content plus artwork.**
 
 P5-T61 specced a hand-refreshed snapshot of posted-video counts and a
 most-recent-video link, and the owner cut both in P5-T63. Both were readings of
@@ -234,7 +238,156 @@ If live numbers are ever wanted, the upgrade path is unchanged and out of scope
 here: the pipeline uploads a small public JSON export and the page reads it at
 build time with the existing `revalidate` pattern.
 
+## 6. Per-channel stats: source and refresh (P5-T66, 2026-09-02)
+
+**Decision: a small table in the existing Neon Postgres, written on a timer by
+the tiktok-script dashboard process that is already running, read server-side by
+this page.**
+
+Section 5 rejected numbers because the only proposal on the table was a snapshot
+the owner hand-edits into `content/`, and that rots silently. The objection was
+to the hand-editing, not to the numbers. This section keeps the numbers and
+removes the hand-editing.
+
+### Why this source
+
+`pipeline.db` stays where it is. Nothing on Vercel reads it, and the tailnet Hono
+dashboard stays tailnet-only. The pipeline machine pushes out, the website never
+reaches in.
+
+Two alternatives were weighed and rejected:
+
+- A scheduled job that commits a JSON snapshot into this repo. It works, but it
+  makes a background process author commits on `main` and triggers a Vercel
+  deploy every refresh, which collides with the owner's own working tree and
+  fills the history with machine noise.
+- Public platform APIs. The YouTube Data API reports channel stats, but TikTok
+  and Instagram do not expose comparable public numbers, so two thirds of every
+  card would be blank or would need a different metric than the third.
+
+The Neon route needs no new infrastructure on either side. The portfolio already
+connects to that database (`DATABASE_URL`, pooled through `lib/gym-db.ts`) for
+the gym dashboard, and tiktok-script's `src/services/dashboard/server.ts` already
+runs five `setInterval` ticks in a long-lived process (reconcile, retention,
+storage snapshot, backup, final-artifact recovery). The push is a sixth tick in
+an established pattern.
+
+### The three metrics
+
+Plain counts and one date. No charts, no derived rates, no per-video rows.
+
+| Label | Value |
+|---|---|
+| `Posted` | videos posted all time |
+| `Last 30d` | videos posted in the trailing 30 days |
+| `Latest` | date of the most recent post |
+
+All three come from `pipeline_items` in `pipeline.db`, counting rows with a
+non-null `posted_at` grouped by `channel_name`. Counting items rather than
+`platform_posts` rows means one video posted to three platforms counts once,
+which is what "videos posted" reads as. `platform_posts.platform_url` is still
+NULL for TikTok, so nothing here depends on it.
+
+`Last 30d` is the metric that carries the weight: it is the one a visitor reads
+as "is this thing actually still running". The all-time count is context for it,
+and `Latest` is the check on both.
+
+### Typed shape in `content/reddit-pipeline.ts`
+
+```ts
+export type ChannelStats = {
+  /** videos with a posted_at, all time */
+  posted: number
+  /** videos posted in the trailing 30 days */
+  postedLast30Days: number
+  /** ISO date of the most recent post, null if the channel has never posted */
+  latestPostedAt: string | null
+  /** when the pipeline wrote this row; the card's freshness label reads it */
+  capturedAt: string
+}
+
+export type PipelineChannel = {
+  // ...existing fields unchanged...
+  /**
+   * Live counts, attached server-side in page.tsx from Neon. Absent when the
+   * query fails or the channel has no row yet; the card then renders as it
+   * does today, with no stats block.
+   */
+  stats?: ChannelStats
+}
+```
+
+`stats` is never written into the `REDDIT_PIPELINE` literal. The literal stays
+hand-authored static content; `page.tsx` reads the table, matches rows to
+channels on `key` (which already equals `channel_name` in `pipeline.db`), and
+merges. That keeps the "no hand-refreshed readings in `content/`" rule from
+section 5 intact.
+
+### What changes on the tiktok-script side
+
+1. **Table.** One table in the existing Neon database, created by a committed
+   one-shot migration in this repo under `db/migrations/`, following the
+   convention in the root `CLAUDE.md`:
+
+   ```sql
+   CREATE TABLE pipeline_channel_stats (
+     channel_name        text PRIMARY KEY,
+     posted              integer NOT NULL,
+     posted_last_30_days integer NOT NULL,
+     latest_posted_at    date,
+     captured_at         timestamptz NOT NULL DEFAULT now()
+   );
+   ```
+
+   Three rows, upserted in place. It never grows.
+
+2. **Tick.** A `publicStatsTick` in tiktok-script alongside the existing ticks in
+   `src/services/dashboard/server.ts`, on a six hour interval. It runs the
+   grouped count against `pipeline.db`, upserts one row per channel, and logs and
+   swallows failures the way the sibling ticks do. A failed push is not an
+   outage: the page keeps serving the last row and its freshness label ages.
+
+3. **Credential.** A write connection string for that database in tiktok-script's
+   `.env`, plus a Postgres client dependency (it has none today). Grant it insert
+   and update on this one table only. Do not reuse the gym chat read-only role,
+   and do not hand the pipeline the pooled `DATABASE_URL` the website uses.
+
+4. **Nothing else.** No change to the schema in `src/db/schema.ts`, no change to
+   any queue, job, or posting path.
+
+### Staleness and how the card says so
+
+Worst case is the tick interval plus the page's revalidate window: six hours plus
+one hour, so under eight hours in normal operation. That bound only holds while
+the pipeline machine is up, which is exactly why the card does not state a bound.
+
+The card renders a fourth line under the three stats, in the same small mono
+treatment as the profile links: `Updated 3h ago`, computed at render time from
+`capturedAt`. It is a relative age, not a fixed claim. If the machine is off for
+a week the label reads `Updated 6d ago` and the visitor knows to discount the
+numbers, which is precisely what the hand-refreshed snapshot could not do.
+
+Because that line is computed per request, the page needs `export const
+revalidate = 3600` (matching `app/demos/page.tsx`) rather than full static
+generation, or the label freezes at build time.
+
+### Placement on the card
+
+Between the subreddit line and the profile links, inside `.itemBody` in
+`ChannelCarousel.tsx`. Three label/value pairs on one row at 720px and up,
+stacked at 390px, with the freshness line beneath. Same type scale and color as
+`.profileLink`, so the block reads as card metadata and not as a dashboard KPI
+row. No borders, per `.claude/STYLE.md`.
+
+### Not shipped in P5-T66
+
+This ticket is the decision only. The card snippet needs the Neon table, the tick,
+and the credential to exist first, all of them on the tiktok-script side, so the
+implementation is a follow-up for the owner to file. Until then the page renders
+exactly as P5-T63 shipped it.
+
 ## Out of scope
 
-Live data fetching, per-video analytics, the compilations feature, and any
-change to the Shmoney repo.
+Per-video analytics, the compilations feature, and any change to the Shmoney
+repo. Live fetching of `pipeline.db` or the tailnet Hono dashboard from Vercel
+stays out of scope; section 6 pushes from the pipeline instead of pulling.
