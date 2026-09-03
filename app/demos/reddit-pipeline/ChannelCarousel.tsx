@@ -6,7 +6,9 @@ import {
   BANNER_SIZE,
   LOGO_SIZE,
   PROFILE_PLATFORMS,
+  STAT_LABELS,
   profileUrl,
+  type ChannelStats,
   type PipelineChannel,
 } from '@/content/reddit-pipeline'
 import styles from './page.module.css'
@@ -96,6 +98,7 @@ export function ChannelCarousel({
                 <h3 className={styles.channelName}>{channel.name}</h3>
               </div>
               <p className={styles.subreddit}>{channel.subreddit}</p>
+              {channel.stats ? <ChannelStatsBlock stats={channel.stats} /> : null}
               <ul className={styles.profiles}>
                 {PROFILE_PLATFORMS.map((platform) => (
                   <li key={platform}>
@@ -115,5 +118,30 @@ export function ChannelCarousel({
         ))}
       </ul>
     </>
+  )
+}
+
+/**
+ * Values are preformatted on the server. Nothing here derives a date or an age:
+ * the carousel is a client component, and a time computed here would not match
+ * what the server rendered.
+ */
+function ChannelStatsBlock({ stats }: { stats: ChannelStats }) {
+  return (
+    <div className={styles.stats}>
+      <dl className={styles.statList}>
+        <dt className={styles.statLabel}>{STAT_LABELS.posted}</dt>
+        <dd className={styles.statValue}>{stats.posted}</dd>
+        <dt className={styles.statLabel}>{STAT_LABELS.postedLast30Days}</dt>
+        <dd className={styles.statValue}>{stats.postedLast30Days}</dd>
+        {stats.latestPosted ? (
+          <>
+            <dt className={styles.statLabel}>{STAT_LABELS.latestPosted}</dt>
+            <dd className={styles.statValue}>{stats.latestPosted}</dd>
+          </>
+        ) : null}
+      </dl>
+      <p className={styles.statAge}>Updated {stats.captured}</p>
+    </div>
   )
 }

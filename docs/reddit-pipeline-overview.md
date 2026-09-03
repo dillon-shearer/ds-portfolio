@@ -242,7 +242,12 @@ build time with the existing `revalidate` pattern.
 
 **Decision: a small table in the existing Neon Postgres, written on a timer by
 the tiktok-script dashboard process that is already running, read server-side by
-this page.**
+this page.** Built in P5-T67; this section describes what shipped.
+
+**Owner correction, 2026-09-02, folded in below:** the latest reading is a date
+AND time, not a date. The pipeline posts twice a day, so a date collapses both of
+a day's posts into one reading and cannot show whether the most recent one landed
+this morning or this evening.
 
 Section 5 rejected numbers because the only proposal on the table was a snapshot
 the owner hand-edits into `content/`, and that rots silently. The objection was
@@ -280,7 +285,7 @@ Plain counts and one date. No charts, no derived rates, no per-video rows.
 |---|---|
 | `Posted` | videos posted all time |
 | `Last 30d` | videos posted in the trailing 30 days |
-| `Latest` | date of the most recent post |
+| `Latest` | date and time of the most recent post |
 
 All three come from `pipeline_items` in `pipeline.db`, counting rows with a
 non-null `posted_at` grouped by `channel_name`. Counting items rather than
@@ -288,22 +293,37 @@ non-null `posted_at` grouped by `channel_name`. Counting items rather than
 which is what "videos posted" reads as. `platform_posts.platform_url` is still
 NULL for TikTok, so nothing here depends on it.
 
+Rows with a non-null `removed_at` are excluded: that column means the video was
+pulled from the platform, so it is no longer something a visitor can go and watch.
+A soft-deleted pipeline row whose video is still up does still count.
+
+`Latest` renders in `America/New_York` with an explicit `ET` suffix, formatted
+through `Intl.DateTimeFormat` with an explicit `timeZone`, so the string does not
+shift with whichever region renders the page.
+
+Note for the first month or so of a channel's life: `Posted` and `Last 30d` show
+the same number, because every video it has ever posted is inside the window. They
+separate permanently once a channel is older than 30 days, which is when `Last 30d`
+starts doing its job as the "is this still running" reading.
+
 `Last 30d` is the metric that carries the weight: it is the one a visitor reads
 as "is this thing actually still running". The all-time count is context for it,
 and `Latest` is the check on both.
 
 ### Typed shape in `content/reddit-pipeline.ts`
 
+Both time fields arrive at the card already formatted. `ChannelCarousel` is a
+client component, so a date or an age computed inside it would not match what the
+server rendered; `page.tsx` formats both and passes strings down.
+
 ```ts
 export type ChannelStats = {
-  /** videos with a posted_at, all time */
   posted: number
-  /** videos posted in the trailing 30 days */
   postedLast30Days: number
-  /** ISO date of the most recent post, null if the channel has never posted */
-  latestPostedAt: string | null
-  /** when the pipeline wrote this row; the card's freshness label reads it */
-  capturedAt: string
+  /** e.g. 'Sep 2, 6:41 PM ET'; null when the channel has never posted */
+  latestPosted: string | null
+  /** relative age of the reading itself, e.g. '2h ago' */
+  captured: string
 }
 
 export type PipelineChannel = {
@@ -334,23 +354,30 @@ section 5 intact.
      channel_name        text PRIMARY KEY,
      posted              integer NOT NULL,
      posted_last_30_days integer NOT NULL,
-     latest_posted_at    date,
+     latest_posted_at    timestamptz,
      captured_at         timestamptz NOT NULL DEFAULT now()
    );
    ```
 
-   Three rows, upserted in place. It never grows.
+   Three rows, upserted in place. It never grows. Shipped as
+   `db/migrations/2026-09-02-pipeline-channel-stats.sql`, which also grants the
+   writing role `SELECT, INSERT, UPDATE` on this one table and nothing else.
 
-2. **Tick.** A `publicStatsTick` in tiktok-script alongside the existing ticks in
-   `src/services/dashboard/server.ts`, on a six hour interval. It runs the
-   grouped count against `pipeline.db`, upserts one row per channel, and logs and
-   swallows failures the way the sibling ticks do. A failed push is not an
-   outage: the page keeps serving the last row and its freshness label ages.
+2. **Tick.** `publicStatsTick` in `src/services/publicStats/index.ts`, wired into
+   `src/services/dashboard/server.ts` alongside the existing ticks on a six hour
+   interval. It runs the grouped count against `pipeline.db`, upserts one row per
+   channel, and logs and swallows failures the way the sibling ticks do. A failed
+   push is not an outage: the page keeps serving the last row and its freshness
+   label ages. It no-ops when `PIPELINE_STATS_DATABASE_URL` is unset, so a checkout
+   without the credential runs unchanged.
 
-3. **Credential.** A write connection string for that database in tiktok-script's
-   `.env`, plus a Postgres client dependency (it has none today). Grant it insert
-   and update on this one table only. Do not reuse the gym chat read-only role,
-   and do not hand the pipeline the pooled `DATABASE_URL` the website uses.
+3. **Credential.** `PIPELINE_STATS_DATABASE_URL` in tiktok-script's `.env`, a
+   `pipeline_writer` role scoped to this one table, plus `pg` as a dependency there.
+   Pin `sslmode=verify-full` in that string: `pg` currently treats `require` as
+   `verify-full` but warns that it will stop doing so, and the silent end state of
+   that change is weaker verification, not an error. The gym chat read-only role is
+   not reused and the pipeline never receives the pooled `DATABASE_URL` the website
+   uses.
 
 4. **Nothing else.** No change to the schema in `src/db/schema.ts`, no change to
    any queue, job, or posting path.
@@ -367,9 +394,13 @@ treatment as the profile links: `Updated 3h ago`, computed at render time from
 a week the label reads `Updated 6d ago` and the visitor knows to discount the
 numbers, which is precisely what the hand-refreshed snapshot could not do.
 
-Because that line is computed per request, the page needs `export const
-revalidate = 3600` (matching `app/demos/page.tsx`) rather than full static
-generation, or the label freezes at build time.
+Because that line is computed at render, the page carries `export const
+revalidate = 3600` (matching `app/demos/page.tsx`) rather than plain static
+generation, or the label would freeze at build time. The route still builds as
+static-with-ISR (`Revalidate 1h` in the build output), because the development-only
+`?__uiState=empty` seam awaits `searchParams` inside a `NODE_ENV !== 'production'`
+branch that the production prerender never enters. Move that access outside the
+branch and the whole route silently becomes per-request dynamic.
 
 ### Placement on the card
 
@@ -379,12 +410,17 @@ stacked at 390px, with the freshness line beneath. Same type scale and color as
 `.profileLink`, so the block reads as card metadata and not as a dashboard KPI
 row. No borders, per `.claude/STYLE.md`.
 
-### Not shipped in P5-T66
+### Degraded states
 
-This ticket is the decision only. The card snippet needs the Neon table, the tick,
-and the credential to exist first, all of them on the tiktok-script side, so the
-implementation is a follow-up for the owner to file. Until then the page renders
-exactly as P5-T63 shipped it.
+A channel with no row, a null `latest_posted_at`, and a failed or unreachable query
+all render the card exactly as P5-T63 shipped it: no readings block, no error text,
+no layout shift. `loadStats` swallows its error on purpose, because an unreachable
+database must not take the page down and a visible error would tell a visitor
+nothing they can act on. The CI build proves this path, since it builds with dummy
+database values and prerenders the page with no readings.
+
+`/demos/reddit-pipeline?__uiState=empty` reproduces that state outside production
+and is what the `no-stats` UI evidence scenario captures.
 
 ## Out of scope
 

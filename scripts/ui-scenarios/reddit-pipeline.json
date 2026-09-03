@@ -3,11 +3,12 @@
   "route": "/demos/reddit-pipeline",
   "reducedMotion": true,
   "viewports": [
-    { "width": 320, "height": 800 },
-    { "width": 360, "height": 800 },
-    { "width": 720, "height": 900 },
-    { "width": 1080, "height": 900 },
-    { "width": 1440, "height": 900 }
+    { "width": 320, "height": 900 },
+    { "width": 360, "height": 900 },
+    { "width": 390, "height": 900 },
+    { "width": 720, "height": 1000 },
+    { "width": 1080, "height": 1000 },
+    { "width": 1440, "height": 1000 }
   ],
   "states": [
     {
@@ -18,6 +19,22 @@
         { "kind": "count", "selector": "a[href*='tiktok.com']", "equals": 3 },
         { "kind": "count", "selector": "img", "equals": 6 },
         { "kind": "visible", "selector": "text=r/AmItheAsshole" },
+        { "kind": "count", "selector": "ul[aria-label='Pipeline channels'] dl", "equals": 3 },
+        {
+          "kind": "eval",
+          "expression": "document.querySelectorAll('ul[aria-label=\"Pipeline channels\"] dl dt').length",
+          "equals": 9
+        },
+        {
+          "kind": "eval",
+          "expression": "Array.from(document.querySelectorAll('ul[aria-label=\"Pipeline channels\"] p')).filter(p => /^Updated \\d+[mhd] ago$/.test(p.textContent.trim())).length",
+          "equals": 3
+        },
+        {
+          "kind": "eval",
+          "expression": "Array.from(document.querySelectorAll('ul[aria-label=\"Pipeline channels\"] dd')).filter(d => /\\d{1,2}:\\d{2}\\s?(AM|PM) ET$/.test(d.textContent.trim())).length",
+          "equals": 3
+        },
         {
           "kind": "eval",
           "expression": "Array.from(document.querySelectorAll('ul[aria-label=\"Pipeline channels\"] a')).filter(a => a.target === '_blank' && a.rel === 'noopener noreferrer').length",
@@ -27,6 +44,17 @@
       "actions": [
         { "action": "focus", "selector": "ul[aria-label='Pipeline channels'] a >> nth=0" },
         { "action": "tabs", "count": 4 }
+      ]
+    },
+    {
+      "name": "no-stats",
+      "route": "/demos/reddit-pipeline?__uiState=empty",
+      "ready": "h3:has-text('Daily Story Time')",
+      "assertions": [
+        { "kind": "count", "selector": "ul[aria-label='Pipeline channels'] > li", "equals": 3 },
+        { "kind": "count", "selector": "ul[aria-label='Pipeline channels'] dl", "equals": 0 },
+        { "kind": "count", "selector": "a[href*='tiktok.com']", "equals": 3 },
+        { "kind": "visible", "selector": "text=r/AmItheAsshole" }
       ]
     }
   ]

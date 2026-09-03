@@ -119,7 +119,7 @@ primitives are listed after them and are not exported from that barrel.
 | `Input` | `Input.tsx` | Contact-form input and textarea fields |
 | `PageHeader` | `PageHeader.tsx` | Page-top eyebrow, title, lead, and optional rule |
 | `DashboardCard` | `DashboardCard.tsx` | Numbered dashboard index rows |
-| Channel card | `app/demos/reddit-pipeline/ChannelCarousel.tsx` | Route-local layout primitive: a card carrying a full-bleed banner image, a square logo, a name, and outbound links. Not a shared export; copy the pattern rather than reaching for it |
+| Channel card | `app/demos/reddit-pipeline/ChannelCarousel.tsx` | Route-local layout primitive: a card carrying a full-bleed banner image, a square logo, a name, an optional two-column mono readings block with its own freshness line, and outbound links. Not a shared export; copy the pattern rather than reaching for it |
 
 - Buttons are rectangular, at most 2px radius, and use mono uppercase xs labels.
 - Prose links use a 1px underline and change to accent on hover.

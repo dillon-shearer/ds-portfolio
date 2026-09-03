@@ -118,6 +118,39 @@
   margin-top: var(--space-3);
 }
 
+.stats {
+  margin-top: var(--space-4);
+}
+
+.statList {
+  display: grid;
+  grid-template-columns: max-content auto;
+  gap: var(--space-1) var(--space-3);
+  align-items: baseline;
+}
+
+.statLabel,
+.statValue,
+.statAge {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+.statLabel,
+.statAge {
+  color: var(--color-ink-3);
+}
+
+.statValue {
+  color: var(--color-ink);
+}
+
+.statAge {
+  margin-top: var(--space-2);
+}
+
 .profiles {
   display: flex;
   flex-wrap: wrap;

@@ -16,6 +16,22 @@ export function profileUrl(platform: PipelinePlatform, handle: string) {
   return PROFILE_BASE[platform] + handle
 }
 
+/**
+ * Live per-channel readings, attached server-side in page.tsx from the
+ * pipeline_channel_stats table the pipeline pushes to. Never hand-written into
+ * REDDIT_PIPELINE below: the literal stays static content. Both time fields
+ * arrive preformatted because the carousel is a client component and a date
+ * formatted there would not match the server render.
+ */
+export type ChannelStats = {
+  posted: number
+  postedLast30Days: number
+  /** e.g. 'Sep 2, 6:41 PM ET'; null when the channel has never posted */
+  latestPosted: string | null
+  /** relative age of the reading itself, e.g. '2h ago' */
+  captured: string
+}
+
 export type PipelineChannel = {
   /** channel_name in pipeline.db, kept so the channel can be matched back */
   key: string
@@ -29,7 +45,16 @@ export type PipelineChannel = {
     /** empty on purpose: the logo repeats the channel name it sits beside */
     alt: string
   }
+  /** absent when the row is missing or the query failed; the card then hides the block */
+  stats?: ChannelStats
 }
+
+/** Labels for the three readings, in render order. */
+export const STAT_LABELS = {
+  posted: 'Posted',
+  postedLast30Days: 'Last 30d',
+  latestPosted: 'Latest',
+} as const
 
 export type RedditPipelineOverview = {
   route: string
