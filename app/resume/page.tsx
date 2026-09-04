@@ -99,8 +99,10 @@ export default function ResumePage() {
                   {project.tools}
                 </p>
                 <p className={styles.projectMeta}>
-                  <span>Repository: </span>
-                  {project.repository}
+                  <span>Live: </span>
+                  <a href={project.link.href} target="_blank" rel="noopener noreferrer">
+                    {project.link.label}
+                  </a>
                 </p>
               </div>
             </li>

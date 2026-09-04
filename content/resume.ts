@@ -9,7 +9,7 @@ export type ResumeProject = {
   title: string
   description: string
   tools: string
-  repository: string
+  link: { label: string; href: string }
 }
 
 export const RESUME_PAGE = {
@@ -94,18 +94,21 @@ export const RESUME_PAGE = {
   ] satisfies ResumeExperience[],
   projects: [
     {
-      title: '2022 SAIPE Estimates Analysis',
+      title: 'Variant Report Tool',
       description:
-        'Analyzed and visualized Small Area Income and Poverty Estimates (SAIPE) data to uncover insights on poverty rates and median income.',
-      tools: 'Python, Pandas, Matplotlib, Seaborn',
-      repository: 'Census SAIPE Analysis',
+        'Production web app in an ALS research data portal for exploring whole genome sequencing variant data. Builds multi-sheet Excel variant reports for a chosen gene list and participant set, runs genotype-first lookups that turn a locus or rsID into the participants carrying that variant, and plots cohort variants in an embedded igv.js genome browser.',
+      tools: 'Python, Panel, Azure SQL, Azure Blob Storage, igv.js, Azure App Service',
+      link: {
+        label: 'neuromine-variant-reports-prod.azurewebsites.net',
+        href: 'https://neuromine-variant-reports-prod.azurewebsites.net/home',
+      },
     },
     {
-      title: 'State-by-State Analysis of Chronic Condition Drug Utilization and Costs',
+      title: 'Gym Tracker',
       description:
-        'Analyzed drug utilization patterns and costs across U.S. states, providing policy implications for healthcare strategies.',
-      tools: 'Python, Pandas, SQLite, Matplotlib, Seaborn',
-      repository: 'State-by-State Analysis of Chronic Condition Drug Utilization and Costs',
+        'Personal training dashboard built on every workout I log. Tracks weekly volume, splits, body part frequency, and exercise PRs, with an interactive 3D body diagram and an AI coach that answers questions directly against the lift database.',
+      tools: 'Next.js, PostgreSQL, Recharts, React Three Fiber, OpenAI',
+      link: { label: 'datawithdillon.com/demos/gym', href: '/demos/gym' },
     },
   ] satisfies ResumeProject[],
   education: {

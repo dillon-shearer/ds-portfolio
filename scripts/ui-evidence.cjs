@@ -484,7 +484,18 @@ async function main() {
   process.exit(report.toolUnavailable ? 2 : report.failures.length ? 1 : 0)
 }
 
-main().catch((error) => {
-  console.error(error.stack || error.message)
-  process.exit(2)
-})
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error.stack || error.message)
+    process.exit(2)
+  })
+}
+
+// Shared with scripts/resume-pdf.cjs so the repo keeps one browser-launch path.
+module.exports = {
+  findOpenPort,
+  resolveChrome,
+  resolvePlaywright,
+  startIsolatedServer,
+  stopIsolatedServer,
+}

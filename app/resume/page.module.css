@@ -211,3 +211,59 @@
     text-align: left;
   }
 }
+
+@media print {
+  /*
+   * Header.module.css sets .header { display: flex } at (0,1,0), which outranks
+   * an element selector here, so the print override has to be !important.
+   */
+  :global(body > header),
+  :global(body > footer) {
+    display: none !important;
+  }
+
+  :global(.page-wrapper--wide) {
+    max-width: none;
+    padding: 0;
+  }
+
+  .header > a {
+    display: none;
+  }
+
+  .entry,
+  .project,
+  .skill,
+  .education,
+  .entryHeader {
+    break-inside: avoid;
+  }
+
+  .sectionTitle {
+    break-after: avoid;
+  }
+
+  .entry,
+  .project {
+    padding: var(--space-4) 0;
+  }
+
+  /*
+   * Print tightening. Type is rem-based and spacing is px-based, so the whole
+   * document compacts from two levers instead of a per-rule print override.
+   * !important because this module loads before the root bundle in Next 15,
+   * so equal-specificity token declarations here would otherwise lose.
+   */
+  :global(html) {
+    font-size: 12.5px !important;
+  }
+
+  :global(:root) {
+    --space-3: 8px !important;
+    --space-4: 10px !important;
+    --space-5: 12px !important;
+    --space-6: 16px !important;
+    --space-7: 12px !important;
+    --space-8: 24px !important;
+  }
+}
