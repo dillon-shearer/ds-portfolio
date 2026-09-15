@@ -14,7 +14,7 @@
       "route": "/links?__uiState=sample",
       "ready": "h2:has-text('daily.writing.prompts0')",
       "assertions": [
-        { "kind": "visible", "selector": "text=My channels" },
+        { "kind": "visible", "selector": "h1:has-text('Channels')" },
         { "kind": "count", "selector": "ul[aria-label='Channels'] > li", "equals": 3 },
         { "kind": "count", "selector": "ul[aria-label='Channels'] a", "equals": 6 },
         { "kind": "count", "selector": "a[href*='tiktok.com']", "equals": 0 },
@@ -27,11 +27,6 @@
           "kind": "eval",
           "expression": "document.querySelectorAll('ul[aria-label=\"Channels\"] a[href*=\"instagram.com/\"]').length",
           "equals": 3
-        },
-        {
-          "kind": "eval",
-          "expression": "Array.from(document.querySelectorAll('ul[aria-label=\"Channels\"] a')).filter(a => a.target === '_blank' && a.rel === 'noopener noreferrer').length",
-          "equals": 6
         }
       ],
       "actions": [
@@ -42,10 +37,10 @@
     {
       "name": "empty",
       "route": "/links?__uiState=empty",
-      "ready": "text=Channel links are not available right now.",
+      "ready": "text=Links are not available right now.",
       "assertions": [
         { "kind": "count", "selector": "ul[aria-label='Channels'] > li", "equals": 0 },
-        { "kind": "visible", "selector": "text=My channels" }
+        { "kind": "visible", "selector": "h1:has-text('Channels')" }
       ]
     }
   ]

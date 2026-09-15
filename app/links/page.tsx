@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
-import { PageHeader } from '@/components/ui'
-import { LINK_HUB, HUB_PLATFORMS } from '@/content/links'
+import { Button } from '@/components/ui'
+import { LINK_HUB } from '@/content/links'
 import { sql } from '@/lib/gym-db'
 import styles from './page.module.css'
 
@@ -9,8 +9,8 @@ export const metadata: Metadata = {
   description: LINK_HUB.metadataDescription,
 }
 
-// The list is data-driven from Neon, so a freshness window keeps a newly added or
-// renamed channel from waiting on a redeploy. One hour matches the other data pages.
+// The list is data-driven from Neon, so a new or renamed channel does not wait on a
+// redeploy. One hour matches the other data pages.
 export const revalidate = 3600
 
 type HubChannel = {
@@ -42,14 +42,12 @@ async function loadChannels(): Promise<HubChannel[]> {
       instagramUrl: row.instagram_url,
     }))
   } catch {
-    // An unreachable database must not take the page down. The hub shows its empty
-    // state rather than an error a visitor cannot act on.
+    // An unreachable database must not take the page down; it shows its empty state.
     return []
   }
 }
 
-// The three currently-live channels, for the development-only UI evidence harness.
-// Production ignores this and always reads the table.
+// Sample rows for the development-only UI evidence harness. Production always reads Neon.
 const SAMPLE: HubChannel[] = [
   'daily.writing.prompts0',
   'reddit.daily.story.time0',
@@ -70,10 +68,6 @@ async function resolveChannels(searchParams: Promise<{ __uiState?: string }>) {
   return loadChannels()
 }
 
-function destination(url: string) {
-  return url.replace(/^https?:\/\//, '')
-}
-
 export default async function LinksPage({
   searchParams,
 }: {
@@ -82,39 +76,27 @@ export default async function LinksPage({
   const channels = await resolveChannels(searchParams)
 
   return (
-    <div className="page-wrapper">
-      <PageHeader
-        eyebrow={LINK_HUB.eyebrow}
-        title={LINK_HUB.title}
-        lead={LINK_HUB.lead}
-        rule={false}
-      />
+    <div className={styles.hub}>
+      <h1 className={styles.title}>{LINK_HUB.title}</h1>
       {channels.length === 0 ? (
         <p className={styles.empty}>{LINK_HUB.empty}</p>
       ) : (
         <ul className={styles.list} aria-label="Channels">
           {channels.map((channel) => (
             <li key={channel.channelName} className={styles.channel}>
-              <h2 className={styles.channelName}>{channel.displayName}</h2>
-              <ul className={styles.links} aria-label={channel.displayName}>
-                {HUB_PLATFORMS.map(({ key, label }) => {
-                  const url = key === 'youtube' ? channel.youtubeUrl : channel.instagramUrl
-                  if (!url) return null
-                  return (
-                    <li key={key}>
-                      <a
-                        className={styles.tapTarget}
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <span className={styles.platform}>{label}</span>
-                        <span className={styles.dest}>{destination(url)}</span>
-                      </a>
-                    </li>
-                  )
-                })}
-              </ul>
+              <h2 className={styles.name}>{channel.displayName}</h2>
+              <div className={styles.buttons}>
+                {channel.youtubeUrl && (
+                  <Button href={channel.youtubeUrl} variant="outline">
+                    YouTube
+                  </Button>
+                )}
+                {channel.instagramUrl && (
+                  <Button href={channel.instagramUrl} variant="outline">
+                    Instagram
+                  </Button>
+                )}
+              </div>
             </li>
           ))}
         </ul>
