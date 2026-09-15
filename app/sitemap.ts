@@ -10,6 +10,7 @@ const routes = [
   '/demos',
   '/demos/gym',
   '/demos/reddit-pipeline',
+  '/links',
   '/work/gym-tracker',
   '/rss',
 ]
