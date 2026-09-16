@@ -5,7 +5,8 @@ import { usePathname } from 'next/navigation'
 import { Header } from './Header'
 import { Footer } from './Footer'
 
-const NAKED_PATHS: string[] = []
+// /links is a public link-in-bio page: no Header or Footer, but still indexable.
+const NAKED_PATHS: string[] = ['/links']
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? ''

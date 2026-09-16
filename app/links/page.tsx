@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { Button } from '@/components/ui'
 import { LINK_HUB } from '@/content/links'
 import { sql } from '@/lib/gym-db'
 import styles from './page.module.css'
@@ -80,34 +79,34 @@ export default async function LinksPage({
   const channels = await resolveChannels(searchParams)
 
   return (
-    <div className={styles.hub}>
-      <h1 className={styles.title}>{LINK_HUB.title}</h1>
+    <main className={styles.hub}>
+      <h1 className={styles.srOnly}>{LINK_HUB.title}</h1>
       {channels.length === 0 ? (
         <p className={styles.empty}>{LINK_HUB.empty}</p>
       ) : (
         <ul className={styles.list} aria-label="Channels">
           {channels.map((channel) => (
             <li key={channel.channelName} className={styles.channel}>
-              <div className={styles.meta}>
-                <h2 className={styles.name}>{channel.displayName}</h2>
-                {channel.subreddit && <p className={styles.sub}>{channel.subreddit}</p>}
-              </div>
-              <div className={styles.buttons}>
+              <h2 className={styles.name}>
+                {channel.displayName}
+                {channel.subreddit && <span className={styles.sub}>{channel.subreddit}</span>}
+              </h2>
+              <div className={styles.halves}>
                 {channel.youtubeUrl && (
-                  <Button href={channel.youtubeUrl} variant="outline">
+                  <a href={channel.youtubeUrl} className={styles.half}>
                     YouTube
-                  </Button>
+                  </a>
                 )}
                 {channel.instagramUrl && (
-                  <Button href={channel.instagramUrl} variant="outline">
+                  <a href={channel.instagramUrl} className={styles.half}>
                     Instagram
-                  </Button>
+                  </a>
                 )}
               </div>
             </li>
           ))}
         </ul>
       )}
-    </div>
+    </main>
   )
 }

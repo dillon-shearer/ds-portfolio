@@ -14,7 +14,7 @@
       "route": "/links?__uiState=sample",
       "ready": "h2:has-text('daily.writing.prompts0')",
       "assertions": [
-        { "kind": "visible", "selector": "h1:has-text('Channels')" },
+        { "kind": "count", "selector": "header, footer", "equals": 0 },
         { "kind": "count", "selector": "ul[aria-label='Channels'] > li", "equals": 3 },
         { "kind": "count", "selector": "ul[aria-label='Channels'] a", "equals": 6 },
         { "kind": "count", "selector": "a[href*='tiktok.com']", "equals": 0 },
@@ -39,8 +39,7 @@
       "route": "/links?__uiState=empty",
       "ready": "text=Links are not available right now.",
       "assertions": [
-        { "kind": "count", "selector": "ul[aria-label='Channels'] > li", "equals": 0 },
-        { "kind": "visible", "selector": "h1:has-text('Channels')" }
+        { "kind": "count", "selector": "ul[aria-label='Channels'] > li", "equals": 0 }
       ]
     }
   ]
