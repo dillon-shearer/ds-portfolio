@@ -141,7 +141,7 @@ export const REDDIT_PIPELINE: RedditPipelineOverview = {
       },
       logo: { src: '/channels/aio/logo.png', alt: '' },
     },
-    // P5-T417: sixth-wave channels. No branded art yet — the monogram fallback renders.
+    // P5-T417: sixth-wave channels. No branded art yet - the monogram fallback renders.
     {
       key: 'reddit.inlaws.stories0',
       name: 'In-Law Stories Daily',
