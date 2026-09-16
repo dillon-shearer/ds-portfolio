@@ -101,6 +101,21 @@
   border-radius: var(--radius-sm);
 }
 
+.logoFallback {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  background: var(--color-rule);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--text-lg);
+  color: var(--color-ink-2);
+}
+
 .channelName {
   font-family: var(--font-display);
   font-weight: 600;

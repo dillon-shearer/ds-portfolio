@@ -1,16 +1,15 @@
-export type PipelinePlatform = 'tiktok' | 'instagram' | 'youtube'
+export type PipelinePlatform = 'instagram' | 'youtube'
 
 /**
- * The handle is identical on all three platforms and equals the channel name,
+ * The handle is identical on both platforms and equals the channel name,
  * so a profile URL is a prefix plus the handle. Nothing is stored per platform.
  */
 export const PROFILE_BASE: Record<PipelinePlatform, string> = {
-  tiktok: 'https://www.tiktok.com/@',
   instagram: 'https://www.instagram.com/',
   youtube: 'https://www.youtube.com/@',
 }
 
-export const PROFILE_PLATFORMS: PipelinePlatform[] = ['tiktok', 'instagram', 'youtube']
+export const PROFILE_PLATFORMS: PipelinePlatform[] = ['instagram', 'youtube']
 
 export function profileUrl(platform: PipelinePlatform, handle: string) {
   return PROFILE_BASE[platform] + handle
@@ -37,10 +36,11 @@ export type PipelineChannel = {
   key: string
   name: string
   subreddit: string
-  /** same on TikTok, Instagram, and YouTube; the three URLs derive from it */
+  /** same on Instagram and YouTube; the two URLs derive from it */
   handle: string
-  banner: { src: string; alt: string }
-  logo: {
+  /** absent until branded art exists for the channel; the card then skips the banner strip */
+  banner?: { src: string; alt: string }
+  logo?: {
     src: string
     /** empty on purpose: the logo repeats the channel name it sits beside */
     alt: string
@@ -77,12 +77,12 @@ export const REDDIT_PIPELINE: RedditPipelineOverview = {
   route: '/demos/reddit-pipeline',
   metadataTitle: 'Reddit to short-form video pipeline',
   metadataDescription:
-    'The channels my Reddit to short-form video pipeline posts to on TikTok, Instagram, and YouTube.',
+    'The channels my Reddit to short-form video pipeline posts to on Instagram and YouTube.',
   eyebrow: 'Demos',
   title: 'Reddit to short-form video pipeline',
   lead: 'A local pipeline that turns Reddit stories into narrated, captioned short-form videos and posts them on a schedule.',
   description:
-    'Stories come out of subreddit RSS feeds, get narrated with Kokoro TTS, captioned with faster-whisper, composited over background video, and pushed to TikTok, YouTube, and Instagram through each platform connection. Every stage runs as a BullMQ job. These are the channels it currently runs.',
+    'Stories come out of subreddit RSS feeds, get narrated with Kokoro TTS, captioned with faster-whisper, composited over background video, and pushed to YouTube and Instagram through each platform connection. Every stage runs as a BullMQ job. These are the channels it currently runs.',
   carouselLabel: 'Channels',
   carouselAriaLabel: 'Pipeline channels',
   channels: [
@@ -118,6 +118,18 @@ export const REDDIT_PIPELINE: RedditPipelineOverview = {
         alt: 'Reddit WP Daily channel banner: the channel name in white and orange on a black field flanked by orange chevrons.',
       },
       logo: { src: '/channels/wp/logo.png', alt: '' },
+    },
+    {
+      key: 'reddit.confessions.stories0',
+      name: 'Reddit Confessions',
+      subreddit: 'r/TrueOffMyChest',
+      handle: 'reddit.confessions.stories0',
+    },
+    {
+      key: 'overreacting.stories.daily0',
+      name: 'Am I Overreacting',
+      subreddit: 'r/AmIOverreacting',
+      handle: 'overreacting.stories.daily0',
     },
   ],
 }

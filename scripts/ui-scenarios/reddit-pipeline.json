@@ -15,20 +15,22 @@
       "name": "loaded",
       "ready": "h3:has-text('Daily Story Time')",
       "assertions": [
-        { "kind": "count", "selector": "ul[aria-label='Pipeline channels'] > li", "equals": 3 },
-        { "kind": "count", "selector": "a[href*='tiktok.com']", "equals": 3 },
+        { "kind": "count", "selector": "ul[aria-label='Pipeline channels'] > li", "equals": 5 },
+        { "kind": "count", "selector": "a[href*='tiktok.com']", "equals": 0 },
         { "kind": "count", "selector": "img", "equals": 6 },
         { "kind": "visible", "selector": "text=r/AmItheAsshole" },
-        { "kind": "count", "selector": "ul[aria-label='Pipeline channels'] dl", "equals": 3 },
+        { "kind": "visible", "selector": "text=r/AmIOverreacting" },
+        { "kind": "visible", "selector": "text=r/TrueOffMyChest" },
+        { "kind": "count", "selector": "ul[aria-label='Pipeline channels'] dl", "equals": 5 },
         {
           "kind": "eval",
           "expression": "document.querySelectorAll('ul[aria-label=\"Pipeline channels\"] dl dt').length",
-          "equals": 9
+          "equals": 13
         },
         {
           "kind": "eval",
           "expression": "Array.from(document.querySelectorAll('ul[aria-label=\"Pipeline channels\"] p')).filter(p => /^Updated \\d+[mhd] ago$/.test(p.textContent.trim())).length",
-          "equals": 3
+          "equals": 5
         },
         {
           "kind": "eval",
@@ -38,7 +40,7 @@
         {
           "kind": "eval",
           "expression": "Array.from(document.querySelectorAll('ul[aria-label=\"Pipeline channels\"] a')).filter(a => a.target === '_blank' && a.rel === 'noopener noreferrer').length",
-          "equals": 9
+          "equals": 10
         }
       ],
       "actions": [
@@ -51,9 +53,9 @@
       "route": "/demos/reddit-pipeline?__uiState=empty",
       "ready": "h3:has-text('Daily Story Time')",
       "assertions": [
-        { "kind": "count", "selector": "ul[aria-label='Pipeline channels'] > li", "equals": 3 },
+        { "kind": "count", "selector": "ul[aria-label='Pipeline channels'] > li", "equals": 5 },
         { "kind": "count", "selector": "ul[aria-label='Pipeline channels'] dl", "equals": 0 },
-        { "kind": "count", "selector": "a[href*='tiktok.com']", "equals": 3 },
+        { "kind": "count", "selector": "a[href*='tiktok.com']", "equals": 0 },
         { "kind": "visible", "selector": "text=r/AmItheAsshole" }
       ]
     }

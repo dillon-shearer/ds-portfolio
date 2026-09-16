@@ -77,24 +77,32 @@ export function ChannelCarousel({
       >
         {channels.map((channel) => (
           <li key={channel.key} className={styles.item}>
-            <Image
-              className={styles.banner}
-              src={channel.banner.src}
-              alt={channel.banner.alt}
-              width={BANNER_SIZE.width}
-              height={BANNER_SIZE.height}
-              sizes="(min-width: 1080px) 356px, (min-width: 720px) 50vw, 100vw"
-            />
+            {channel.banner ? (
+              <Image
+                className={styles.banner}
+                src={channel.banner.src}
+                alt={channel.banner.alt}
+                width={BANNER_SIZE.width}
+                height={BANNER_SIZE.height}
+                sizes="(min-width: 1080px) 356px, (min-width: 720px) 50vw, 100vw"
+              />
+            ) : null}
             <div className={styles.itemBody}>
               <div className={styles.itemHead}>
-                <Image
-                  className={styles.logo}
-                  src={channel.logo.src}
-                  alt={channel.logo.alt}
-                  width={LOGO_SIZE.width}
-                  height={LOGO_SIZE.height}
-                  sizes="48px"
-                />
+                {channel.logo ? (
+                  <Image
+                    className={styles.logo}
+                    src={channel.logo.src}
+                    alt={channel.logo.alt}
+                    width={LOGO_SIZE.width}
+                    height={LOGO_SIZE.height}
+                    sizes="48px"
+                  />
+                ) : (
+                  <span className={styles.logoFallback} aria-hidden="true">
+                    {channel.name.charAt(0)}
+                  </span>
+                )}
                 <h3 className={styles.channelName}>{channel.name}</h3>
               </div>
               <p className={styles.subreddit}>{channel.subreddit}</p>
