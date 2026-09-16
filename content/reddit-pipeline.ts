@@ -121,15 +121,25 @@ export const REDDIT_PIPELINE: RedditPipelineOverview = {
     },
     {
       key: 'reddit.confessions.stories0',
-      name: 'Reddit Confessions',
+      name: 'True Confessions Daily',
       subreddit: 'r/TrueOffMyChest',
       handle: 'reddit.confessions.stories0',
+      banner: {
+        src: '/channels/tomc/banner.png',
+        alt: 'True Confessions Daily channel banner: the channel name in white and orange on a black field flanked by orange chevrons.',
+      },
+      logo: { src: '/channels/tomc/logo.png', alt: '' },
     },
     {
       key: 'overreacting.stories.daily0',
-      name: 'Am I Overreacting',
+      name: 'Am I Overreacting? Daily',
       subreddit: 'r/AmIOverreacting',
       handle: 'overreacting.stories.daily0',
+      banner: {
+        src: '/channels/aio/banner.png',
+        alt: 'Am I Overreacting? Daily channel banner: the channel name in white and orange on a black field flanked by orange chevrons.',
+      },
+      logo: { src: '/channels/aio/logo.png', alt: '' },
     },
   ],
 }

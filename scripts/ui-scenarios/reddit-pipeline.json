@@ -17,7 +17,7 @@
       "assertions": [
         { "kind": "count", "selector": "ul[aria-label='Pipeline channels'] > li", "equals": 5 },
         { "kind": "count", "selector": "a[href*='tiktok.com']", "equals": 0 },
-        { "kind": "count", "selector": "img", "equals": 6 },
+        { "kind": "count", "selector": "img", "equals": 10 },
         { "kind": "visible", "selector": "text=r/AmItheAsshole" },
         { "kind": "visible", "selector": "text=r/AmIOverreacting" },
         { "kind": "visible", "selector": "text=r/TrueOffMyChest" },
