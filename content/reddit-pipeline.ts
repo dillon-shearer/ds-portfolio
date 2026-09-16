@@ -141,5 +141,30 @@ export const REDDIT_PIPELINE: RedditPipelineOverview = {
       },
       logo: { src: '/channels/aio/logo.png', alt: '' },
     },
+    // P5-T417: sixth-wave channels. No branded art yet — the monogram fallback renders.
+    {
+      key: 'reddit.inlaws.stories0',
+      name: 'In-Law Stories Daily',
+      subreddit: 'r/JUSTNOMIL',
+      handle: 'reddit.inlaws.stories0',
+    },
+    {
+      key: 'reddit.cheating.stories0',
+      name: 'Cheating Stories Daily',
+      subreddit: 'r/survivinginfidelity',
+      handle: 'reddit.cheating.stories0',
+    },
+    {
+      key: 'reddit.scary.stories0',
+      name: 'Short Scary Stories Daily',
+      subreddit: 'r/shortscarystories',
+      handle: 'reddit.scary.stories0',
+    },
+    {
+      key: 'reddit.toxicparents.stories0',
+      name: 'Toxic Parent Stories Daily',
+      subreddit: 'r/raisedbynarcissists',
+      handle: 'reddit.toxicparents.stories0',
+    },
   ],
 }
