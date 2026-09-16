@@ -16,6 +16,7 @@ export const revalidate = 3600
 type HubChannel = {
   channelName: string
   displayName: string
+  subreddit: string | null
   youtubeUrl: string | null
   instagramUrl: string | null
 }
@@ -23,6 +24,7 @@ type HubChannel = {
 type HubRow = {
   channel_name: string
   display_name: string | null
+  subreddit: string | null
   youtube_url: string | null
   instagram_url: string | null
 }
@@ -30,7 +32,7 @@ type HubRow = {
 async function loadChannels(): Promise<HubChannel[]> {
   try {
     const { rows } = await sql /* sql */ `
-      SELECT channel_name, display_name, youtube_url, instagram_url
+      SELECT channel_name, display_name, subreddit, youtube_url, instagram_url
       FROM pipeline_channel_stats
       WHERE youtube_url IS NOT NULL OR instagram_url IS NOT NULL
       ORDER BY COALESCE(display_name, channel_name)
@@ -38,6 +40,7 @@ async function loadChannels(): Promise<HubChannel[]> {
     return (rows as HubRow[]).map((row) => ({
       channelName: row.channel_name,
       displayName: row.display_name ?? row.channel_name,
+      subreddit: row.subreddit,
       youtubeUrl: row.youtube_url,
       instagramUrl: row.instagram_url,
     }))
@@ -49,12 +52,13 @@ async function loadChannels(): Promise<HubChannel[]> {
 
 // Sample rows for the development-only UI evidence harness. Production always reads Neon.
 const SAMPLE: HubChannel[] = [
-  'daily.writing.prompts0',
-  'reddit.daily.story.time0',
-  'reddit.tifu.stories0',
-].map((name) => ({
+  ['daily.writing.prompts0', 'r/WritingPrompts'],
+  ['reddit.daily.story.time0', 'r/AmItheAsshole'],
+  ['reddit.tifu.stories0', 'r/TIFU'],
+].map(([name, subreddit]) => ({
   channelName: name,
   displayName: name,
+  subreddit,
   youtubeUrl: `https://www.youtube.com/@${name}`,
   instagramUrl: `https://www.instagram.com/${name}`,
 }))
@@ -84,7 +88,10 @@ export default async function LinksPage({
         <ul className={styles.list} aria-label="Channels">
           {channels.map((channel) => (
             <li key={channel.channelName} className={styles.channel}>
-              <h2 className={styles.name}>{channel.displayName}</h2>
+              <div className={styles.meta}>
+                <h2 className={styles.name}>{channel.displayName}</h2>
+                {channel.subreddit && <p className={styles.sub}>{channel.subreddit}</p>}
+              </div>
               <div className={styles.buttons}>
                 {channel.youtubeUrl && (
                   <Button href={channel.youtubeUrl} variant="outline">
