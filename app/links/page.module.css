@@ -24,9 +24,9 @@
   gap: var(--space-3);
 }
 
-/* One ink block per channel: name and subreddit on top, platform links as halves below. */
+/* One oxblood block per channel: name and subreddit on top, platform links as halves below. */
 .channel {
-  background: var(--color-ink);
+  background: var(--color-accent);
   color: var(--color-paper-2);
   border-radius: var(--radius-sm);
   font-family: var(--font-mono);
@@ -51,13 +51,13 @@
   margin-top: 2px;
   text-transform: none;
   letter-spacing: 0;
-  opacity: 0.6;
+  opacity: 0.8;
   overflow-wrap: anywhere;
 }
 
 .halves {
   display: flex;
-  border-top: var(--rule-hairline) solid var(--color-ink-2);
+  border-top: var(--rule-hairline) solid var(--color-accent-hover);
 }
 
 .half {
@@ -69,11 +69,12 @@
 }
 
 .half + .half {
-  border-left: var(--rule-hairline) solid var(--color-ink-2);
+  border-left: var(--rule-hairline) solid var(--color-accent-hover);
 }
 
-.half:hover {
-  background: var(--color-accent);
+.half:hover,
+.half:active {
+  background: var(--color-ink);
 }
 
 /* Keep the focus ring inside the block so it is not clipped by neighbours. */
