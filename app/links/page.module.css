@@ -3,8 +3,11 @@
   width: 100%;
   max-width: 22rem;
   margin: 0 auto;
-  /* The viewport is locked: the page never scrolls, the list inside does (see .list). */
+  /* The viewport is locked: the page never scrolls, the list inside does (see .list).
+     main is itself a flex item of body, so min-height: 0 stops it growing past 100dvh. */
   height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   padding: var(--space-6) var(--gutter) 0;
