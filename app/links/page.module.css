@@ -4,7 +4,9 @@
   max-width: 22rem;
   margin: 0 auto;
   /* The viewport is locked: the page never scrolls, the list inside does (see .list).
-     main is itself a flex item of body, so min-height: 0 stops it growing past 100dvh. */
+     main is itself a flex item of body and globals.css gives main flex: 1, whose 0% basis
+     resolves to content size and ignores height. flex: none makes the 100dvh height win. */
+  flex: none;
   height: 100dvh;
   min-height: 0;
   overflow: hidden;
