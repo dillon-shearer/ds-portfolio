@@ -46,7 +46,7 @@
   font-weight: 400;
   letter-spacing: inherit;
   line-height: inherit;
-  padding: var(--space-3) var(--space-4) var(--space-2);
+  padding: var(--space-2) var(--space-3) var(--space-1);
   overflow-wrap: anywhere;
 }
 
@@ -66,8 +66,10 @@
 
 .half {
   flex: 1;
-  padding: var(--space-2) var(--space-3);
-  color: inherit;
+  /* ponytail: 10px vertical keeps the tap target near 36px while the card stays thin */
+  padding: 10px var(--space-3);
+  background: var(--color-accent);
+  color: var(--color-paper-2);
   text-decoration: none;
   transition:
     background-color var(--duration-fast) var(--ease-out),
@@ -75,18 +77,18 @@
 }
 
 .half + .half {
-  border-left: var(--rule-hairline) solid var(--color-accent);
+  border-left: var(--rule-hairline) solid var(--color-accent-hover);
 }
 
 .half:hover,
 .half:active {
-  background: var(--color-accent);
-  color: var(--color-paper-2);
+  background: var(--color-accent-hover);
 }
 
 /* Keep the focus ring inside the card so it is not clipped by the rounded overflow. */
 .half:focus-visible {
   outline-offset: -4px;
+  outline-color: var(--color-paper-2);
   border-radius: 6px;
 }
 
