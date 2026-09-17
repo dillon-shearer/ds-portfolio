@@ -80,7 +80,8 @@
 
 .halves {
   display: flex;
-  border-top: var(--rule-hairline) solid var(--color-accent);
+  gap: var(--space-2);
+  padding: 0 var(--space-2) var(--space-2);
 }
 
 .half {
@@ -89,14 +90,11 @@
   padding: 10px var(--space-3);
   background: var(--color-accent);
   color: var(--color-paper-2);
+  border-radius: 6px;
   text-decoration: none;
   transition:
     background-color var(--duration-fast) var(--ease-out),
     color var(--duration-fast) var(--ease-out);
-}
-
-.half + .half {
-  border-left: var(--rule-hairline) solid var(--color-accent-hover);
 }
 
 .half:hover,
@@ -108,7 +106,6 @@
 .half:focus-visible {
   outline-offset: -4px;
   outline-color: var(--color-paper-2);
-  border-radius: 6px;
 }
 
 .empty {
