@@ -141,30 +141,49 @@ export const REDDIT_PIPELINE: RedditPipelineOverview = {
       },
       logo: { src: '/channels/aio/logo.png', alt: '' },
     },
-    // P5-T417: sixth-wave channels. No branded art yet - the monogram fallback renders.
     {
       key: 'reddit.inlaws.stories0',
       name: 'In-Law Stories Daily',
       subreddit: 'r/JUSTNOMIL',
       handle: 'reddit.inlaws.stories0',
+      banner: {
+        src: '/channels/inlaws/banner.png',
+        alt: 'In Law Nightmares Daily channel banner: the channel name in white and orange on a black field flanked by orange chevrons.',
+      },
+      logo: { src: '/channels/inlaws/logo.png', alt: '' },
     },
     {
       key: 'reddit.cheating.stories0',
       name: 'Cheating Stories Daily',
       subreddit: 'r/survivinginfidelity',
       handle: 'reddit.cheating.stories0',
+      banner: {
+        src: '/channels/cheating/banner.png',
+        alt: 'Daily Cheating Scandals Stories channel banner: the channel name in white and orange on a black field flanked by orange chevrons.',
+      },
+      logo: { src: '/channels/cheating/logo.png', alt: '' },
     },
     {
       key: 'reddit.scary.stories0',
       name: 'Short Scary Stories Daily',
       subreddit: 'r/shortscarystories',
       handle: 'reddit.scary.stories0',
+      banner: {
+        src: '/channels/scary/banner.png',
+        alt: 'Scary Story Central Daily channel banner: the channel name in white and orange on a black field flanked by orange chevrons.',
+      },
+      logo: { src: '/channels/scary/logo.png', alt: '' },
     },
     {
       key: 'reddit.toxicparents.stories0',
       name: 'Toxic Parent Stories Daily',
       subreddit: 'r/raisedbynarcissists',
       handle: 'reddit.toxicparents.stories0',
+      banner: {
+        src: '/channels/toxicparents/banner.png',
+        alt: 'Toxic Parent Stories Daily channel banner: the channel name in white and orange on a black field flanked by orange chevrons.',
+      },
+      logo: { src: '/channels/toxicparents/logo.png', alt: '' },
     },
   ],
 }

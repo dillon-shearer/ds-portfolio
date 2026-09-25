@@ -15,9 +15,9 @@
       "name": "loaded",
       "ready": "h3:has-text('Daily Story Time')",
       "assertions": [
-        { "kind": "count", "selector": "ul[aria-label='Pipeline channels'] > li", "equals": 5 },
+        { "kind": "count", "selector": "ul[aria-label='Pipeline channels'] > li", "equals": 9 },
         { "kind": "count", "selector": "a[href*='tiktok.com']", "equals": 0 },
-        { "kind": "count", "selector": "img", "equals": 10 },
+        { "kind": "count", "selector": "img", "equals": 18 },
         { "kind": "visible", "selector": "text=r/AmItheAsshole" },
         { "kind": "visible", "selector": "text=r/AmIOverreacting" },
         { "kind": "visible", "selector": "text=r/TrueOffMyChest" },
@@ -53,7 +53,7 @@
       "route": "/demos/reddit-pipeline?__uiState=empty",
       "ready": "h3:has-text('Daily Story Time')",
       "assertions": [
-        { "kind": "count", "selector": "ul[aria-label='Pipeline channels'] > li", "equals": 5 },
+        { "kind": "count", "selector": "ul[aria-label='Pipeline channels'] > li", "equals": 9 },
         { "kind": "count", "selector": "ul[aria-label='Pipeline channels'] dl", "equals": 0 },
         { "kind": "count", "selector": "a[href*='tiktok.com']", "equals": 0 },
         { "kind": "visible", "selector": "text=r/AmItheAsshole" }
