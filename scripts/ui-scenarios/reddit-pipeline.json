@@ -25,7 +25,7 @@
         {
           "kind": "eval",
           "expression": "document.querySelectorAll('ul[aria-label=\"Pipeline channels\"] dl dt').length",
-          "equals": 13
+          "equals": 18
         },
         {
           "kind": "eval",

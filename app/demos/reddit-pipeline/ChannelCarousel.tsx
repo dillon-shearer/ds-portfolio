@@ -142,6 +142,18 @@ function ChannelStatsBlock({ stats }: { stats: ChannelStats }) {
         <dd className={styles.statValue}>{stats.posted}</dd>
         <dt className={styles.statLabel}>{STAT_LABELS.postedLast30Days}</dt>
         <dd className={styles.statValue}>{stats.postedLast30Days}</dd>
+        {stats.youtubeSubscribers ? (
+          <>
+            <dt className={styles.statLabel}>{STAT_LABELS.youtubeSubscribers}</dt>
+            <dd className={styles.statValue}>{stats.youtubeSubscribers}</dd>
+          </>
+        ) : null}
+        {stats.instagramFollowers ? (
+          <>
+            <dt className={styles.statLabel}>{STAT_LABELS.instagramFollowers}</dt>
+            <dd className={styles.statValue}>{stats.instagramFollowers}</dd>
+          </>
+        ) : null}
         {stats.latestPosted ? (
           <>
             <dt className={styles.statLabel}>{STAT_LABELS.latestPosted}</dt>

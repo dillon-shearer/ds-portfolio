@@ -25,6 +25,9 @@ export function profileUrl(platform: PipelinePlatform, handle: string) {
 export type ChannelStats = {
   posted: number
   postedLast30Days: number
+  /** preformatted, e.g. '1,234'; null when not pushed, hidden, or the lookup failed */
+  youtubeSubscribers: string | null
+  instagramFollowers: string | null
   /** e.g. 'Sep 2, 6:41 PM ET'; null when the channel has never posted */
   latestPosted: string | null
   /** relative age of the reading itself, e.g. '2h ago' */
@@ -49,10 +52,12 @@ export type PipelineChannel = {
   stats?: ChannelStats
 }
 
-/** Labels for the three readings, in render order. */
+/** Labels for the readings, in render order. */
 export const STAT_LABELS = {
   posted: 'Posted',
   postedLast30Days: 'Last 30d',
+  youtubeSubscribers: 'Subscribers',
+  instagramFollowers: 'Followers',
   latestPosted: 'Latest',
 } as const
 

@@ -50,12 +50,18 @@ function formatAge(capturedAt: string | Date) {
   return `${Math.round(hours / 24)}d ago`
 }
 
+function formatCount(value: number | null) {
+  return value === null ? null : value.toLocaleString('en-US')
+}
+
 // The driver may hand back timestamps as Date or as string depending on the type
 // parsers in play; both formatters normalise, so neither shape can surprise the page.
 type StatsRow = {
   channel_name: string
   posted: number
   posted_last_30_days: number
+  youtube_subscribers: number | null
+  instagram_followers: number | null
   latest_posted_at: string | Date | null
   captured_at: string | Date
 }
@@ -64,13 +70,16 @@ async function loadStats(): Promise<Map<string, ChannelStats>> {
   const stats = new Map<string, ChannelStats>()
   try {
     const { rows } = await sql /* sql */ `
-      SELECT channel_name, posted, posted_last_30_days, latest_posted_at, captured_at
+      SELECT channel_name, posted, posted_last_30_days, youtube_subscribers,
+        instagram_followers, latest_posted_at, captured_at
       FROM pipeline_channel_stats
     `
     for (const row of rows as StatsRow[]) {
       stats.set(row.channel_name, {
         posted: row.posted,
         postedLast30Days: row.posted_last_30_days,
+        youtubeSubscribers: formatCount(row.youtube_subscribers),
+        instagramFollowers: formatCount(row.instagram_followers),
         latestPosted: formatLatest(row.latest_posted_at),
         captured: formatAge(row.captured_at),
       })

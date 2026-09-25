@@ -285,6 +285,8 @@ Plain counts and one date. No charts, no derived rates, no per-video rows.
 |---|---|
 | `Posted` | videos posted all time |
 | `Last 30d` | videos posted in the trailing 30 days |
+| `Subscribers` | YouTube subscriber count (P4-T71) |
+| `Followers` | Instagram follower count (P4-T71) |
 | `Latest` | date and time of the most recent post |
 
 All three come from `pipeline_items` in `pipeline.db`, counting rows with a
@@ -305,6 +307,18 @@ Note for the first month or so of a channel's life: `Posted` and `Last 30d` show
 the same number, because every video it has ever posted is inside the window. They
 separate permanently once a channel is older than 30 days, which is when `Last 30d`
 starts doing its job as the "is this still running" reading.
+
+`Subscribers` and `Followers` (P4-T71) come from the platforms, not `pipeline.db`.
+The same tick reads YouTube `subscriberCount` from
+`channels?part=statistics&forHandle=<channel name>&key=YOUTUBE_API_KEY` (an API key,
+because the stored OAuth tokens carry only `youtube.upload` and `mine=true` is a
+403) and Instagram `followers_count` from `graph.instagram.com/me` with the
+channel's existing token. A platform the channel does not target is not queried.
+An unset key, a hidden count, or a failed lookup writes NULL for that column only,
+logs one line, and the card hides that row. The columns are
+`youtube_subscribers` and `instagram_followers` on `pipeline_channel_stats`
+(`db/migrations/2026-09-25-pipeline-channel-followers.sql`); `Updated <age>` is
+their timestamp, and the 6h push interval is their refresh.
 
 `Last 30d` is the metric that carries the weight: it is the one a visitor reads
 as "is this thing actually still running". The all-time count is context for it,
@@ -405,8 +419,8 @@ branch and the whole route silently becomes per-request dynamic.
 ### Placement on the card
 
 Between the subreddit line and the profile links, inside `.itemBody` in
-`ChannelCarousel.tsx`. Three label/value pairs on one row at 720px and up,
-stacked at 390px, with the freshness line beneath. Same type scale and color as
+`ChannelCarousel.tsx`. Stacked label/value pairs in render order (Posted, Last
+30d, Subscribers, Followers, Latest), with the freshness line beneath. Same type scale and color as
 `.profileLink`, so the block reads as card metadata and not as a dashboard KPI
 row. No borders, per `.claude/STYLE.md`.
 
