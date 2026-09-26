@@ -93,6 +93,10 @@
   flex: 1;
   /* ponytail: 10px vertical keeps the tap target near 36px while the card stays thin */
   padding: 10px var(--space-3);
+  /* Centers a single-line half beside a neighbour that carries a count line. */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background: var(--color-accent);
   color: var(--color-paper-2);
   border-radius: 6px;
@@ -100,6 +104,20 @@
   transition:
     background-color var(--duration-fast) var(--ease-out),
     color var(--duration-fast) var(--ease-out);
+}
+
+/* With a count line the half trims its padding so the tap target stays near 36px. */
+.half:has(.count) {
+  padding-block: 7px;
+}
+
+/* Audience count under the platform word: same tap target, recedes behind the label. */
+.count {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  opacity: 0.78;
 }
 
 .half:hover,

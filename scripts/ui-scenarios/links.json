@@ -18,6 +18,12 @@
         { "kind": "count", "selector": "ul[aria-label='Channels'] > li", "equals": 3 },
         { "kind": "count", "selector": "ul[aria-label='Channels'] a", "equals": 6 },
         { "kind": "count", "selector": "a[href*='tiktok.com']", "equals": 0 },
+        { "kind": "count", "selector": "ul[aria-label='Channels'] a > span", "equals": 5 },
+        {
+          "kind": "eval",
+          "expression": "Math.min(...[...document.querySelectorAll('ul[aria-label=\"Channels\"] a')].map((a) => a.getBoundingClientRect().height)) >= 34",
+          "equals": true
+        },
         {
           "kind": "eval",
           "expression": "document.querySelectorAll('ul[aria-label=\"Channels\"] a[href*=\"youtube.com/@\"]').length",

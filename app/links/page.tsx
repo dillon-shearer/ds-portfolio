@@ -18,6 +18,8 @@ type HubChannel = {
   subreddit: string | null
   youtubeUrl: string | null
   instagramUrl: string | null
+  youtubeSubscribers: string | null
+  instagramFollowers: string | null
 }
 
 type HubRow = {
@@ -26,12 +28,23 @@ type HubRow = {
   subreddit: string | null
   youtube_url: string | null
   instagram_url: string | null
+  youtube_subscribers: number | null
+  instagram_followers: number | null
+}
+
+const COMPACT = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 })
+
+// Null means not pushed, hidden, or lookup failed; zero is hidden too. Either way the button
+// keeps its single line.
+function formatCount(value: number | null): string | null {
+  return value ? COMPACT.format(value) : null
 }
 
 async function loadChannels(): Promise<HubChannel[]> {
   try {
     const { rows } = await sql /* sql */ `
-      SELECT channel_name, display_name, subreddit, youtube_url, instagram_url
+      SELECT channel_name, display_name, subreddit, youtube_url, instagram_url,
+        youtube_subscribers, instagram_followers
       FROM pipeline_channel_stats
       WHERE youtube_url IS NOT NULL OR instagram_url IS NOT NULL
       ORDER BY COALESCE(display_name, channel_name)
@@ -42,6 +55,8 @@ async function loadChannels(): Promise<HubChannel[]> {
       subreddit: row.subreddit,
       youtubeUrl: row.youtube_url,
       instagramUrl: row.instagram_url,
+      youtubeSubscribers: formatCount(row.youtube_subscribers),
+      instagramFollowers: formatCount(row.instagram_followers),
     }))
   } catch {
     // An unreachable database must not take the page down; it shows its empty state.
@@ -50,16 +65,21 @@ async function loadChannels(): Promise<HubChannel[]> {
 }
 
 // Sample rows for the development-only UI evidence harness. Production always reads Neon.
-const SAMPLE: HubChannel[] = [
-  ['daily.writing.prompts0', 'r/WritingPrompts'],
-  ['reddit.daily.story.time0', 'r/AmItheAsshole'],
-  ['reddit.tifu.stories0', 'r/TIFU'],
-].map(([name, subreddit]) => ({
+// One null count keeps the single-line fallback in the evidence shot.
+const SAMPLE: HubChannel[] = (
+  [
+    ['daily.writing.prompts0', 'r/WritingPrompts', 1234, 604],
+    ['reddit.daily.story.time0', 'r/AmItheAsshole', 12800, null],
+    ['reddit.tifu.stories0', 'r/TIFU', 87, 3450],
+  ] as const
+).map(([name, subreddit, subscribers, followers]) => ({
   channelName: name,
   displayName: name,
   subreddit,
   youtubeUrl: `https://www.youtube.com/@${name}`,
   instagramUrl: `https://www.instagram.com/${name}`,
+  youtubeSubscribers: formatCount(subscribers),
+  instagramFollowers: formatCount(followers),
 }))
 
 async function resolveChannels(searchParams: Promise<{ __uiState?: string }>) {
@@ -95,11 +115,17 @@ export default async function LinksPage({
                 {channel.youtubeUrl && (
                   <a href={channel.youtubeUrl} className={styles.half}>
                     YouTube
+                    {channel.youtubeSubscribers && (
+                      <span className={styles.count}>{channel.youtubeSubscribers}</span>
+                    )}
                   </a>
                 )}
                 {channel.instagramUrl && (
                   <a href={channel.instagramUrl} className={styles.half}>
                     Instagram
+                    {channel.instagramFollowers && (
+                      <span className={styles.count}>{channel.instagramFollowers}</span>
+                    )}
                   </a>
                 )}
               </div>
