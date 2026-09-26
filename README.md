@@ -46,7 +46,7 @@ components/
   dashboard/                Dashboard framework components
 content/                    Structured site and page content
 db/migrations/              One-shot SQL migrations
-docs/                       Design spec and feature-parity reference
+docs/                       Design spec and operational reference docs
 scripts/                    Repository utilities, including ASCII validation
 styles/tokens.css           Single source of truth for design tokens
 .claude/                    Agent guidance and style rules

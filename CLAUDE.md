@@ -34,7 +34,7 @@ app/             Next.js App Router pages
 components/ui/   Shared UI primitives (Badge, Button, InlineLink, NavLink, Card, Input, PageHeader, DashboardCard)
 components/      Layout components (Header, Footer, MobileDrawer)
 content/         Structured site, home, about, dashboard, RSS, and contact content
-docs/            Locked design spec and feature-parity reference
+docs/            Locked design spec and operational reference docs
 scripts/         Repository checks including check-ascii.mjs
 styles/          tokens.css only - all other styles are CSS Modules co-located with components
 .claude/         Agent guidance (STYLE.md, AGENTS.md, HANDOFF.md)
@@ -78,7 +78,7 @@ styles/          tokens.css only - all other styles are CSS Modules co-located w
 - **FloatingChatWidget - ReactMarkdown wraps message content in `<p class="mdP">` with built-in `margin-bottom`:** plain user/assistant text rendered through `<MarkdownContent>` inherits `.mdP { margin: 0 0 var(--space-2) }`, producing visibly asymmetric padding inside `.messageUser`/`.messageAssistant` bubbles. The override `.message > :last-child.mdP { margin-bottom: 0 }` (specificity 0,3,0) beats `.mdP` (0,1,0) and trims the trailing margin. Same applies to `.mdUl`/`.mdOl`.
 - **Turbopack CSS Module HMR is stale-prone:** new CSS rules (especially `position: absolute`, new classes, new selectors) often don't apply after edits even though TSX hot-reloads. Symptom: new elements appear in the DOM with default browser styling (e.g. an absolutely-positioned button rendering at top-left of its container instead of where CSS says). Fix: full `npm run dev` restart. `npm run build` is not affected.
 - **Gym dashboard mobile:** responsive breakpoints are 720px and 1080px. Follow the current rules in `docs/design-spec.md` and `.claude/STYLE.md` when changing responsive layout.
-- **Design docs:** current design and parity references live directly in `docs/`, especially `docs/design-spec.md` and `docs/feature-parity.md`.
+- **Design docs:** current design and operational references live directly in `docs/`, especially `docs/design-spec.md`, `docs/ui-evidence.md`, and `docs/gym-chat-exercise-context-eval.md`.
 
 ## DB migrations
 
