@@ -34,10 +34,9 @@ type HubRow = {
 
 const COMPACT = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 })
 
-// Null means not pushed, hidden, or lookup failed; zero is hidden too. Either way the button
-// keeps its single line.
+// Null means not pushed, hidden, or lookup failed; the button keeps its single line. Zero shows.
 function formatCount(value: number | null): string | null {
-  return value ? COMPACT.format(value) : null
+  return value == null ? null : COMPACT.format(value)
 }
 
 async function loadChannels(): Promise<HubChannel[]> {
@@ -65,12 +64,12 @@ async function loadChannels(): Promise<HubChannel[]> {
 }
 
 // Sample rows for the development-only UI evidence harness. Production always reads Neon.
-// One null count keeps the single-line fallback in the evidence shot.
+// One null count keeps the single-line fallback in the evidence shot; one zero shows as 0.
 const SAMPLE: HubChannel[] = (
   [
     ['daily.writing.prompts0', 'r/WritingPrompts', 1234, 604],
     ['reddit.daily.story.time0', 'r/AmItheAsshole', 12800, null],
-    ['reddit.tifu.stories0', 'r/TIFU', 87, 3450],
+    ['reddit.tifu.stories0', 'r/TIFU', 0, 3450],
   ] as const
 ).map(([name, subreddit, subscribers, followers]) => ({
   channelName: name,
