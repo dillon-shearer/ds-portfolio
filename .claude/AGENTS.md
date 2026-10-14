@@ -1,0 +1,48 @@
+# AGENTS.md: Working in This Codebase
+
+## Read order (required before every task)
+
+1. `.claude/STYLE.md` (design system)
+2. `.claude/AGENTS.md` (this file)
+3. The specific component(s) your task touches
+4. The task description
+
+## Forbidden without updating .claude/STYLE.md first
+
+- New colors (beyond tokens.css)
+- New fonts
+- New border-radius values
+- New box-shadows
+- New breakpoints
+- New component variants
+- New layout primitives
+- Em dashes or en dashes in copy: use commas or colons instead
+
+## Forbidden without explicit user approval
+
+- Adding npm dependencies
+- Adding routes
+- Adding analytics providers
+
+## Required for every PR
+
+- Screenshot at 360px and 1440px for every page touched
+- Confirm all colors, fonts, and spacing reference `var(--*)` (no hardcoded values)
+- Confirm no `border-radius` > 2px, no `box-shadow`, no gradient backgrounds
+
+## When in doubt
+
+Ask, don't invent. Match an existing pattern before creating a new one.
+
+## Known gotchas
+
+- Navigation comes from `NAV_ITEMS` in `content/site.ts`; Header, MobileDrawer, and Footer consume it.
+- Run `npm run check:ascii`, `npm run lint`, and `npx tsc --noEmit` for applicable changes. CI also runs the repository build with dummy environment values.
+- CSS precedence: page-level module CSS loads before the root bundle in Next.js 15; page overrides silently lose to component rules. See `.claude/STYLE.md` "CSS Precedence" section.
+
+## Out of scope without explicit instruction
+
+- Rewriting copy
+- Adding nav items
+- Adding pages
+- Restoring /blog, /demos, /notebooks content

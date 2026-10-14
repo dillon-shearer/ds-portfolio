@@ -1,0 +1,194 @@
+export type PipelinePlatform = 'instagram' | 'youtube'
+
+/**
+ * The handle is identical on both platforms and equals the channel name,
+ * so a profile URL is a prefix plus the handle. Nothing is stored per platform.
+ */
+export const PROFILE_BASE: Record<PipelinePlatform, string> = {
+  instagram: 'https://www.instagram.com/',
+  youtube: 'https://www.youtube.com/@',
+}
+
+export const PROFILE_PLATFORMS: PipelinePlatform[] = ['instagram', 'youtube']
+
+export function profileUrl(platform: PipelinePlatform, handle: string) {
+  return PROFILE_BASE[platform] + handle
+}
+
+/**
+ * Live per-channel readings, attached server-side in page.tsx from the
+ * pipeline_channel_stats table the pipeline pushes to. Never hand-written into
+ * REDDIT_PIPELINE below: the literal stays static content. Both time fields
+ * arrive preformatted because the carousel is a client component and a date
+ * formatted there would not match the server render.
+ */
+export type ChannelStats = {
+  posted: number
+  postedLast30Days: number
+  /** preformatted, e.g. '1,234'; null when not pushed, hidden, or the lookup failed */
+  youtubeSubscribers: string | null
+  instagramFollowers: string | null
+  /** e.g. 'Sep 2, 6:41 PM ET'; null when the channel has never posted */
+  latestPosted: string | null
+  /** relative age of the reading itself, e.g. '2h ago' */
+  captured: string
+}
+
+export type PipelineChannel = {
+  /** channel_name in pipeline.db, kept so the channel can be matched back */
+  key: string
+  name: string
+  subreddit: string
+  /** same on Instagram and YouTube; the two URLs derive from it */
+  handle: string
+  /** absent until branded art exists for the channel; the card then skips the banner strip */
+  banner?: { src: string; alt: string }
+  logo?: {
+    src: string
+    /** empty on purpose: the logo repeats the channel name it sits beside */
+    alt: string
+  }
+  /** absent when the row is missing or the query failed; the card then hides the block */
+  stats?: ChannelStats
+}
+
+/** Labels for the readings, in render order. */
+export const STAT_LABELS = {
+  posted: 'Posted',
+  postedLast30Days: 'Last 30d',
+  youtubeSubscribers: 'Subscribers',
+  instagramFollowers: 'Followers',
+  latestPosted: 'Latest',
+} as const
+
+export type RedditPipelineOverview = {
+  route: string
+  metadataTitle: string
+  metadataDescription: string
+  eyebrow: string
+  title: string
+  lead: string
+  description: string
+  carouselLabel: string
+  carouselAriaLabel: string
+  channels: PipelineChannel[]
+}
+
+/** Rendered size of the shipped assets in public/channels, in CSS pixels. */
+export const BANNER_SIZE = { width: 1200, height: 675 }
+export const LOGO_SIZE = { width: 256, height: 256 }
+
+export const REDDIT_PIPELINE: RedditPipelineOverview = {
+  route: '/demos/reddit-pipeline',
+  metadataTitle: 'Reddit to short-form video pipeline',
+  metadataDescription:
+    'The channels my Reddit to short-form video pipeline posts to on Instagram and YouTube.',
+  eyebrow: 'Demos',
+  title: 'Reddit to short-form video pipeline',
+  lead: 'A local pipeline that turns Reddit stories into narrated, captioned short-form videos and posts them on a schedule.',
+  description:
+    'Stories come out of subreddit RSS feeds, get narrated with Kokoro TTS, captioned with faster-whisper, composited over background video, and pushed to YouTube and Instagram through each platform connection. Every stage runs as a BullMQ job. These are the channels it currently runs.',
+  carouselLabel: 'Channels',
+  carouselAriaLabel: 'Pipeline channels',
+  channels: [
+    {
+      key: 'reddit.daily.story.time0',
+      name: 'Daily Story Time',
+      subreddit: 'r/AmItheAsshole',
+      handle: 'reddit.daily.story.time0',
+      banner: {
+        src: '/channels/aita/banner.png',
+        alt: 'Reddit AITA Daily channel banner: the channel name in white and orange on a black field flanked by orange chevrons.',
+      },
+      logo: { src: '/channels/aita/logo.png', alt: '' },
+    },
+    {
+      key: 'reddit.tifu.stories0',
+      name: 'TIFU Stories',
+      subreddit: 'r/TIFU',
+      handle: 'reddit.tifu.stories0',
+      banner: {
+        src: '/channels/tifu/banner.png',
+        alt: 'Reddit TIFU Daily channel banner: the channel name in white and orange on a black field flanked by orange chevrons.',
+      },
+      logo: { src: '/channels/tifu/logo.png', alt: '' },
+    },
+    {
+      key: 'daily.writing.prompts0',
+      name: 'Daily Writing Prompts',
+      subreddit: 'r/WritingPrompts',
+      handle: 'daily.writing.prompts0',
+      banner: {
+        src: '/channels/wp/banner.png',
+        alt: 'Reddit WP Daily channel banner: the channel name in white and orange on a black field flanked by orange chevrons.',
+      },
+      logo: { src: '/channels/wp/logo.png', alt: '' },
+    },
+    {
+      key: 'reddit.confessions.stories0',
+      name: 'True Confessions Daily',
+      subreddit: 'r/TrueOffMyChest',
+      handle: 'reddit.confessions.stories0',
+      banner: {
+        src: '/channels/tomc/banner.png',
+        alt: 'True Confessions Daily channel banner: the channel name in white and orange on a black field flanked by orange chevrons.',
+      },
+      logo: { src: '/channels/tomc/logo.png', alt: '' },
+    },
+    {
+      key: 'overreacting.stories.daily0',
+      name: 'Am I Overreacting? Daily',
+      subreddit: 'r/AmIOverreacting',
+      handle: 'overreacting.stories.daily0',
+      banner: {
+        src: '/channels/aio/banner.png',
+        alt: 'Am I Overreacting? Daily channel banner: the channel name in white and orange on a black field flanked by orange chevrons.',
+      },
+      logo: { src: '/channels/aio/logo.png', alt: '' },
+    },
+    {
+      key: 'reddit.inlaws.stories0',
+      name: 'In-Law Stories Daily',
+      subreddit: 'r/JUSTNOMIL',
+      handle: 'reddit.inlaws.stories0',
+      banner: {
+        src: '/channels/inlaws/banner.png',
+        alt: 'In Law Nightmares Daily channel banner: the channel name in white and orange on a black field flanked by orange chevrons.',
+      },
+      logo: { src: '/channels/inlaws/logo.png', alt: '' },
+    },
+    {
+      key: 'reddit.cheating.stories0',
+      name: 'Cheating Stories Daily',
+      subreddit: 'r/survivinginfidelity',
+      handle: 'reddit.cheating.stories0',
+      banner: {
+        src: '/channels/cheating/banner.png',
+        alt: 'Daily Cheating Scandals Stories channel banner: the channel name in white and orange on a black field flanked by orange chevrons.',
+      },
+      logo: { src: '/channels/cheating/logo.png', alt: '' },
+    },
+    {
+      key: 'reddit.scary.stories0',
+      name: 'Short Scary Stories Daily',
+      subreddit: 'r/shortscarystories',
+      handle: 'reddit.scary.stories0',
+      banner: {
+        src: '/channels/scary/banner.png',
+        alt: 'Scary Story Central Daily channel banner: the channel name in white and orange on a black field flanked by orange chevrons.',
+      },
+      logo: { src: '/channels/scary/logo.png', alt: '' },
+    },
+    {
+      key: 'reddit.toxicparents.stories0',
+      name: 'Toxic Parent Stories Daily',
+      subreddit: 'r/raisedbynarcissists',
+      handle: 'reddit.toxicparents.stories0',
+      banner: {
+        src: '/channels/toxicparents/banner.png',
+        alt: 'Toxic Parent Stories Daily channel banner: the channel name in white and orange on a black field flanked by orange chevrons.',
+      },
+      logo: { src: '/channels/toxicparents/logo.png', alt: '' },
+    },
+  ],
+}

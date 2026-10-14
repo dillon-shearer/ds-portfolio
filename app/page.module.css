@@ -1,0 +1,119 @@
+.hero {
+  width: 100%;
+}
+
+.eyebrow {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-ink-3);
+}
+
+.statement {
+  grid-area: statement;
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-ink);
+  max-width: 20ch;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-areas:
+    'statement statement statement statement statement statement statement . . . . .'
+    'support support support support support support support . . . . .'
+    'meta meta meta meta meta meta meta . . . . .'
+    'ctas ctas ctas ctas ctas ctas ctas . . . . .';
+  column-gap: var(--space-4);
+  align-items: start;
+  margin-top: var(--space-7);
+}
+
+.support {
+  grid-area: support;
+  font-family: var(--font-sans);
+  font-size: var(--text-lg);
+  font-weight: 400;
+  line-height: var(--leading-normal);
+  color: var(--color-ink-2);
+  max-width: 50ch;
+  margin-top: var(--space-5);
+}
+
+.meta {
+  grid-area: meta;
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  line-height: var(--leading-snug);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-ink-3);
+  margin-top: var(--space-7);
+}
+
+.metaLink {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: var(--rule-hairline);
+  text-underline-offset: var(--space-1);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.metaLink:hover {
+  color: var(--color-accent);
+}
+
+.meta > span[aria-hidden='true'] {
+  white-space: pre;
+}
+
+.ctas {
+  grid-area: ctas;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+
+@media (max-width: 719px) {
+  .heroGrid {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--space-6);
+  }
+
+  .support {
+    margin-top: var(--space-6);
+  }
+
+  .meta {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-1);
+  }
+
+  .meta > span[aria-hidden='true'] {
+    display: none;
+  }
+}
+
+@media (min-width: 720px) and (max-width: 1079px) {
+  .heroGrid {
+    grid-template-areas:
+      'statement statement statement statement statement statement statement statement . . . .'
+      'support support support support support support support support . . . .'
+      'meta meta meta meta meta meta meta meta . . . .'
+      'ctas ctas ctas ctas ctas ctas ctas ctas . . . .';
+  }
+}
