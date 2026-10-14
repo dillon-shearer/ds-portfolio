@@ -1,9 +1,15 @@
 ## What this project is for
 
-Dillon Shearer's personal portfolio website. It shows what he builds and has built: data pipelines, analytics, and web apps, with his resume and project write-ups. Visitors are recruiters and hiring managers, so pages should load fast, read clearly and work on a phone.
+The Data With Dillon portfolio site: Dillon Shearer's data pipelines, analytics and web apps, with resume and project write-ups. Visitors are recruiters and hiring managers, so pages should load fast, read clearly and work on a phone.
+
+Stack: Next.js 15 App Router, deployed on Vercel from GitHub main. Repo: github.com/dillon-shearer/ds-portfolio. Local checkout: C:\Users\dills\ds-portfolio.
 
 ## How the operator works
 
-Casual prompts on a local folder. There is no git remote and nothing is pushed; the board merges finished tickets into `master` locally. Do not add a remote, push, or set up GitHub unless the operator asks.
+GitHub repo with push. The board merges finished tickets to main and pushes to origin main, which triggers the Vercel deploy. Anything merged goes live, so main must always build.
 
-Site copy follows the owner voice row in the brain: plain first-person statements of what he did, no talk about feelings or AI.
+## Operator style
+
+Brief replies, plain language, ASCII only, no code comments, surgical changes, preserve all existing behaviour, own every issue found even if not caused by the ticket.
+
+Site copy follows the owner voice row in the brain: plain first-person statements of what was done, no talk about feelings or AI.
