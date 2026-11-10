@@ -9,6 +9,7 @@ interface InputProps {
   rows?: number
   placeholder?: string
   defaultValue?: string
+  autoComplete?: string
 }
 
 export function Input({
@@ -20,6 +21,7 @@ export function Input({
   rows,
   placeholder,
   defaultValue,
+  autoComplete,
 }: InputProps) {
   const id = `field-${name}`
   const fieldClass = `${styles.field} ${as === 'textarea' ? styles.textarea : ''}`
@@ -38,6 +40,7 @@ export function Input({
           rows={rows}
           placeholder={placeholder}
           defaultValue={defaultValue}
+          autoComplete={autoComplete}
           className={fieldClass}
         />
       ) : (
@@ -48,6 +51,7 @@ export function Input({
           required={required}
           placeholder={placeholder}
           defaultValue={defaultValue}
+          autoComplete={autoComplete}
           className={fieldClass}
         />
       )}

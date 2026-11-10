@@ -58,8 +58,8 @@ export function ContactForm() {
       )}
 
       <div className={styles.fields}>
-        <Input label="Name" name="name" required />
-        <Input label="Email" name="email" type="email" required />
+        <Input label="Name" name="name" autoComplete="name" required />
+        <Input label="Email" name="email" type="email" autoComplete="email" required />
         <Input label="Message" name="message" as="textarea" rows={6} required />
       </div>
 
