@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Button } from '@/components/ui'
+import { Button, InlineLink } from '@/components/ui'
 import { HERO } from '@/content/home'
 import { SITE, SOCIALS } from '@/content/site'
 import styles from './page.module.css'
@@ -21,16 +21,16 @@ export default function HomePage() {
               {HERO.ctas.primary.label}
             </Button>
             {HERO.ctas.secondary.map((link) => (
-              <Button key={link.href} href={link.href} variant="outline" size="md">
+              <InlineLink key={link.href} href={link.href}>
                 {link.label}
-              </Button>
+              </InlineLink>
             ))}
-            <Button href={SOCIALS.github} variant="outline" size="md" external>
+            <InlineLink href={SOCIALS.github} external>
               {HERO.ctas.social.github}
-            </Button>
-            <Button href={SOCIALS.linkedin} variant="outline" size="md" external>
+            </InlineLink>
+            <InlineLink href={SOCIALS.linkedin} external>
               {HERO.ctas.social.linkedin}
-            </Button>
+            </InlineLink>
           </div>
         </div>
       </section>
