@@ -29,8 +29,6 @@ function ChartTooltip({ active, payload }: any) {
       <span
         style={{
           fontWeight: '500',
-          letterSpacing: 'var(--tracking-wide)',
-          textTransform: 'uppercase',
         }}
       >
         {p.ex}

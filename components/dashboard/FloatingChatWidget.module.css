@@ -91,8 +91,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink-3);
 }
 
@@ -100,8 +98,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 600;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink-3);
   background: none;
   border: var(--rule-hairline) solid var(--color-rule);
@@ -197,6 +193,9 @@
 .message > :last-child.mdOl {
   margin-bottom: 0;
 }
+.message > :has(+ .copyBtn:last-child) {
+  margin-bottom: 0;
+}
 
 /* ------- Per-message copy button ------- */
 .copyBtn {
@@ -241,7 +240,7 @@
   align-self: flex-end;
   background: var(--color-paper);
   border: var(--rule-hairline) solid var(--color-rule);
-  padding: 9px var(--space-5) 5px var(--space-3);
+  padding: 11px var(--space-5) 11px var(--space-3);
   max-width: 80%;
 }
 
@@ -269,8 +268,6 @@
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-warn);
   margin-bottom: var(--space-2);
 }
@@ -291,8 +288,6 @@
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-paper);
   background: var(--color-warn);
   border: none;
@@ -317,8 +312,6 @@
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink-3);
   margin-bottom: var(--space-2);
 }
@@ -459,8 +452,6 @@
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-paper);
   background: var(--color-ink);
   border: none;
@@ -507,8 +498,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink-3);
   margin-bottom: var(--space-2);
 }
@@ -531,8 +520,6 @@
   cursor: pointer;
   font-size: var(--text-xs);
   font-weight: 600;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink-3);
 }
 
@@ -653,8 +640,6 @@
   text-align: left;
   font-size: 9px;
   font-weight: 700;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink-3);
   background: var(--color-paper);
   border-bottom: var(--rule-hairline) solid var(--color-rule);
@@ -695,8 +680,6 @@
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   font-weight: 600;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink);
   margin: var(--space-2) 0 var(--space-1);
 }

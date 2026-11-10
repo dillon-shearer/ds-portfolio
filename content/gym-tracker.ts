@@ -44,18 +44,18 @@ export const GYM_TRACKER_CASE_STUDY = {
   metadataTitle: 'Gym Tracker AI chat case study',
   metadataDescription:
     'How the Gym Tracker combines a read-only SQL policy, live schema context, muscle-aware data, and Recharts plus React Three Fiber visualizations.',
-  eyebrow: 'CASE STUDY / GYM TRACKER',
+  eyebrow: 'Case study / Gym Tracker',
   title: 'A chat boundary around a training database',
   lead: 'The Gym Tracker is a workout log, analytics dashboard, and AI coach. The interesting part is the boundary between the coach and the database: every query is inspected, constrained, enriched, and returned with enough context for the model to recover when the first attempt is wrong.',
   stats: [
-    { value: '958', label: 'LINES', detail: 'AST validation in sql-policy.ts' },
-    { value: 'SELECT', label: 'POLICY', detail: 'Read-only queries reach Postgres' },
-    { value: 'LIVE', label: 'CATALOG', detail: 'Schema and body-part values join the prompt' },
-    { value: 'R3F', label: 'VISUALS', detail: '3D body map beside Recharts panels' },
+    { value: '958', label: 'Lines', detail: 'AST validation in sql-policy.ts' },
+    { value: 'SELECT', label: 'Policy', detail: 'Read-only queries reach Postgres' },
+    { value: 'LIVE', label: 'Catalog', detail: 'Schema and body-part values join the prompt' },
+    { value: 'R3F', label: 'Visuals', detail: '3D body map beside Recharts panels' },
   ],
   sections: [
     {
-      eyebrow: '01 / SQL POLICY',
+      eyebrow: '01 / SQL policy',
       title: 'The model gets a boundary, not a database connection.',
       paragraphs: [
         'I do not let the model send arbitrary SQL to PostgreSQL. Its query passes through validateAndRewriteSql, which parses the statement with pgsql-ast-parser, rejects forbidden syntax, checks tables and columns against the allowlist, parameterizes string literals, validates CTE scope, and applies a limit and time window.',
@@ -64,7 +64,7 @@ export const GYM_TRACKER_CASE_STUDY = {
       sourceLabels: ['SQL policy AST validator'],
     },
     {
-      eyebrow: '02 / PROMPT CONTEXT',
+      eyebrow: '02 / Prompt context',
       title: 'The prompt knows the current shape of the data.',
       paragraphs: [
         'The chat route builds its system prompt from the catalog, metric definitions, semantic query hints, and the current body-part values. The catalog reads the allowed tables and columns from information_schema, caches the result, and keeps a fallback schema for local or unavailable database connections.',
@@ -73,7 +73,7 @@ export const GYM_TRACKER_CASE_STUDY = {
       sourceLabels: ['Prompt construction and tool results', 'Live schema and body-part catalog'],
     },
     {
-      eyebrow: '03 / DATA MODEL',
+      eyebrow: '03 / Data model',
       title: 'The view resolves anatomy before the chat has to reason about it.',
       paragraphs: [
         'gym_lifts stores the exercise text that was logged. The gym_lifts_v view joins that text to exercises and exercise_aliases, then exposes canonical_name and body_part_key. An entry such as RDL can resolve to the canonical exercise without making every model query repeat alias logic.',
@@ -82,7 +82,7 @@ export const GYM_TRACKER_CASE_STUDY = {
       sourceLabels: ['Muscle-aware view migration', 'Prompt construction and tool results'],
     },
     {
-      eyebrow: '04 / FAILURE PATH',
+      eyebrow: '04 / Failure path',
       title: 'A failed query becomes useful context for the next turn.',
       paragraphs: [
         'The executor returns the query id, purpose, rewritten SQL, parameters, row count, preview rows, applied policy, and error. Validation failures are captured in the same shape as database failures. The model can see what failed, explain what is missing, and choose a narrower follow-up instead of receiving a generic server error.',
@@ -91,7 +91,7 @@ export const GYM_TRACKER_CASE_STUDY = {
       sourceLabels: ['Prompt construction and tool results', 'SQL policy AST validator'],
     },
     {
-      eyebrow: '05 / VISUAL LAYER',
+      eyebrow: '05 / Visual layer',
       title: 'The dashboard turns the same model into a review surface.',
       paragraphs: [
         'The dashboard uses Recharts for time-series volume and body-part comparisons. React Three Fiber renders the interactive body diagram, so the data can be read as a trend, a table, or a map of trained areas. Each view answers a different question without asking the chat layer to carry the whole interface.',

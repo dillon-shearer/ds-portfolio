@@ -33,7 +33,7 @@ type Props = { lifts: GymLift[] }
 
 const TABS = [
   { label: 'Dashboard', key: 'dashboard' },
-  { label: 'Log Workout', key: 'log' },
+  { label: 'Log workout', key: 'log' },
 ]
 
 const RANGE_OPTIONS = [
@@ -370,7 +370,7 @@ export default function GymDashboard({ lifts }: Props) {
                       disabled={mode === 'day' && !!datasetMinDate && dayDate <= datasetMinDate}
                       aria-label={mode === 'day' ? 'Previous day' : 'Previous year'}
                     >
-                      PREV
+                      Prev
                     </button>
                     <span className={styles.dateLabel}>
                       {mode === 'day' ? formatLongDate(dayDate) : year}
@@ -386,7 +386,7 @@ export default function GymDashboard({ lifts }: Props) {
                       disabled={mode === 'day' ? dayDate >= todayUTCKey() : year >= currentYear}
                       aria-label={mode === 'day' ? 'Next day' : 'Next year'}
                     >
-                      NEXT
+                      Next
                     </button>
                   </div>
                 )}
@@ -413,32 +413,32 @@ export default function GymDashboard({ lifts }: Props) {
                 <div className={styles.panelStack}>
                   {/* KPI row */}
                   <div className={styles.kpiRow}>
-                    <StatWidget label="Total Volume" value={totalVolume} sub="lbs" />
-                    <StatWidget label="Gym Days" value={`${gymDays} / ${dateWindow.length}`} />
-                    <StatWidget label="Exercise Variety" value={exerciseVariety} />
+                    <StatWidget label="Total volume" value={totalVolume} sub="lbs" />
+                    <StatWidget label="Gym days" value={`${gymDays} / ${dateWindow.length}`} />
+                    <StatWidget label="Exercise variety" value={exerciseVariety} />
                   </div>
 
                   {/* Main grid: charts + body diagram */}
                   <div className={styles.mainGrid}>
                     <div className={styles.leftCol}>
-                      <DashboardPanel eyebrow="Daily Volume">
+                      <DashboardPanel eyebrow="Daily volume">
                         <VolumeChart data={daily} height={200} />
                       </DashboardPanel>
                       <div className={styles.splitRow}>
-                        <DashboardPanel eyebrow="Split Frequency">
+                        <DashboardPanel eyebrow="Split frequency">
                           <SplitFrequency
                             push={splitCountsPPL.Push}
                             pull={splitCountsPPL.Pull}
                             legs={splitCountsPPL.Legs}
                           />
                         </DashboardPanel>
-                        <DashboardPanel eyebrow="Body Part Frequency">
+                        <DashboardPanel eyebrow="Body part frequency">
                           <BodyPartFrequency rows={bodyPartsList} />
                         </DashboardPanel>
                       </div>
                     </div>
                     <div className={styles.sidebar}>
-                      <DashboardPanel eyebrow="Muscles Trained" className={styles.bodyDiagramPanel}>
+                      <DashboardPanel eyebrow="Muscles trained" className={styles.bodyDiagramPanel}>
                         <BodyDiagramClient stats={bodyStats} splitCounts={splitCountsPPL} />
                       </DashboardPanel>
                     </div>
@@ -458,13 +458,13 @@ export default function GymDashboard({ lifts }: Props) {
                         onNext={() => setPrsPage((p) => Math.min(prsSortedPaged.totalPages, p + 1))}
                       />
                     </DashboardPanel>
-                    <DashboardPanel eyebrow="Volume Heatmap">
+                    <DashboardPanel eyebrow="Volume heatmap">
                       <VolumeHeatmap mode={mode as 'week' | 'month' | 'year'} data={daily} />
                     </DashboardPanel>
                   </div>
 
                   {/* Recent sessions */}
-                  <DashboardPanel eyebrow="Recent Sessions">
+                  <DashboardPanel eyebrow="Recent sessions">
                     <RecentSessions
                       rows={recentSessions.rows}
                       page={recentSessions.page}

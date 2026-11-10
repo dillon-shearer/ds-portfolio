@@ -39,7 +39,7 @@ bottom, left aligned:
 2. One description paragraph: sans, `--text-md`, `--color-ink-2`, measure
    capped at 68ch. It says what the pipeline does and that the channels below
    are the ones it currently runs.
-3. The carousel section: a mono uppercase xs section label, the prev/next
+3. The carousel section: a mono sentence-case xs section label, the prev/next
    control row, and the scroller.
 
 A 1px `--color-rule` hairline sits between block 2 and block 3, full width of
@@ -70,8 +70,8 @@ top to bottom:
 | Channel banner | `next/image` | Full-bleed strip across the top of the card, `object-fit: cover` at 96px tall below 720px and 120px at 720px and up. No radius, no shadow. Real alt text from the content module |
 | Channel logo | `next/image` | 48px square in a row with the channel name, `--radius-sm`. `alt=""`: it repeats the name it sits beside |
 | Channel display name | `h3` | display font, 600, `--text-lg`, `--color-ink` |
-| Subreddit | `p` | mono, `--text-xs`, uppercase, `--tracking-wide`, `--color-ink-3` |
-| Profile links | `ul` of three | mono, `--text-xs`, uppercase, `--color-accent`, 1px underline, `--color-accent-hover` on hover; labels `TIKTOK`, `INSTAGRAM`, `YOUTUBE`, separated by ` / ` |
+| Subreddit | `p` | mono, `--text-xs`, `--color-ink-3` |
+| Profile links | `ul` of two | mono, `--text-xs`, `--color-accent`, 1px underline, `--color-accent-hover` on hover; labels `Instagram`, `YouTube` from `PROFILE_LABELS`, separated by ` / ` |
 
 All three outbound links are `target="_blank" rel="noopener noreferrer"`, the
 same treatment `DashboardCard` already gives an external `href`.

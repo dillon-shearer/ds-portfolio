@@ -381,10 +381,10 @@ export default function WorkoutForm() {
       {/* Top controls */}
       <div className={styles.toolbar}>
         <button type="button" className={styles.toolBtn} onClick={() => setShowDayInfo(true)}>
-          Day Info
+          Day info
         </button>
         <button type="button" className={styles.toolBtn} onClick={() => setShowBodyParts(true)}>
-          Body Parts
+          Body parts
         </button>
       </div>
 
@@ -401,7 +401,7 @@ export default function WorkoutForm() {
 
       {/* ===================== Add New Set ===================== */}
       <form onSubmit={handleSubmit} className={styles.card}>
-        <h2 className={styles.cardTitle}>Add New Set</h2>
+        <h2 className={styles.cardTitle}>Add new set</h2>
 
         <div className={styles.dateLine}>
           <span className={styles.dateLineLabel}>Date:</span>
@@ -425,7 +425,7 @@ export default function WorkoutForm() {
                 onClick={() => setShowManageEx(true)}
                 title="Manage your exercise catalog"
               >
-                Manage Exercises
+                Manage exercises
               </button>
             </div>
             <select
@@ -510,7 +510,7 @@ export default function WorkoutForm() {
           </div>
 
           <button type="submit" disabled={status === 'submitting'} className={styles.submit}>
-            {status === 'submitting' ? 'Saving...' : 'Add Set'}
+            {status === 'submitting' ? 'Saving...' : 'Add set'}
           </button>
         </div>
       </form>
@@ -518,7 +518,7 @@ export default function WorkoutForm() {
       {/* ===================== Workout History ===================== */}
       <div className={styles.history}>
         <h3 className={styles.historyTitle}>
-          Workout History for <span className={styles.historyDate}>{formData.date}</span>
+          Workout history for <span className={styles.historyDate}>{formData.date}</span>
         </h3>
         <div className={styles.historyMeta}>
           {dayTagForSelectedDate && <span className={styles.chip}>{dayTagForSelectedDate}</span>}
@@ -554,7 +554,7 @@ export default function WorkoutForm() {
                         {set.equipment ? (
                           <span className={styles.setBadge}>{set.equipment}</span>
                         ) : null}
-                        {set.isUnilateral ? <span className={styles.setBadgeUni}>UNI</span> : null}
+                        {set.isUnilateral ? <span className={styles.setBadgeUni}>Uni</span> : null}
                       </div>
                       <div className={styles.setActions}>
                         <button

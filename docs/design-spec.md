@@ -69,14 +69,12 @@ xs .75rem / sm .875rem / base 1rem / md 1.125rem / lg 1.25rem /
 xl 1.5rem / 2xl 1.875rem / 3xl 2.25rem / 4xl clamp(2.75rem, 6vw, 4rem)
 
 Leading: tight 1.1 (display), snug 1.3, normal 1.5, loose 1.7.
-Tracking: tight -0.02em (display), wide 0.08em (dashboard labels only, pending
-the dashboard conversion).
+Tracking: tight -0.02em (display). No wide tracking token.
 
 Register rules:
 - Eyebrows and metadata: --font-mono, sentence case, --text-xs or --text-sm,
   normal letter spacing, --color-ink-3. No eyebrow that only repeats the
-  page title. The dashboard pages keep uppercase wide-tracked labels until
-  the follow-up ticket converts them. Separator between metadata terms is " / " (ASCII).
+  page title. Separator between metadata terms is " / " (ASCII).
 - Headings: --font-display, weight 600, tracking tight, sentence case.
 - Body: --font-sans 400, --text-base or --text-md, max measure 68ch.
 - Numbers in dashboards: --font-mono.
@@ -107,20 +105,16 @@ animation-duration to 0.01ms and disables BodyDiagram autoRotate.
 
 ## Hero treatment (home)
 
-No name headline (the name lives in the header wordmark and title tag).
-Structure, top to bottom, left-aligned in the wide grid:
+Structure, top to bottom, left-aligned in the wide grid. Copy lives in
+`HERO` in content/home.ts.
 
-1. Mono metadata line with hairline rule running to the right edge:
-   "DATA ANALYST / ENGINEER"
-2. h1 statement at --text-4xl, --font-display 600, max 16 words:
-   "I do data work for healthcare and life science teams."
-3. Supporting line at --text-lg, --color-ink-2, max 50ch:
-   "Pipelines, analytics, and whatever else it takes to ship something
-   useful."
-4. Ledger meta row (mono, xs, sentence case, three items with " / "):
-   "CURRENTLY: DATA SCIENTIST, ANSWER ALS" plus links "GITHUB" "LINKEDIN"
-5. Actions: one primary button "Get in touch" -> /contact, one underlined
-   text link "About me" -> /about.
+1. h1 statement at --text-4xl, --font-display 600: the name.
+2. Supporting line at --text-lg, --color-ink-2: plain facts about the work and
+   what the site holds. No job-role line and no lines about feelings or purpose.
+3. Meta row (mono, xs, sentence case, normal letter spacing): "GitHub" /
+   "LinkedIn" links.
+4. Actions: one primary button "Demos" -> /demos, then underlined text links
+   "Resume" and "Contact".
 
 ## Component register
 

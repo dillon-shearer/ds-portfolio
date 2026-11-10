@@ -20,8 +20,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
   line-height: var(--leading-snug);
   color: var(--color-ink-3);
 }
@@ -127,8 +125,6 @@
 .subreddit {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
   color: var(--color-ink-3);
   margin-top: var(--space-3);
 }
@@ -149,8 +145,6 @@
 .statAge {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
 }
 
 .statLabel,
@@ -184,8 +178,6 @@
 .profileLink {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
   color: var(--color-accent);
   text-decoration: underline;
   text-decoration-thickness: var(--rule-hairline);

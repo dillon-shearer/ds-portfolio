@@ -44,10 +44,10 @@ export default function EditSetModal({
   if (!lift) return null
 
   return (
-    <div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Edit Set">
+    <div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Edit set">
       <div className={styles.backdrop} onClick={onClose} />
       <div className={styles.modal}>
-        <h3 className={styles.title}>Edit Set</h3>
+        <h3 className={styles.title}>Edit set</h3>
 
         <div className={styles.body}>
           <div className={styles.field}>
@@ -147,7 +147,7 @@ export default function EditSetModal({
 
           <div className={styles.field}>
             <label htmlFor="edit-set-set-number" className={styles.label}>
-              Set Number
+              Set number
             </label>
             <input
               id="edit-set-set-number"
@@ -161,7 +161,7 @@ export default function EditSetModal({
 
           <div className={styles.field}>
             <label htmlFor="edit-set-day-tag" className={styles.label}>
-              Day Tag
+              Day tag
             </label>
             <input
               id="edit-set-day-tag"
@@ -180,7 +180,7 @@ export default function EditSetModal({
 
         <div className={styles.footer}>
           <button type="button" className={styles.save} onClick={onSave}>
-            Save Changes
+            Save changes
           </button>
           <button type="button" className={styles.cancel} onClick={onClose}>
             Cancel

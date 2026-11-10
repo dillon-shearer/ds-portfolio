@@ -11,8 +11,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
   line-height: var(--leading-snug);
   color: var(--color-ink-3);
 }
@@ -130,7 +128,7 @@
 }
 
 .sectionSources li::before {
-  content: 'SOURCE / ';
+  content: 'Source / ';
   color: var(--color-accent);
 }
 
@@ -195,8 +193,6 @@
   border-top: var(--rule-hairline) solid var(--color-rule);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
 }
 
 @media (max-width: 719px) {

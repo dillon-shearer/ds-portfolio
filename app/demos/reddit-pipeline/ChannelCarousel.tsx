@@ -5,6 +5,7 @@ import Image from 'next/image'
 import {
   BANNER_SIZE,
   LOGO_SIZE,
+  PROFILE_LABELS,
   PROFILE_PLATFORMS,
   STAT_LABELS,
   profileUrl,
@@ -116,7 +117,7 @@ export function ChannelCarousel({
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {platform}
+                      {PROFILE_LABELS[platform]}
                     </a>
                   </li>
                 ))}

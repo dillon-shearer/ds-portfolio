@@ -37,11 +37,10 @@ export default function OpenGraphImage() {
           color: '#6F6B64',
           fontFamily: 'monospace',
           fontSize: 20,
-          letterSpacing: '0.08em',
           marginTop: 94,
         }}
       >
-        {dashboard.tool.toUpperCase()}
+        {dashboard.tool}
       </div>
       <div
         style={{

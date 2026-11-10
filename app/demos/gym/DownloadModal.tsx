@@ -104,7 +104,7 @@ export default function DownloadModal({
       >
         <div className={styles.modalHeader}>
           <h2 id="download-dialog-title" className={styles.modalTitle}>
-            Download Dataset
+            Download dataset
           </h2>
           <button
             ref={closeButtonRef}
