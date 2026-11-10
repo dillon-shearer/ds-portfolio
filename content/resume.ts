@@ -16,7 +16,7 @@ export const RESUME_PAGE = {
   metadata: {
     title: 'Resume',
     description:
-      'Resume for Dillon Shearer, a data analyst working in healthcare technology, data standards, and transformation processes.',
+      'Resume for Dillon Shearer covering data engineering, data analytics, and data science work with healthcare data standards, ETL, and clinical research data.',
   },
   eyebrow: 'Resume / Data analyst',
   name: 'Dillon Shearer',

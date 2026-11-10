@@ -1,6 +1,24 @@
 
 export const DASHBOARDS_PAGE = {
   title: 'Demos',
+  metadata: {
+    title: 'Demos',
+    description:
+      'Data projects by Dillon Shearer: a gym tracker with SQL analytics and an AI chat, and a genome variant report tool used in data science work on ALS.',
+  },
+} as const
+
+export const GYM_DASHBOARD_PAGE = {
+  breadcrumbs: [
+    { name: 'Home', path: '/' },
+    { name: 'Demos', path: '/demos' },
+    { name: 'Gym Tracker', path: '/demos/gym' },
+  ],
+  metadata: {
+    title: 'Gym Tracker',
+    description:
+      "Dillon Shearer's personal gym dashboard with logged workouts, volume analytics, a 3D body map, and an AI coach that reads the data through read-only SQL.",
+  },
 } as const
 
 export const DASHBOARDS: {

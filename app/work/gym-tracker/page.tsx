@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { JsonLd } from '@/components/JsonLd'
 import { GYM_TRACKER_CASE_STUDY } from '@/content/gym-tracker'
+import { breadcrumbJsonLd } from '@/lib/json-ld'
 import styles from './page.module.css'
 
 export const metadata: Metadata = {
@@ -91,6 +93,7 @@ export default function GymTrackerCaseStudyPage() {
           </Link>
         </nav>
       </main>
+      <JsonLd data={breadcrumbJsonLd(content.breadcrumbs)} />
     </div>
   )
 }

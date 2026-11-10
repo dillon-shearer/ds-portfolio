@@ -1,16 +1,12 @@
 import type { Metadata } from 'next'
 import { Fragment } from 'react'
 import { PageHeader } from '@/components/ui'
-import { LEAD } from '@/content/contact'
+import { CONTACT_PAGE, LEAD } from '@/content/contact'
 import { SOCIALS } from '@/content/site'
 import { ContactForm } from './ContactForm'
 import styles from './page.module.css'
 
-export const metadata: Metadata = {
-  title: 'Contact',
-  description:
-    'Get in touch with Dillon Shearer about data engineering, analytics, or healthcare data projects.',
-}
+export const metadata: Metadata = CONTACT_PAGE.metadata
 
 const ELSEWHERE_LINKS = [
   { label: 'Email', href: `mailto:${SOCIALS.email}` },

@@ -21,6 +21,7 @@ export type CaseStudySection = {
 
 export type GymTrackerCaseStudy = {
   route: string
+  breadcrumbs: { name: string; path: string }[]
   metadataTitle: string
   metadataDescription: string
   eyebrow: string
@@ -41,6 +42,11 @@ export type GymTrackerCaseStudy = {
 
 export const GYM_TRACKER_CASE_STUDY = {
   route: '/work/gym-tracker',
+  breadcrumbs: [
+    { name: 'Home', path: '/' },
+    { name: 'Demos', path: '/demos' },
+    { name: 'Gym Tracker case study', path: '/work/gym-tracker' },
+  ],
   metadataTitle: 'Gym Tracker AI chat case study',
   metadataDescription:
     'How the Gym Tracker combines a read-only SQL policy, live schema context, muscle-aware data, and Recharts plus React Three Fiber visualizations.',
