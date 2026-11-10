@@ -51,7 +51,7 @@
   flex-wrap: wrap;
   align-items: center;
   font-family: var(--font-mono);
-  font-size: var(--text-base);
+  font-size: var(--text-lg);
   font-weight: 400;
   line-height: var(--leading-snug);
 }

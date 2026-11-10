@@ -19,7 +19,6 @@ export const ABOUT_PAGE = {
   resume: {
     heading: 'Resume',
     intro: 'This is the current version.',
-    formatLabel: 'PDF',
     downloadLabel: 'Download',
   },
   certifications: {

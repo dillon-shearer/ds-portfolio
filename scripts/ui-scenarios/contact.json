@@ -28,7 +28,7 @@
         {
           "kind": "eval",
           "expression": "Array.from(document.querySelectorAll('section[aria-labelledby=elsewhere-heading] a')).map((a) => a.textContent.trim() + ':' + getComputedStyle(a).fontSize).join('|')",
-          "equals": "Email:16px|LinkedIn:16px|GitHub:16px"
+          "equals": "Email:20px|LinkedIn:20px|GitHub:20px"
         },
         {
           "kind": "eval",
