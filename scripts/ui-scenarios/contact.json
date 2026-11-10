@@ -27,6 +27,21 @@
         },
         {
           "kind": "eval",
+          "expression": "Array.from(document.querySelectorAll('section[aria-labelledby=elsewhere-heading] a')).map((a) => a.textContent.trim() + ':' + getComputedStyle(a).fontSize).join('|')",
+          "equals": "Email:16px|LinkedIn:16px|GitHub:16px"
+        },
+        {
+          "kind": "eval",
+          "expression": "(() => { const s = getComputedStyle(document.querySelector('form button[type=submit]')); return [s.fontSize, s.paddingTop, s.paddingRight, s.paddingBottom, s.paddingLeft].join(' '); })()",
+          "equals": "12px 12px 24px 12px 24px"
+        },
+        {
+          "kind": "eval",
+          "expression": "document.documentElement.scrollWidth === document.documentElement.clientWidth",
+          "equals": true
+        },
+        {
+          "kind": "eval",
           "expression": "matchMedia('(prefers-reduced-motion: reduce)').matches",
           "equals": true
         }

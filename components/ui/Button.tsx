@@ -2,9 +2,12 @@ import NextLink from 'next/link'
 import styles from './Button.module.css'
 
 type Variant = 'primary' | 'outline' | 'ghost'
+type Size = 'sm' | 'md'
 
 interface ButtonProps {
   variant?: Variant
+  size?: Size
+  external?: boolean
   href?: string
   download?: boolean | string
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -15,6 +18,8 @@ interface ButtonProps {
 
 export function Button({
   variant = 'primary',
+  size = 'sm',
+  external,
   href,
   download,
   onClick,
@@ -22,7 +27,7 @@ export function Button({
   disabled,
   children,
 }: ButtonProps) {
-  const className = `${styles.button} ${styles[variant]}`
+  const className = `${styles.button} ${styles[variant]}${size === 'md' ? ` ${styles.md}` : ''}`
 
   if (href) {
     if (href.startsWith('/')) {
@@ -34,7 +39,12 @@ export function Button({
     }
 
     return (
-      <a href={href} download={download} className={className}>
+      <a
+        href={href}
+        download={download}
+        className={className}
+        {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+      >
         {children}
       </a>
     )

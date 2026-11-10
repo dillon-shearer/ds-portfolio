@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Button, InlineLink } from '@/components/ui'
+import { Button } from '@/components/ui'
 import { HERO } from '@/content/home'
 import { SITE, SOCIALS } from '@/content/site'
 import styles from './page.module.css'
@@ -16,34 +16,21 @@ export default function HomePage() {
         <div className={styles.heroGrid}>
           <h1 className={styles.statement}>{HERO.statement}</h1>
           <p className={styles.support}>{HERO.support}</p>
-          <div className={styles.meta}>
-            <a
-              href={SOCIALS.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.metaLink}
-            >
-              {HERO.meta.github}
-            </a>
-            <span aria-hidden="true">{HERO.meta.separator}</span>
-            <a
-              href={SOCIALS.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.metaLink}
-            >
-              {HERO.meta.linkedin}
-            </a>
-          </div>
-          <div className={styles.ctas}>
-            <Button href={HERO.ctas.primary.href} variant="primary">
+          <div className={styles.ctas} data-hero-actions>
+            <Button href={HERO.ctas.primary.href} variant="primary" size="md">
               {HERO.ctas.primary.label}
             </Button>
             {HERO.ctas.secondary.map((link) => (
-              <InlineLink key={link.href} href={link.href}>
+              <Button key={link.href} href={link.href} variant="outline" size="md">
                 {link.label}
-              </InlineLink>
+              </Button>
             ))}
+            <Button href={SOCIALS.github} variant="outline" size="md" external>
+              {HERO.ctas.social.github}
+            </Button>
+            <Button href={SOCIALS.linkedin} variant="outline" size="md" external>
+              {HERO.ctas.social.linkedin}
+            </Button>
           </div>
         </div>
       </section>

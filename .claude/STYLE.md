@@ -122,6 +122,8 @@ primitives are listed after them and are not exported from that barrel.
 | `DashboardCard` | `DashboardCard.tsx` | Dashboard list rows |
 
 - Buttons are rectangular, at most 2px radius, and use sentence-case mono labels with normal letter spacing.
+- `Button` `size` defaults to `sm` (`--text-xs` label, today's look). `size="md"` sets the label to `--text-sm` with the same padding; the home hero action row uses it. `external` adds `target="_blank"` and `rel="noopener noreferrer"` to an absolute `href`.
+- Home hero actions: one row, Demos as the only `primary`, Resume, Contact, GitHub and LinkedIn as `outline`, all `size="md"`. Below 720px the row is a two-column grid with Demos spanning both columns.
 - Prose links use a 1px underline and change to accent on hover.
 - Dashboard list rows are a single full-width column in an unnumbered list: display title link, mono tool line, one sans description, mono tech line, an optional mono stats line, and one 1px rule between rows.
 - Image-bearing cards keep the artwork square or full-bleed with no radius above 2px and no shadow. Banners crop with `object-fit: cover` at a capped height so a card never becomes mostly picture at 320px. Every image is a `next/image` with explicit `width` and `height`, and a logo that repeats an adjacent name takes `alt=""`.
