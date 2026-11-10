@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    env:
+      # Dummy values: next build evaluates modules that construct DB/API clients.
+      # Only DATABASE_URL is proven required (lib/gym-db.ts creates a pool at
+      # import time); the rest mirror the documented env so future module-scope
+      # reads do not break CI.
+      RESEND_API_KEY: x
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      DATABASE_URL: postgres://user:pass@localhost:5432/db
+      GYM_CHAT_DATABASE_URL_READONLY: postgres://user:pass@localhost:5432/db
+      OPENAI_API_KEY: x
+      LIFT_PASSWORD: x
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run check:ascii
+      - run: npm run lint
+      - run: npm run build

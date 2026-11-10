@@ -1,0 +1,12 @@
+.content {
+  padding-top: var(--space-9);
+}
+
+.body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-ink-2);
+  max-width: 68ch;
+  margin-bottom: var(--space-6);
+}

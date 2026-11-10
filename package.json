@@ -1,0 +1,42 @@
+{
+  "name": "ds-portfolio",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
+    "start": "next start",
+    "lint": "eslint .",
+    "test:gym-chat-catalog": "node --experimental-strip-types --test scripts/test-gym-chat-catalog.mjs",
+    "test:gym": "node --experimental-strip-types --test scripts/test-gym-metrics.mjs",
+    "test:gym-day-view": "node --experimental-strip-types --test scripts/test-gym-day-view.mjs",
+    "check:ascii": "node scripts/check-ascii.mjs",
+    "format": "prettier --write .",
+    "resume:pdf": "node scripts/resume-pdf.cjs"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/postgres": "^0.10.0",
+    "next": "15.5.18",
+    "nosleep.js": "^0.12.0",
+    "pgsql-ast-parser": "^12.0.2",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-markdown": "^10.1.0",
+    "recharts": "^3.8.1",
+    "three": "^0.184.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/three": "^0.184.1",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^15.5.18",
+    "prettier": "^3.9.6",
+    "typescript": "^5"
+  }
+}

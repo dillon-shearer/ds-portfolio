@@ -1,0 +1,46 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.kpiRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+.kpiItem {
+  background: var(--color-rule-soft);
+  padding: var(--space-5);
+}
+
+@media (max-width: 720px) {
+  .kpiRow {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+}
+
+@media (max-width: 480px) {
+  .kpiRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chartRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-4);
+}
+
+@media (max-width: 720px) {
+  .chartRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chartLarge {
+}
+.chartSmall {
+}

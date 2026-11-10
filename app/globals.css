@@ -1,0 +1,103 @@
+/* Base reset - tokens loaded separately via layout.tsx import */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+main {
+  flex: 1;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+p {
+  hyphens: auto;
+  hanging-punctuation: first last;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Page wrapper - used by all prose pages */
+.page-wrapper {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: var(--space-8) var(--gutter);
+}
+
+@media (min-width: 720px) {
+  .page-wrapper {
+    padding-left: var(--space-7);
+    padding-right: var(--space-7);
+  }
+}
+
+.page-wrapper--wide {
+  max-width: var(--content-width-wide);
+  margin: 0 auto;
+  padding: var(--space-8) var(--gutter);
+}
+
+@media (min-width: 720px) {
+  .page-wrapper--wide {
+    padding-left: var(--space-7);
+    padding-right: var(--space-7);
+  }
+}

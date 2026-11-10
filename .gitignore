@@ -1,11 +1,63 @@
-node_modules/
-dist/
-build/
-.env
-.env.*
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
 !.env.example
-!.env.sample
-!.env.template
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# superpowers brainstorming
+.superpowers/
+
+# claude worktrees
+.claude/worktrees/
+
+.vercel
+.env*.local
+
+# Local browser evidence and its isolated Playwright support install.
+/.ui-evidence/
+
+# Local task-board and test artifacts.
+/data/
+/brain/
+
+# Kanban95 board state.
 .kanban95/board.db
 .kanban95/board.db-*
 .kanban95/sessions/
