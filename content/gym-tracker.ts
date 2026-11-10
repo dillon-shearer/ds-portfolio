@@ -36,9 +36,6 @@ export type GymTrackerCaseStudy = {
   statsAriaLabel: string
   relatedAriaLabel: string
   backToDashboardsLabel: string
-  rssTitle: string
-  rssDescription: string
-  rssPubDate: string
   sourceAriaLabel: string
 }
 
@@ -152,9 +149,5 @@ export const GYM_TRACKER_CASE_STUDY = {
   statsAriaLabel: 'Case study facts',
   relatedAriaLabel: 'Related pages',
   backToDashboardsLabel: 'Back to demos',
-  rssTitle: 'Gym Tracker case study published',
-  rssDescription:
-    'A case study of the Gym Tracker AI chat boundary, including the read-only SQL policy, live catalog context, muscle-aware view, and dashboard visual layer.',
-  rssPubDate: 'Thu, 06 Aug 2026 00:00:00 +0000',
   sourceAriaLabel: 'Open source file',
 } as const satisfies GymTrackerCaseStudy

@@ -33,7 +33,7 @@ public URL, contact form, gym database, gym chat, and local fallback variables.
 app/             Next.js App Router pages
 components/ui/   Shared UI primitives (Badge, Button, InlineLink, NavLink, Card, Input, PageHeader, DashboardCard)
 components/      Layout components (Header, Footer, MobileDrawer)
-content/         Structured site, home, about, dashboard, RSS, and contact content
+content/         Structured site, home, about, dashboard, and contact content
 docs/            Locked design spec and operational reference docs
 scripts/         Repository checks including check-ascii.mjs
 styles/          tokens.css only - all other styles are CSS Modules co-located with components
@@ -50,12 +50,11 @@ styles/          tokens.css only - all other styles are CSS Modules co-located w
 | `/demos` | Demos list (dashboards and tools) |
 | `/demos/coming-soon` | Placeholder for unhosted dashboards |
 | `/demos/gym` | Gym tracker dashboard (analytics, log workout, AI chat) |
-| `/rss` | RSS feed |
 
 ## Gotchas
 
-- **Nav and copy changes:** edit `NAV_ITEMS` in `content/site.ts`; Header, MobileDrawer, and Footer all consume it. All marketing copy, nav, socials, and structured entries live in `content/` (site, home, about, dashboards, rss, contact). Update data files instead of JSX for copy changes.
-- **Hidden-route pattern:** noindex via per-route `export const metadata = { robots: { index: false, follow: false } }` PLUS an `X-Robots-Tag: noindex, nofollow` entry in `next.config.ts` `headers()`. Deliberately NO `app/robots.ts` entry - listing the path there would advertise it. Add the route to `NAKED_PATHS` in `components/SiteChrome.tsx` to suppress Header and Footer for full-bleed pages. Do not add the route to nav, footer, dashboards list, or RSS.
+- **Nav and copy changes:** edit `NAV_ITEMS` in `content/site.ts`; Header, MobileDrawer, and Footer all consume it. All marketing copy, nav, socials, and structured entries live in `content/` (site, home, about, dashboards, contact). Update data files instead of JSX for copy changes.
+- **Hidden-route pattern:** noindex via per-route `export const metadata = { robots: { index: false, follow: false } }` PLUS an `X-Robots-Tag: noindex, nofollow` entry in `next.config.ts` `headers()`. Deliberately NO `app/robots.ts` entry - listing the path there would advertise it. Add the route to `NAKED_PATHS` in `components/SiteChrome.tsx` to suppress Header and Footer for full-bleed pages. Do not add the route to nav, footer, or dashboards list.
 - **Root `app/layout.tsx` does NOT render `<Header />` or `<Footer />` directly** - they live inside `components/SiteChrome.tsx`, which conditionally renders them based on pathname (`NAKED_PATHS` array). Don't move them back into the root layout; that re-introduces the chrome on any future naked routes.
 - **CSS precedence:** page-level CSS modules load before the root bundle in Next.js 15 - page-level overrides silently lose to component rules. Use component props or inline styles instead. See `.claude/STYLE.md`.
 - No `border-radius` > 2px, no `box-shadow`, no gradients - see `.claude/STYLE.md`
