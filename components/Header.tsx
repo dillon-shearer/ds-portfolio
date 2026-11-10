@@ -31,7 +31,7 @@ export function Header() {
       <header className={styles.header}>
         <div className={styles.inner}>
           <Link href="/" className={styles.wordmark} aria-label="Data With Dillon, home">
-            Data With Dillon
+            Data With <span className={styles.wordmarkAccent}>Dillon</span>
           </Link>
 
           <nav className={styles.desktopNav} aria-label="Primary navigation">

@@ -14,8 +14,8 @@
 /* Nav link */
 .nav {
   font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  font-weight: 400;
+  font-size: var(--text-sm);
+  font-weight: 500;
   line-height: var(--leading-snug);
   color: var(--color-ink-3);
   text-decoration: none;

@@ -69,6 +69,7 @@
 
   /* Tracking */
   --tracking-tight: -0.02em;
+  --tracking-wordmark: 0.1em;
 
   /* ---------- Spacing (4px scale) ---------- */
   --space-1: 4px;

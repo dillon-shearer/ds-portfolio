@@ -55,6 +55,31 @@
           "kind": "eval",
           "expression": "matchMedia('(prefers-reduced-motion: reduce)').matches",
           "equals": true
+        },
+        {
+          "kind": "eval",
+          "expression": "(() => { const a = document.querySelector(\"header a[aria-label='Data With Dillon, home']\"); const s = getComputedStyle(a); return [a.getAttribute('href'), s.textTransform, s.fontSize, s.fontWeight, s.letterSpacing].join('|'); })()",
+          "equals": "/|uppercase|12px|500|1.2px"
+        },
+        {
+          "kind": "eval",
+          "expression": "(() => { const a = document.querySelector(\"header a[aria-label='Data With Dillon, home']\"); const sp = a.querySelector('span'); return [sp.textContent, getComputedStyle(sp).color, getComputedStyle(a).color].join('|'); })()",
+          "equals": "Dillon|rgb(122, 46, 46)|rgb(17, 17, 16)"
+        },
+        {
+          "kind": "eval",
+          "expression": "(() => { return Array.from(document.querySelectorAll(\"header nav a\")).every((a) => { const s = getComputedStyle(a); return s.fontSize === '14px' && s.fontWeight === '500' && s.textTransform === 'none'; }); })()",
+          "equals": true
+        },
+        {
+          "kind": "eval",
+          "expression": "(() => { return Array.from(document.querySelectorAll(\"header nav a[aria-current='page']\")).map((a) => a.textContent.trim() + ':' + getComputedStyle(a).color).join('|'); })()",
+          "equals": "Home:rgb(122, 46, 46)"
+        },
+        {
+          "kind": "eval",
+          "expression": "(() => { const w = document.querySelector(\"header a[aria-label='Data With Dillon, home']\").getBoundingClientRect(); const els = Array.from(document.querySelectorAll(\"header nav a, header button\")).filter((e) => e.offsetParent !== null); return els.every((e) => { const r = e.getBoundingClientRect(); return r.left >= w.right || r.right <= w.left; }) && document.querySelector('header').scrollWidth <= document.querySelector('header').clientWidth; })()",
+          "equals": true
         }
       ],
       "actions": [

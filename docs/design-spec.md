@@ -69,7 +69,8 @@ xs .75rem / sm .875rem / base 1rem / md 1.125rem / lg 1.25rem /
 xl 1.5rem / 2xl 1.875rem / 3xl 2.25rem / 4xl clamp(2.75rem, 6vw, 4rem)
 
 Leading: tight 1.1 (display), snug 1.3, normal 1.5, loose 1.7.
-Tracking: tight -0.02em (display). No wide tracking token.
+Tracking: tight -0.02em (display); wordmark 0.1em (header wordmark only).
+No general wide tracking token.
 
 Register rules:
 - Eyebrows and metadata: --font-mono, sentence case, --text-xs or --text-sm,
@@ -78,6 +79,12 @@ Register rules:
 - Headings: --font-display, weight 600, tracking tight, sentence case.
 - Body: --font-sans 400, --text-base or --text-md, max measure 68ch.
 - Numbers in dashboards: --font-mono.
+- Header wordmark: the single allowed use of uppercase with wide spacing.
+  "Data With Dillon", Inter 500, --text-xs, uppercase, --tracking-wordmark
+  (0.1em); "Data With" in --color-ink, "Dillon" in --color-accent. Everything
+  else stays sentence case with normal spacing.
+- Nav links: Inter 500, --text-sm, sentence case; --color-ink-3, hover
+  --color-ink, current page --color-accent.
 
 ## Spacing, layout, grid
 
