@@ -18,6 +18,41 @@
         },
         {
           "kind": "eval",
+          "expression": "Array.from(document.querySelectorAll('main [data-hero-actions] > a')).map((a) => a.textContent.trim()).join('|')",
+          "equals": "Demos|Resume|Contact|GitHub|LinkedIn"
+        },
+        {
+          "kind": "eval",
+          "expression": "Array.from(document.querySelectorAll('main section a')).every((a) => a.closest('[data-hero-actions]') !== null)",
+          "equals": true
+        },
+        {
+          "kind": "eval",
+          "expression": "(() => { if (innerWidth < 1440) return true; const c = Array.from(document.querySelectorAll('main [data-hero-actions] > a')).map((a) => { const r = a.getBoundingClientRect(); return r.top + r.height / 2; }); return Math.max(...c) - Math.min(...c) <= 1; })()",
+          "equals": true
+        },
+        {
+          "kind": "eval",
+          "expression": "(() => { const s = Array.from(document.querySelectorAll('main [data-hero-actions] > a')).map((a) => parseFloat(getComputedStyle(a).fontSize)); return s.every((v) => v === s[0]) && s[0] >= 14; })()",
+          "equals": true
+        },
+        {
+          "kind": "eval",
+          "expression": "(() => { const accent = getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim(); const probe = document.createElement('div'); probe.style.color = accent; document.body.appendChild(probe); const rgb = getComputedStyle(probe).color; probe.remove(); return Array.from(document.querySelectorAll('main [data-hero-actions] > a')).filter((a) => getComputedStyle(a).backgroundColor === rgb).map((a) => a.textContent.trim()).join('|'); })()",
+          "equals": "Demos"
+        },
+        {
+          "kind": "eval",
+          "expression": "Array.from(document.querySelectorAll('main [data-hero-actions] > a[href^=http]')).map((a) => a.target + ':' + a.rel.includes('noopener')).join('|')",
+          "equals": "_blank:true|_blank:true"
+        },
+        {
+          "kind": "eval",
+          "expression": "document.documentElement.scrollWidth === document.documentElement.clientWidth",
+          "equals": true
+        },
+        {
+          "kind": "eval",
           "expression": "matchMedia('(prefers-reduced-motion: reduce)').matches",
           "equals": true
         }
