@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 
 const EXTENSIONS = ['.ts', '.tsx', '.css', '.md', '.mjs', '.sql']
-const EXCLUDED_PREFIXES = ['.claude/', 'brain/', 'public/']
+const EXCLUDED_PREFIXES = ['.claude/', '.kanban95/', 'brain/', 'public/']
 
 const files = execFileSync('git', ['ls-files'], { encoding: 'utf8' })
   .split('\n')
