@@ -13,7 +13,6 @@ export const ABOUT_PAGE = {
     description:
       `${SITE.positioning} building data systems, analytics, and applications focused on healthcare and life sciences.`,
   },
-  eyebrow: 'ABOUT',
   title: 'Dillon Shearer',
   lead: 'I work across the data lifecycle, mostly in healthcare and life sciences.',
   resume: {
@@ -39,7 +38,7 @@ export const RESUMES: { role: string; description: string; href: string; htmlHre
 export const CERTIFICATIONS: { title: string; meta: string; credential: string }[] = [
   {
     title: 'Protecting Human Research Participants',
-    meta: 'APR 2025 / PHRP ONLINE TRAINING, INC.',
+    meta: 'Apr 2025 / PHRP Online Training, Inc.',
     credential: 'Credential ID: 3004648',
   },
 ]

@@ -9,7 +9,6 @@ export default function AboutPage() {
   return (
     <div className="page-wrapper">
       <PageHeader
-        eyebrow={ABOUT_PAGE.eyebrow}
         title={ABOUT_PAGE.title}
         lead={ABOUT_PAGE.lead}
       />

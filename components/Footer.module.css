@@ -21,8 +21,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
   color: var(--color-ink-3);
   margin-bottom: var(--space-4);
 }

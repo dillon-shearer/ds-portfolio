@@ -21,7 +21,7 @@ const ELSEWHERE_LINKS = [
 export default function ContactPage() {
   return (
     <div className="page-wrapper">
-      <PageHeader eyebrow="Contact" title="Get in touch" lead={LEAD} />
+      <PageHeader title="Get in touch" lead={LEAD} />
 
       <ContactForm />
 

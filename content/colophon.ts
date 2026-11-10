@@ -29,42 +29,42 @@ export const COLOPHON_PAGE = {
     description:
       'Notes on how Data With Dillon is built with Next.js, TypeScript, typed content, CSS Modules, and Vercel.',
   },
-  eyebrow: 'SITE NOTES',
+  eyebrow: 'Site notes',
   title: 'Site notes',
   lead: 'A short record of the tools, constraints, and deployment path behind Data With Dillon.',
   entries: [
     {
-      label: '01 / APPLICATION',
+      label: '01 / Application',
       title: 'Next.js 15 App Router',
       description:
         'The site uses the Next.js 15 App Router with TypeScript. Routes are server-rendered by default, with client components where interaction requires them.',
     },
     {
-      label: '02 / CONTENT',
+      label: '02 / Content',
       title: 'Typed content modules',
       description:
         'Page copy lives in typed modules under content/. This keeps content separate from route composition and gives repeated structures a shared shape.',
     },
     {
-      label: '03 / STYLING',
+      label: '03 / Styling',
       title: 'CSS Modules and design tokens',
       description:
         'CSS Modules scope page styles. Shared color, type, spacing, border, and motion values live in styles/tokens.css.',
     },
     {
-      label: '04 / SYSTEM',
+      label: '04 / System',
       title: 'Studio Ledger',
       description:
         'The interface follows the locked Studio Ledger design system: paper, ink, hairlines, a restrained type scale, and compact index-list layouts.',
     },
     {
-      label: '05 / CHECKS',
+      label: '05 / Checks',
       title: 'CI gates',
       description:
         'Every change passes ESLint, the ASCII-only content check, and a production build before it ships.',
     },
     {
-      label: '06 / DEPLOYMENT',
+      label: '06 / Deployment',
       title: 'Vercel',
       description:
         'The public site deploys on Vercel. The deployment reads the repository and publishes the Next.js application.',

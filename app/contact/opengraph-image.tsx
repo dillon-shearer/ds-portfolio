@@ -32,24 +32,13 @@ export default function OpenGraphImage() {
       </div>
       <div
         style={{
-          color: '#6F6B64',
-          fontFamily: 'monospace',
-          fontSize: 20,
-          letterSpacing: '0.08em',
-          marginTop: 94,
-        }}
-      >
-        {CONTACT_PAGE.eyebrow}
-      </div>
-      <div
-        style={{
           display: 'flex',
           fontFamily: 'sans-serif',
           fontSize: 64,
           fontWeight: 700,
           letterSpacing: '-0.02em',
           lineHeight: 1.1,
-          marginTop: 16,
+          marginTop: 94,
         }}
       >
         {CONTACT_PAGE.title}

@@ -10,7 +10,7 @@ export function Footer() {
       <div className={styles.inner}>
         <div className={styles.columns}>
           <div>
-            <p className={styles.columnTitle}>NAVIGATE</p>
+            <p className={styles.columnTitle}>Navigate</p>
             <ul className={styles.columnLinks}>
               {NAV_ITEMS.map((item) => (
                 <li key={item.href}>
@@ -23,7 +23,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className={styles.columnTitle}>ELSEWHERE</p>
+            <p className={styles.columnTitle}>Elsewhere</p>
             <ul className={styles.columnLinks}>
               <li>
                 <a
@@ -49,7 +49,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className={styles.columnTitle}>CONNECT</p>
+            <p className={styles.columnTitle}>Connect</p>
             <ul className={styles.columnLinks}>
               <li>
                 <a href={`mailto:${SOCIALS.email}`} className={styles.columnLink}>

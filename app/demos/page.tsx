@@ -49,7 +49,7 @@ async function getGymStats() {
     if (!Number.isFinite(sessions) || !Number.isFinite(sets) || !lastLogged) return undefined
 
     const numberFormat = new Intl.NumberFormat('en-US')
-    return `${numberFormat.format(sessions)} SESSIONS / ${numberFormat.format(sets)} SETS / LAST LOGGED ${lastLogged}`
+    return `${numberFormat.format(sessions)} sessions / ${numberFormat.format(sets)} sets / last logged ${lastLogged}`
   } catch {
     return undefined
   }
@@ -71,7 +71,6 @@ export default async function DashboardsPage({
   return (
     <div className="page-wrapper--wide">
       <PageHeader
-        eyebrow="Demos"
         title="Demos"
         lead="Projects you can open or read about."
         rule={false}

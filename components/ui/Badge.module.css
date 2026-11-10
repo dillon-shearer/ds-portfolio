@@ -3,7 +3,5 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 400;
-  letter-spacing: var(--tracking-wide);
   line-height: var(--leading-snug);
-  text-transform: uppercase;
 }

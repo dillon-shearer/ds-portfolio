@@ -69,11 +69,14 @@ xs .75rem / sm .875rem / base 1rem / md 1.125rem / lg 1.25rem /
 xl 1.5rem / 2xl 1.875rem / 3xl 2.25rem / 4xl clamp(2.75rem, 6vw, 4rem)
 
 Leading: tight 1.1 (display), snug 1.3, normal 1.5, loose 1.7.
-Tracking: tight -0.02em (display), wide 0.08em (mono labels, uppercase).
+Tracking: tight -0.02em (display), wide 0.08em (dashboard labels only, pending
+the dashboard conversion).
 
 Register rules:
-- Eyebrows and metadata: --font-mono, uppercase, --text-xs, tracking wide,
-  --color-ink-3. Separator between metadata terms is " / " (ASCII).
+- Eyebrows and metadata: --font-mono, sentence case, --text-xs or --text-sm,
+  normal letter spacing, --color-ink-3. No eyebrow that only repeats the
+  page title. The dashboard pages keep uppercase wide-tracked labels until
+  the follow-up ticket converts them. Separator between metadata terms is " / " (ASCII).
 - Headings: --font-display, weight 600, tracking tight, sentence case.
 - Body: --font-sans 400, --text-base or --text-md, max measure 68ch.
 - Numbers in dashboards: --font-mono.
@@ -114,7 +117,7 @@ Structure, top to bottom, left-aligned in the wide grid:
 3. Supporting line at --text-lg, --color-ink-2, max 50ch:
    "Pipelines, analytics, and whatever else it takes to ship something
    useful."
-4. Ledger meta row (mono, xs, uppercase, three items with " / "):
+4. Ledger meta row (mono, xs, sentence case, three items with " / "):
    "CURRENTLY: DATA SCIENTIST, ANSWER ALS" plus links "GITHUB" "LINKEDIN"
 5. Actions: one primary button "Get in touch" -> /contact, one underlined
    text link "About me" -> /about.
@@ -122,8 +125,8 @@ Structure, top to bottom, left-aligned in the wide grid:
 ## Component register
 
 - Buttons: rectangular, 2px radius max, accent fill primary / 1px rule
-  outline secondary, mono uppercase xs label OR sans medium sm label
-  (pick mono; it carries the ledger register).
+  outline secondary, mono sentence-case label with normal letter
+  spacing.
 - Links in prose: ink text, 1px underline, accent on hover.
 - Index lists replace card grids: display-font title, sans description,
   mono tag list, 1px rule between rows. Used on home (The work). On
@@ -133,7 +136,7 @@ Structure, top to bottom, left-aligned in the wide grid:
 - Tables and data: mono numerals, right-aligned numeric columns, hairline
   row rules.
 - Forms: white (--color-paper-2) inputs, 1px --color-rule border, 2px
-  radius, accent focus ring (2px outline), mono uppercase xs labels.
+  radius, accent focus ring (2px outline), mono sentence-case labels with normal letter spacing.
 - Dashboard panels: --color-rule-soft background, --space-5 padding,
   --space-4 gap, no borders (unchanged pattern, new colors).
 - Dark chart tooltips stay: --color-ink background, --color-paper text.

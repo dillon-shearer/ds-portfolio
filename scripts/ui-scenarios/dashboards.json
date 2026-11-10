@@ -18,7 +18,7 @@
         {
           "kind": "text",
           "selector": "[data-dashboard-stats]",
-          "includes": "412 SESSIONS / 18,240 SETS / LAST LOGGED 2026-08-05"
+          "includes": "412 sessions / 18,240 sets / last logged 2026-08-05"
         }
       ]
     },
