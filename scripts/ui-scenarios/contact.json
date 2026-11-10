@@ -1,0 +1,41 @@
+{
+  "name": "contact",
+  "route": "/contact",
+  "reducedMotion": true,
+  "viewports": [
+    { "width": 360, "height": 800 },
+    { "width": 1440, "height": 1000 }
+  ],
+  "states": [
+    {
+      "name": "loaded",
+      "ready": "form button[type='submit']",
+      "assertions": [
+        {
+          "kind": "text",
+          "selector": "h1",
+          "includes": "Get in touch"
+        },
+        {
+          "kind": "count",
+          "selector": "form input[name='name'], form input[name='email'], form textarea[name='message']",
+          "equals": 3
+        },
+        {
+          "kind": "visible",
+          "selector": "h2#elsewhere-heading"
+        },
+        {
+          "kind": "eval",
+          "expression": "matchMedia('(prefers-reduced-motion: reduce)').matches",
+          "equals": true
+        }
+      ],
+      "actions": [
+        { "action": "fill", "selector": "form input[name='name']", "value": "UI Evidence" },
+        { "action": "focus", "selector": "form input[name='email']" },
+        { "action": "tabs", "count": 3 }
+      ]
+    }
+  ]
+}
