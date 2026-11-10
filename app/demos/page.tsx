@@ -8,7 +8,7 @@ import { dashboardUiState, GYM_STATS_FIXTURE } from './ui-fixtures'
 export const metadata: Metadata = {
   title: 'Demos',
   description:
-    "Dashboards by Dillon Shearer covering clinical data, reporting workflows, and a personal gym tracker.",
+    "Projects by Dillon Shearer: a gym tracker, a variant report tool, and a Reddit video pipeline.",
 }
 
 export const revalidate = 3600
@@ -73,7 +73,7 @@ export default async function DashboardsPage({
       <PageHeader
         eyebrow="Demos"
         title="Demos"
-        lead="A collection of data visualizations and analytics dashboards built across tools and domains."
+        lead="Projects you can open or read about."
         rule={false}
       />
       <ul className={styles.list} data-dashboard-index>
