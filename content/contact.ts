@@ -1,7 +1,6 @@
 import { SOCIALS } from './site'
 
 export const CONTACT_PAGE = {
-  eyebrow: 'CONTACT',
   title: 'Get in touch',
 } as const
 

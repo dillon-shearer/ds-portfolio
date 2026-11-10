@@ -79,8 +79,12 @@ values exactly.
 - Headings use display, weight 600, tight tracking, tight leading, and sentence case.
 - Body copy uses sans at base or md with a maximum measure of 68ch.
 - Eyebrows, labels, metadata, and dashboard numbers use `--font-mono` (which now
-  resolves to Inter, the same face as `--font-sans`). Labels are uppercase, xs, and
-  wide-tracked. Separate metadata terms with ` / `.
+  resolves to Inter, the same face as `--font-sans`). Labels, eyebrows, buttons, and
+  metadata are sentence case at xs or sm with normal letter spacing; no
+  `text-transform: uppercase` and no `--tracking-wide`. Do not add an eyebrow that only
+  repeats the page title. Separate metadata terms with ` / `. The gym and demo
+  dashboard pages still use uppercase wide-tracked labels until their follow-up
+  conversion; `--tracking-wide` stays in tokens for them.
 
 ### Spacing, layout, and motion
 
@@ -121,7 +125,7 @@ primitives are listed after them and are not exported from that barrel.
 | `DashboardCard` | `DashboardCard.tsx` | Dashboard list rows |
 | Channel card | `app/demos/reddit-pipeline/ChannelCarousel.tsx` | Route-local layout primitive: a card carrying a full-bleed banner image, a square logo, a name, an optional two-column mono readings block with its own freshness line, and outbound links. Not a shared export; copy the pattern rather than reaching for it |
 
-- Buttons are rectangular, at most 2px radius, and use mono uppercase xs labels.
+- Buttons are rectangular, at most 2px radius, and use sentence-case mono labels with normal letter spacing.
 - Prose links use a 1px underline and change to accent on hover.
 - Dashboard list rows are a single full-width column in an unnumbered list: display title link, mono tool line, one sans description, mono tech line, an optional mono stats line, and one 1px rule between rows.
 - Image-bearing cards keep the artwork square or full-bleed with no radius above 2px and no shadow. Banners crop with `object-fit: cover` at a capped height so a card never becomes mostly picture at 320px. Every image is a `next/image` with explicit `width` and `height`, and a logo that repeats an adjacent name takes `alt=""`.

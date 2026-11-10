@@ -1,6 +1,5 @@
 
 export const DASHBOARDS_PAGE = {
-  eyebrow: 'DEMOS',
   title: 'Demos',
 } as const
 

@@ -1,4 +1,4 @@
-export const GYM_STATS_FIXTURE = '412 SESSIONS / 18,240 SETS / LAST LOGGED 2026-08-05'
+export const GYM_STATS_FIXTURE = '412 sessions / 18,240 sets / last logged 2026-08-05'
 
 export type DashboardsUiState = 'loaded' | 'fallback'
 

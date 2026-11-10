@@ -10,7 +10,7 @@ export default function ResumePage() {
     <div className="page-wrapper--wide">
       <header className={styles.header}>
         <div>
-          <p className={styles.eyebrow}>RESUME / DATA ANALYST</p>
+          <p className={styles.eyebrow}>{RESUME_PAGE.eyebrow}</p>
           <h1 className={styles.name}>{RESUME_PAGE.name}</h1>
           <p className={styles.location}>{RESUME_PAGE.location}</p>
         </div>

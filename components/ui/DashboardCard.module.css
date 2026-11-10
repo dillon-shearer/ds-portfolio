@@ -12,8 +12,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
   line-height: var(--leading-snug);
   color: var(--color-ink-3);
   font-variant-numeric: tabular-nums;
@@ -74,8 +72,6 @@
   color: var(--color-accent);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
   text-decoration: underline;
   text-decoration-thickness: var(--rule-hairline);
   text-underline-offset: var(--space-1);

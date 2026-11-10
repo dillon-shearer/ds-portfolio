@@ -17,14 +17,12 @@
   font-size: var(--text-xs);
   font-weight: 400;
   line-height: var(--leading-snug);
-  letter-spacing: var(--tracking-wide);
   color: var(--color-ink-3);
 }
 
 .eyebrow,
 .meta,
 .skill dt {
-  text-transform: uppercase;
 }
 
 .eyebrow {
@@ -126,7 +124,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   line-height: var(--leading-snug);
-  letter-spacing: var(--tracking-wide);
   color: var(--color-ink-3);
 }
 
