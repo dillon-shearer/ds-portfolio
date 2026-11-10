@@ -4,8 +4,6 @@ import styles from './Footer.module.css'
 
 export function Footer() {
   const year = new Date().getFullYear()
-  const buildSha = process.env.NEXT_PUBLIC_BUILD_SHA
-  const buildDate = process.env.NEXT_PUBLIC_BUILD_DATE
 
   return (
     <footer className={styles.footer}>
@@ -27,16 +25,6 @@ export function Footer() {
           <div>
             <p className={styles.columnTitle}>ELSEWHERE</p>
             <ul className={styles.columnLinks}>
-              <li>
-                <a
-                  href={SOCIALS.sourceRepo}
-                  className={styles.columnLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  This site&apos;s source
-                </a>
-              </li>
               <li>
                 <a
                   href={SOCIALS.github}
@@ -83,16 +71,6 @@ export function Footer() {
           >
             View source
           </a>
-          <span aria-hidden="true">/</span>
-          <span>Built with Next.js</span>
-          {buildSha ? (
-            <>
-              <span aria-hidden="true">/</span>
-              <span>{buildSha}</span>
-            </>
-          ) : null}
-          <span aria-hidden="true">/</span>
-          <span>{buildDate}</span>
         </div>
       </div>
     </footer>
