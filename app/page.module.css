@@ -49,6 +49,31 @@
   margin-top: var(--space-7);
 }
 
+.strip {
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: var(--rule-hairline) solid var(--color-rule);
+}
+
+.stripHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+}
+
+.stripTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-ink);
+}
+
 @media (max-width: 719px) {
   .heroGrid {
     display: flex;

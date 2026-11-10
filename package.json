@@ -10,6 +10,7 @@
     "test:gym-chat-catalog": "node --experimental-strip-types --test scripts/test-gym-chat-catalog.mjs",
     "test:gym": "node --experimental-strip-types --test scripts/test-gym-metrics.mjs",
     "test:gym-day-view": "node --experimental-strip-types --test scripts/test-gym-day-view.mjs",
+    "test:videos": "node --experimental-strip-types --test scripts/test-videos.mjs",
     "check:ascii": "node scripts/check-ascii.mjs",
     "format": "prettier --write .",
     "resume:pdf": "node scripts/resume-pdf.cjs"

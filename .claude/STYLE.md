@@ -126,13 +126,16 @@ primitives are listed after them and are not exported from that barrel.
 | `NavLink` | `Link.tsx` | Header, footer, and mobile navigation |
 | `Card` | `Card.tsx` | Certifications, resumes, and capabilities |
 | `Input` | `Input.tsx` | Contact-form input and textarea fields |
-| `PageHeader` | `PageHeader.tsx` | Page-top eyebrow, title, lead, and optional rule |
+| `PageHeader` | `PageHeader.tsx` | Page-top eyebrow, title, lead, optional rule, and optional `action` |
 | `DashboardCard` | `DashboardCard.tsx` | Dashboard list rows |
 
 - Buttons are rectangular, at most 2px radius, and use sentence-case mono labels with normal letter spacing.
 - `Button` `size` defaults to `sm` (`--text-xs` label, today's look). `size="md"` sets the label to `--text-sm` with the same padding; the home hero Demos button uses it.
 - Home hero actions: one wrapping row at `--text-sm`. Demos is the only button (`primary`, `size="md"`); Resume, Contact, GitHub and LinkedIn are `InlineLink` text links (GitHub and LinkedIn `external`). The owner rejected outline buttons for the four links.
 - Prose links use a 1px underline and change to accent on hover.
+- `PageHeader` `action` puts one control beside the title and lead: stacked below the lead under 720px, bottom-aligned at the right from 720px. /videos uses it for the filled Subscribe on YouTube button.
+- `Button` `external` opens an absolute `href` in a new tab with `rel="noopener noreferrer"`.
+- Videos (`components/videos/VideoCard.tsx`, route-local, not in the barrel): a 16:9 thumbnail button with a centered ink play square and an ink duration badge at bottom right, then a display title (full, bracketed series prefix kept) and a mono date line. Clicking the thumbnail or title swaps the thumbnail in place for a `youtube-nocookie.com` embed. /videos lays cards in a grid of 1, 2 and 3 columns at under 720px, 720px and 1080px; this is the one approved card grid. The home strip uses `layout="strip"` (thumbnail 5 columns, text 7 columns from 720px).
 - Dashboard list rows are a single full-width column in an unnumbered list: display title link, mono tool line, one sans description, mono tech line, an optional mono stats line, and one 1px rule between rows.
 - Image-bearing cards keep the artwork square or full-bleed with no radius above 2px and no shadow. Banners crop with `object-fit: cover` at a capped height so a card never becomes mostly picture at 320px. Every image is a `next/image` with explicit `width` and `height`, and a logo that repeats an adjacent name takes `alt=""`.
 - Forms use `--color-paper-2`, a 1px `--color-rule` border, 2px radius, and visible accent focus.

@@ -9,6 +9,7 @@ const routes = [
   '/contact',
   '/demos',
   '/demos/gym',
+  '/videos',
   '/work/gym-tracker',
 ]
 
