@@ -5,7 +5,7 @@ import { SITE, SOCIALS } from '@/content/site'
 import styles from './page.module.css'
 
 export const metadata: Metadata = {
-  title: { absolute: `${SITE.author} | ${SITE.positioning}` },
+  title: { absolute: SITE.homeTitle },
   description: SITE.description,
 }
 

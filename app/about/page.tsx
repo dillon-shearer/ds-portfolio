@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { PageHeader, Button } from '@/components/ui'
+import { JsonLd } from '@/components/JsonLd'
+import { profilePageJsonLd } from '@/lib/json-ld'
 import { ABOUT_PAGE, BIO_PARAGRAPHS, RESUMES, CERTIFICATIONS } from '@/content/about'
 import styles from './page.module.css'
 
@@ -57,6 +59,7 @@ export default function AboutPage() {
           ))}
         </ul>
       </section>
+      <JsonLd data={profilePageJsonLd('/about')} />
     </div>
   )
 }

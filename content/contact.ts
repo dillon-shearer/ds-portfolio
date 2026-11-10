@@ -2,6 +2,11 @@ import { SOCIALS } from './site'
 
 export const CONTACT_PAGE = {
   title: 'Get in touch',
+  metadata: {
+    title: 'Contact',
+    description:
+      'Contact Dillon Shearer about data science, data engineering, data analytics, or AI engineering projects. He lives in Newnan, GA and works remotely.',
+  },
 } as const
 
 export const LEAD =

@@ -1,14 +1,11 @@
 import type { Metadata } from 'next'
 import { PageHeader } from '@/components/ui'
+import { GYM_DASHBOARD_PAGE } from '@/content/dashboards'
 import GymDashboard from './GymDashboard'
 import UiFixtureError from './UiFixtureError'
 import { gymFixtureLifts, gymUiState } from './ui-fixtures'
 
-export const metadata: Metadata = {
-  title: 'Gym Tracker',
-  description:
-    "Dillon Shearer's personal gym dashboard for logged workouts, volume trends, and AI coaching.",
-}
+export const metadata: Metadata = GYM_DASHBOARD_PAGE.metadata
 
 export const dynamic = 'force-dynamic'
 

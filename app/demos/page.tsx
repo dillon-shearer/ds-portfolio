@@ -1,15 +1,11 @@
 import type { Metadata } from 'next'
 import { PageHeader, DashboardCard } from '@/components/ui'
-import { DASHBOARDS } from '@/content/dashboards'
+import { DASHBOARDS, DASHBOARDS_PAGE } from '@/content/dashboards'
 import { sql } from '@/lib/gym-db'
 import styles from './page.module.css'
 import { dashboardUiState, GYM_STATS_FIXTURE } from './ui-fixtures'
 
-export const metadata: Metadata = {
-  title: 'Demos',
-  description:
-    "Projects by Dillon Shearer: a gym tracker and a variant report tool.",
-}
+export const metadata: Metadata = DASHBOARDS_PAGE.metadata
 
 export const revalidate = 3600
 

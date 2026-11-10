@@ -4,6 +4,7 @@ export const BIO_PARAGRAPHS: string[] = [
   "I graduated from UWG with an MIS degree and interned as a QA/BA at a rare disease data platform. That got me into healthcare data.",
   "From there I moved to Answer ALS as a data scientist, where I build production ETL pipelines, analytics systems, and AI tooling for ALS research.",
   "The job changes week to week. I've mapped clinical data to OMOP, built executive dashboards, and shipped internal AI tools, usually whatever the research effort needs next.",
+  `I live in ${SITE.location.locality}, ${SITE.location.regionName} and work remotely.`,
   "Outside of work I'm usually building something anyway. This site and the gym dashboard on it are the current examples.",
 ]
 
@@ -11,7 +12,7 @@ export const ABOUT_PAGE = {
   metadata: {
     title: 'About',
     description:
-      `${SITE.positioning} building data systems, analytics, and applications focused on healthcare and life sciences.`,
+      'Dillon Shearer works in data science and data engineering at Answer ALS, building ETL pipelines, analytics, and AI tools for ALS research.',
   },
   title: 'Dillon Shearer',
   lead: 'I work across the data lifecycle, mostly in healthcare and life sciences.',
