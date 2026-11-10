@@ -40,7 +40,7 @@
         {
           "kind": "eval",
           "expression": "Array.from(document.querySelectorAll('ul[aria-label=\"Pipeline channels\"] a')).filter(a => a.target === '_blank' && a.rel === 'noopener noreferrer').length",
-          "equals": 10
+          "equals": 18
         }
       ],
       "actions": [
