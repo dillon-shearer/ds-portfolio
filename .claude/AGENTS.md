@@ -30,6 +30,17 @@
 - Confirm all colors, fonts, and spacing reference `var(--*)` (no hardcoded values)
 - Confirm no `border-radius` > 2px, no `box-shadow`, no gradient backgrounds
 
+## UI evidence (required for UI changes)
+
+Any ticket that changes a rendered page, component, or style must:
+
+1. Run `node scripts/ui-evidence.cjs --scenario <name> --task-ref <ticket> --isolated` for each page it touches. Scenarios live in `scripts/ui-scenarios/`; see `docs/ui-evidence.md`.
+2. Open every screenshot the run produced with the file reader. A passing exit code is not enough.
+3. Fix what looks wrong and rerun until the images look right.
+4. If a touched page has no scenario, add one in the same ticket (360 and 1440 widths, a real ready locator, assertions, a focus target and Tab pass). Never submit a real form; mock its request or do not submit.
+
+Look for these by name: text smaller than its neighbours for no reason, mixed control styles in one row, uneven spacing, and overflow at 360 wide.
+
 ## When in doubt
 
 Ask, don't invent. Match an existing pattern before creating a new one.
