@@ -74,6 +74,7 @@ values exactly.
 | `--text-4xl` | `clamp(2.75rem, 6vw, 4rem)` | `--leading-tight` | `1.1` |
 | `--leading-snug` | `1.3` | `--leading-normal` | `1.5` |
 | `--leading-loose` | `1.7` | `--tracking-tight` | `-0.02em` |
+| `--tracking-wordmark` | `0.1em` | | |
 
 - Headings use display, weight 600, tight tracking, tight leading, and sentence case.
 - Body copy uses sans at base or md with a maximum measure of 68ch.
@@ -82,6 +83,13 @@ values exactly.
   metadata are sentence case at xs or sm with normal letter spacing; no
   `text-transform: uppercase` and no added letter spacing. Do not add an eyebrow that
   only repeats the page title. Separate metadata terms with ` / `.
+- The header wordmark is the only allowed uppercase wide-spaced text: "Data With
+  Dillon" in Inter 500 at `--text-xs`, `text-transform: uppercase`,
+  `--tracking-wordmark` (0.1em), "Data With" in `--color-ink` and "Dillon" in
+  `--color-accent`. Do not reuse this style or its token anywhere else; all other
+  text stays sentence case with normal spacing.
+- Nav links (`NavLink`) are Inter 500 at `--text-sm`, sentence case, `--color-ink-3`,
+  hover `--color-ink`, current page `--color-accent`.
 
 ### Spacing, layout, and motion
 

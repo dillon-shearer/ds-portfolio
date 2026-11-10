@@ -32,6 +32,11 @@
           "kind": "eval",
           "expression": "matchMedia('(prefers-reduced-motion: reduce)').matches",
           "equals": true
+        },
+        {
+          "kind": "eval",
+          "expression": "(() => { return Array.from(document.querySelectorAll(\"header nav a[aria-current='page']\")).map((a) => a.textContent.trim() + ':' + getComputedStyle(a).color).join('|'); })()",
+          "equals": "About:rgb(122, 46, 46)"
         }
       ],
       "actions": [

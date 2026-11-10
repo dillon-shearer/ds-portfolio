@@ -20,11 +20,17 @@
 }
 
 .wordmark {
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
   font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wordmark);
   color: var(--color-ink);
   text-decoration: none;
+}
+
+.wordmarkAccent {
+  color: var(--color-accent);
 }
 
 .desktopNav {
