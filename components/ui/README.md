@@ -12,7 +12,7 @@ Update this table and `.claude/STYLE.md` when adding an export.
 | `Card` | `Card.tsx` | Certifications, resumes, and capabilities | Nested cards or index lists |
 | `Input` | `Input.tsx` | Contact-form fields and textareas | Search or select controls |
 | `PageHeader` | `PageHeader.tsx` | Top of a page | Mid-page headings |
-| `DashboardCard` | `DashboardCard.tsx` | Numbered dashboard index rows | General card layouts |
+| `DashboardCard` | `DashboardCard.tsx` | Dashboard list rows | General card layouts |
 
 ## Import
 

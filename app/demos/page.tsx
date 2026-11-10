@@ -76,22 +76,20 @@ export default async function DashboardsPage({
         lead="A collection of data visualizations and analytics dashboards built across tools and domains."
         rule={false}
       />
-      <ol className={styles.list} data-dashboard-index>
-        {DASHBOARDS.map((d, index) => (
+      <ul className={styles.list} data-dashboard-index>
+        {DASHBOARDS.map((d) => (
           <DashboardCard
             key={`${d.tool}-${d.title}`}
-            index={index + 1}
             tool={d.tool}
             title={d.title}
             description={d.description}
             href={d.href}
-            longDescription={d.longDescription}
             tech={d.tech}
             stats={d.title === 'Gym Tracker' ? stats : undefined}
             caseStudy={d.caseStudy}
           />
         ))}
-      </ol>
+      </ul>
     </div>
   )
 }
