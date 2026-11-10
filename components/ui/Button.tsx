@@ -7,7 +7,6 @@ type Size = 'sm' | 'md'
 interface ButtonProps {
   variant?: Variant
   size?: Size
-  external?: boolean
   href?: string
   download?: boolean | string
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -19,7 +18,6 @@ interface ButtonProps {
 export function Button({
   variant = 'primary',
   size = 'sm',
-  external,
   href,
   download,
   onClick,
@@ -39,12 +37,7 @@ export function Button({
     }
 
     return (
-      <a
-        href={href}
-        download={download}
-        className={className}
-        {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-      >
+      <a href={href} download={download} className={className}>
         {children}
       </a>
     )
