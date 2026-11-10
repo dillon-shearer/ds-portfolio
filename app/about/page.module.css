@@ -52,7 +52,7 @@
 }
 
 .resumeRow {
-  grid-template-columns: calc(var(--space-8) + var(--space-4)) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   border-top: var(--rule-hairline) solid var(--color-rule);
 }
 
@@ -87,17 +87,8 @@
   min-width: 0;
 }
 
-.rowTitle,
 .certificationTitle {
   color: var(--color-ink);
-}
-
-.rowTitle {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: 600;
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
 }
 
 .certificationTitle {
@@ -115,7 +106,6 @@
   font-weight: 400;
   line-height: var(--leading-normal);
   color: var(--color-ink-2);
-  margin-top: var(--space-2);
 }
 
 .credential {

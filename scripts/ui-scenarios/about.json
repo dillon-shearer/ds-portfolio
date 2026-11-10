@@ -25,6 +25,11 @@
           "selector": "h2:has-text('Certifications')"
         },
         {
+          "kind": "eval",
+          "expression": "Array.from(document.querySelectorAll('h2, h3')).filter((h) => h.textContent.trim() === 'Resume').length",
+          "equals": 1
+        },
+        {
           "kind": "visible",
           "selector": "a:has-text('View HTML') >> nth=0"
         },

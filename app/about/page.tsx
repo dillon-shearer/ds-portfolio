@@ -27,9 +27,7 @@ export default function AboutPage() {
         <ul className={styles.ledgerList}>
           {RESUMES.map((r) => (
             <li key={r.role} className={styles.resumeRow}>
-              <p className={styles.meta}>{ABOUT_PAGE.resume.formatLabel}</p>
               <div className={styles.rowContent}>
-                <h3 className={styles.rowTitle}>{r.role}</h3>
                 <p className={styles.rowDescription}>{r.description}</p>
               </div>
               <div className={styles.resumeActions}>
