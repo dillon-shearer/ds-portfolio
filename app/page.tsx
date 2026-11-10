@@ -13,13 +13,10 @@ export default function HomePage() {
   return (
     <div className="page-wrapper--wide">
       <section className={styles.hero}>
-        <p className={styles.eyebrow}>{HERO.eyebrow}</p>
         <div className={styles.heroGrid}>
           <h1 className={styles.statement}>{HERO.statement}</h1>
           <p className={styles.support}>{HERO.support}</p>
           <div className={styles.meta}>
-            <span>{HERO.meta.currently}</span>
-            <span aria-hidden="true">{HERO.meta.separator}</span>
             <a
               href={SOCIALS.github}
               target="_blank"
@@ -42,7 +39,11 @@ export default function HomePage() {
             <Button href={HERO.ctas.primary.href} variant="primary">
               {HERO.ctas.primary.label}
             </Button>
-            <InlineLink href={HERO.ctas.secondary.href}>{HERO.ctas.secondary.label}</InlineLink>
+            {HERO.ctas.secondary.map((link) => (
+              <InlineLink key={link.href} href={link.href}>
+                {link.label}
+              </InlineLink>
+            ))}
           </div>
         </div>
       </section>

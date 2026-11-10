@@ -14,7 +14,7 @@
         {
           "kind": "text",
           "selector": "h1",
-          "includes": "I do data work for healthcare and life science teams."
+          "includes": "Dillon Shearer"
         },
         {
           "kind": "eval",
@@ -23,7 +23,7 @@
         }
       ],
       "actions": [
-        { "action": "focus", "selector": "a[href='/about'] >> visible=true" },
+        { "action": "focus", "selector": "a[href='/resume'] >> visible=true" },
         { "action": "tabs", "count": 3 }
       ]
     }
