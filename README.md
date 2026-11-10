@@ -83,3 +83,4 @@ Needs Node 22.6 or later for the test scripts.
 ## Board setup
 
 `.kanban95/config.json` holds the same steps for agents: `worktree_setup` runs `npm ci` in each new ticket worktree and `test` runs lint plus the gym tests. Both skip when there is no `package.json`, so they also pass in a folder that only holds `.kanban95`.
+Board smoke test passed on 2026-11-09.
