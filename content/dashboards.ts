@@ -27,12 +27,4 @@ export const DASHBOARDS: {
     href: 'https://neuromine-variant-reports-prod.azurewebsites.net/home',
     tech: ['Python', 'Panel', 'Azure SQL', 'Azure Blob Storage', 'igv.js', 'Azure App Service'],
   },
-  {
-    tool: 'TypeScript + BullMQ',
-    title: 'Reddit to Short-Form Video Pipeline',
-    href: '/demos/reddit-pipeline',
-    description:
-      'Local pipeline that turns Reddit stories into narrated, captioned short-form videos and posts them on a schedule.',
-    tech: ['TypeScript', 'Hono', 'BullMQ', 'SQLite', 'Drizzle', 'Kokoro TTS', 'faster-whisper'],
-  },
 ]
