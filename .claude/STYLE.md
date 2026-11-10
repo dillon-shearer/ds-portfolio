@@ -74,17 +74,14 @@ values exactly.
 | `--text-4xl` | `clamp(2.75rem, 6vw, 4rem)` | `--leading-tight` | `1.1` |
 | `--leading-snug` | `1.3` | `--leading-normal` | `1.5` |
 | `--leading-loose` | `1.7` | `--tracking-tight` | `-0.02em` |
-| `--tracking-wide` | `0.08em` | | |
 
 - Headings use display, weight 600, tight tracking, tight leading, and sentence case.
 - Body copy uses sans at base or md with a maximum measure of 68ch.
 - Eyebrows, labels, metadata, and dashboard numbers use `--font-mono` (which now
   resolves to Inter, the same face as `--font-sans`). Labels, eyebrows, buttons, and
   metadata are sentence case at xs or sm with normal letter spacing; no
-  `text-transform: uppercase` and no `--tracking-wide`. Do not add an eyebrow that only
-  repeats the page title. Separate metadata terms with ` / `. The gym and demo
-  dashboard pages still use uppercase wide-tracked labels until their follow-up
-  conversion; `--tracking-wide` stays in tokens for them.
+  `text-transform: uppercase` and no added letter spacing. Do not add an eyebrow that
+  only repeats the page title. Separate metadata terms with ` / `.
 
 ### Spacing, layout, and motion
 

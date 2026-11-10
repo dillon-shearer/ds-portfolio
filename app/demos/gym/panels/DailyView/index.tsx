@@ -55,29 +55,29 @@ export default function DailyView({ lifts, date, onChangeDate }: Props) {
 
   return (
     <div className={styles.root}>
-      <DashboardPanel eyebrow="Last 7 Days">
+      <DashboardPanel eyebrow="Last 7 days">
         <SevenDayStrip lifts={lifts} date={date} onChangeDate={onChangeDate} />
       </DashboardPanel>
       <div className={styles.kpiRow}>
-        <StatWidget label="Total Volume" value={totalVolume} sub="lbs" className={styles.kpiItem} />
+        <StatWidget label="Total volume" value={totalVolume} sub="lbs" className={styles.kpiItem} />
         <StatWidget
-          label="Exercises / Sets / Reps"
+          label="Exercises / sets / reps"
           value={`${exerciseCount} / ${totalSets} / ${totalReps}`}
           className={styles.kpiItem}
         />
-        <StatWidget label="Top Body Part" value={topBodyPart} className={styles.kpiItem} />
+        <StatWidget label="Top body part" value={topBodyPart} className={styles.kpiItem} />
         <StatWidget
-          label="Near-Max Sets"
+          label="Near-max sets"
           value={nearMaxSets}
           sub=">= 90% lifetime 1RM"
           className={styles.kpiItem}
         />
       </div>
       <div className={styles.chartRow}>
-        <DashboardPanel eyebrow="Cumulative Volume by Body Part" className={styles.chartLarge}>
+        <DashboardPanel eyebrow="Cumulative volume by body part" className={styles.chartLarge}>
           <CumulativeVolumeChart dayLifts={dayLifts} />
         </DashboardPanel>
-        <DashboardPanel eyebrow="Muscle Volume" className={styles.chartSmall}>
+        <DashboardPanel eyebrow="Muscle volume" className={styles.chartSmall}>
           <MuscleVolumeDonut dayLifts={dayLifts} />
         </DashboardPanel>
       </div>

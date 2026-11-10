@@ -17,8 +17,6 @@
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink-2);
   background: var(--color-paper-2);
   border: var(--rule-hairline) solid var(--color-rule);
@@ -97,8 +95,6 @@
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-accent);
   background: var(--color-accent-soft);
   border: var(--rule-hairline) solid var(--color-accent);
@@ -124,8 +120,6 @@
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink-3);
   text-align: left;
 }
@@ -139,8 +133,6 @@
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink-2);
   background: var(--color-paper);
   border: var(--rule-hairline) solid var(--color-rule);
@@ -222,8 +214,6 @@
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-paper);
   background: var(--color-ink);
   border: none;
@@ -371,8 +361,6 @@
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   font-weight: 600;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-accent);
   background: var(--color-accent-soft);
   border: var(--rule-hairline) solid var(--color-accent);
@@ -389,8 +377,6 @@
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink-2);
   background: none;
   border: none;
@@ -407,8 +393,6 @@
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-accent);
   background: none;
   border: none;

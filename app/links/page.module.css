@@ -59,8 +59,6 @@
   overflow: hidden;
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
   line-height: var(--leading-snug);
 }
 

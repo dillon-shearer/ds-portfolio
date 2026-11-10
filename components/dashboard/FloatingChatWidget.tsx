@@ -263,8 +263,6 @@ function ChatChartTooltip({
       <span
         style={{
           fontWeight: 500,
-          letterSpacing: 'var(--tracking-wide)',
-          textTransform: 'uppercase',
         }}
       >
         {value}
@@ -839,7 +837,7 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
           />
           {/* Panel header */}
           <div className={styles.panelHeader}>
-            <span className={styles.panelTitle}>Gym Chat</span>
+            <span className={styles.panelTitle}>Gym chat</span>
             <button
               type="button"
               className={styles.clearBtn}
@@ -897,7 +895,7 @@ export default function FloatingChatWidget({ apiEndpoint }: Props) {
             <div ref={scrollContainerRef} onScroll={handleScroll} className={styles.messages}>
               {showStart ? (
                 <div className={styles.startScreen}>
-                  <p className={styles.startTitle}>Gym Chat</p>
+                  <p className={styles.startTitle}>Gym chat</p>
                   <p className={styles.startSub}>Ask anything about your training data</p>
                   <div className={styles.suggestions}>
                     {SUGGESTED_QUESTIONS.map((q) => (

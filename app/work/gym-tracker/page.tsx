@@ -54,7 +54,7 @@ export default function GymTrackerCaseStudyPage() {
         </div>
 
         <section className={styles.sources} aria-labelledby="source-heading">
-          <p className={styles.sectionEyebrow}>SOURCE INDEX</p>
+          <p className={styles.sectionEyebrow}>Source index</p>
           <h2 className={styles.sourceTitle} id="source-heading">
             {content.sourceHeading}
           </h2>

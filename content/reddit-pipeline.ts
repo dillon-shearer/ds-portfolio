@@ -11,6 +11,11 @@ export const PROFILE_BASE: Record<PipelinePlatform, string> = {
 
 export const PROFILE_PLATFORMS: PipelinePlatform[] = ['instagram', 'youtube']
 
+export const PROFILE_LABELS: Record<PipelinePlatform, string> = {
+  instagram: 'Instagram',
+  youtube: 'YouTube',
+}
+
 export function profileUrl(platform: PipelinePlatform, handle: string) {
   return PROFILE_BASE[platform] + handle
 }

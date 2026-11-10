@@ -214,8 +214,6 @@ export default function VolumeHeatmap({
           <span
             style={{
               fontWeight: '500',
-              letterSpacing: 'var(--tracking-wide)',
-              textTransform: 'uppercase',
             }}
           >
             {hoveredCell.volume > 0 ? `${hoveredCell.volume.toLocaleString()} lbs` : 'Rest day'}

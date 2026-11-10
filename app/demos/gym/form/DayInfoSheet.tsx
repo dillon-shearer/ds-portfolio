@@ -36,11 +36,11 @@ export default function DayInfoSheet({
   if (!open) return null
 
   return (
-    <div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Day Information">
+    <div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Day information">
       <div className={styles.backdrop} onClick={onClose} />
       <div className={styles.sheet}>
         <div className={styles.header}>
-          <h3 className={styles.title}>Day Information</h3>
+          <h3 className={styles.title}>Day information</h3>
           <button type="button" className={styles.close} onClick={onClose} aria-label="Close">
             Close
           </button>
@@ -68,7 +68,7 @@ export default function DayInfoSheet({
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label}>Workout Day (optional)</label>
+            <label className={styles.label}>Workout day (optional)</label>
             <div className={styles.tagRow}>
               {defaultDayTags.map((t) => {
                 const active = dayTag.trim().toLowerCase() === t.toLowerCase()

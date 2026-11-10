@@ -37,8 +37,6 @@ function ChartTooltip({ active, payload, label }: any) {
       <span
         style={{
           fontWeight: '500',
-          letterSpacing: 'var(--tracking-wide)',
-          textTransform: 'uppercase',
         }}
       >
         {Number.isFinite(v) ? v.toLocaleString() : 0} lbs

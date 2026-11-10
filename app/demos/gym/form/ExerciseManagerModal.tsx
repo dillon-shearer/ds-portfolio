@@ -64,11 +64,11 @@ export default function ExerciseManagerModal({
   const rows = tab === 'filtered' ? filteredRows : allRows
 
   return (
-    <div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Manage Exercises">
+    <div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Manage exercises">
       <div className={styles.backdrop} onClick={onClose} />
       <div className={styles.frame}>
         <div className={styles.header}>
-          <h3 className={styles.title}>Manage Exercises</h3>
+          <h3 className={styles.title}>Manage exercises</h3>
           <button type="button" className={styles.close} onClick={onClose} aria-label="Close">
             Close
           </button>
@@ -94,7 +94,7 @@ export default function ExerciseManagerModal({
 
             <div className={styles.modifyHead}>
               <div>
-                <div className={styles.modifyTitle}>Modify Existing Exercises</div>
+                <div className={styles.modifyTitle}>Modify existing exercises</div>
                 <div className={styles.modifySub}>Edit names or body parts.</div>
               </div>
               <div className={styles.tabs}>

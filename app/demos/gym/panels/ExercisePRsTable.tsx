@@ -62,7 +62,7 @@ export default function ExercisePRsTable({
               {col('exercise', 'Exercise')}
               {col('bestWeight', 'Weight')}
               {col('best1RM', 'Est 1RM')}
-              <th className={[styles.th, styles.hideMobile].join(' ')}>Best Set</th>
+              <th className={[styles.th, styles.hideMobile].join(' ')}>Best set</th>
               {col('bestSetDate', 'Date', styles.hideMobile)}
             </tr>
           </thead>

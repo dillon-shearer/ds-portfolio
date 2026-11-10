@@ -20,8 +20,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink-3);
   background: var(--color-rule-soft);
   border: var(--rule-hairline) solid var(--color-rule);
@@ -70,8 +68,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink-3);
   background: var(--color-rule-soft);
   border: var(--rule-hairline) solid var(--color-rule);
@@ -233,8 +229,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink-3);
 }
 
@@ -282,8 +276,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink-3);
   margin: 0 0 var(--space-2);
 }
@@ -297,8 +289,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink-3);
   background: var(--color-paper-2);
   border: var(--rule-hairline) solid var(--color-rule);
@@ -325,8 +315,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-ink-3);
   background: var(--color-rule-soft);
   border: var(--rule-hairline) solid var(--color-rule);
@@ -338,8 +326,6 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
   color: var(--color-paper);
   background: var(--color-ink);
   border: none;
