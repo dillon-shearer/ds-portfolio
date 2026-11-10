@@ -23,7 +23,7 @@
         },
         {
           "kind": "eval",
-          "expression": "Array.from(document.querySelectorAll('main section a')).every((a) => a.closest('[data-hero-actions]') !== null)",
+          "expression": "Array.from(document.querySelector('main [data-hero-actions]').closest('section').querySelectorAll('a')).every((a) => a.closest('[data-hero-actions]') !== null)",
           "equals": true
         },
         {
@@ -45,6 +45,21 @@
           "kind": "eval",
           "expression": "Array.from(document.querySelectorAll('main [data-hero-actions] > a[href^=http]')).map((a) => a.target + ':' + a.rel.includes('noopener')).join('|')",
           "equals": "_blank:true|_blank:true"
+        },
+        {
+          "kind": "eval",
+          "expression": "(() => { const s = document.querySelector('[data-home-video-strip]'); return s.querySelectorAll('[data-video-card]').length + '|' + s.querySelector('h2').textContent + '|' + s.querySelector('a').getAttribute('href') + '|' + s.querySelector('a').textContent + '|' + s.querySelector('h3').textContent; })()",
+          "equals": "1|Latest video|/videos|All videos|[Rainy Day Vibe Coding] Building a Brand Skill with AI Agents"
+        },
+        {
+          "kind": "eval",
+          "expression": "Array.from(document.querySelectorAll('header nav a')).map((a) => a.textContent.trim()).join('|')",
+          "equals": "Home|About|Demos|Videos|Contact"
+        },
+        {
+          "kind": "eval",
+          "expression": "Array.from(document.querySelectorAll('footer a')).filter((a) => a.getAttribute('href').startsWith('/')).map((a) => a.textContent.trim()).join('|')",
+          "equals": "Home|About|Demos|Videos|Contact"
         },
         {
           "kind": "eval",

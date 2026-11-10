@@ -42,6 +42,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
   { href: '/demos', label: 'Demos' },
+  { href: '/videos', label: 'Videos' },
   { href: '/contact', label: 'Contact' },
 ]
 
@@ -60,6 +61,7 @@ export const KEY_PAGES: { path: string; title: string; summary: string }[] = [
   { path: '/demos', title: 'Demos', summary: 'Projects you can open or read about.' },
   { path: '/demos/gym', title: 'Gym Tracker', summary: 'Live gym dashboard with analytics and an AI chat over the training data.' },
   { path: '/work/gym-tracker', title: 'Gym Tracker case study', summary: 'How the Gym Tracker AI chat queries Postgres safely.' },
+  { path: '/videos', title: 'Videos', summary: 'Videos from the Data With Dillon YouTube channel, newest first.' },
   { path: '/colophon', title: 'Site notes', summary: 'How this site is built and deployed.' },
   { path: '/contact', title: 'Contact', summary: 'Contact form for project and work inquiries.' },
 ]

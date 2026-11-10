@@ -50,6 +50,7 @@ styles/          tokens.css only - all other styles are CSS Modules co-located w
 | `/demos` | Demos list (dashboards and tools) |
 | `/demos/coming-soon` | Placeholder for unhosted dashboards |
 | `/demos/gym` | Gym tracker dashboard (analytics, log workout, AI chat) |
+| `/videos` | YouTube videos grid (channel RSS feed with a fallback list in `content/videos.ts`) |
 
 ## Gotchas
 

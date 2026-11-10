@@ -37,3 +37,29 @@
   margin: 0;
   width: 100%;
 }
+
+.withAction {
+  display: flex;
+  flex-direction: column;
+}
+
+.text {
+  min-width: 0;
+}
+
+.action {
+  margin-bottom: var(--space-6);
+}
+
+@media (min-width: 720px) {
+  .withAction {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-6);
+  }
+
+  .action {
+    flex: none;
+  }
+}

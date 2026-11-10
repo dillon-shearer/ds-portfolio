@@ -1,0 +1,61 @@
+{
+  "name": "videos",
+  "route": "/videos",
+  "reducedMotion": true,
+  "viewports": [
+    { "width": 360, "height": 800 },
+    { "width": 720, "height": 900 },
+    { "width": 1440, "height": 1000 }
+  ],
+  "states": [
+    {
+      "name": "loaded",
+      "ready": "[data-video-grid]",
+      "assertions": [
+        { "kind": "text", "selector": "h1", "includes": "Videos" },
+        { "kind": "text", "selector": "main header", "includes": "Videos from my YouTube channel, newest first." },
+        {
+          "kind": "eval",
+          "expression": "(() => { const a = Array.from(document.querySelectorAll('main a')).filter((x) => x.href.includes('sub_confirmation=1')); return a.length + '|' + a[0].textContent + '|' + a[0].target + '|' + (a[0].closest('main header') !== null) + '|' + getComputedStyle(a[0]).backgroundColor; })()",
+          "equals": "1|Subscribe on YouTube|_blank|true|rgb(122, 46, 46)"
+        },
+        {
+          "kind": "eval",
+          "expression": "Array.from(document.querySelectorAll('[data-video-card] h2')).map((h) => h.textContent).join('|')",
+          "equals": "[Rainy Day Vibe Coding] Building a Brand Skill with AI Agents"
+        },
+        {
+          "kind": "eval",
+          "expression": "(() => { const c = document.querySelector('[data-video-card]'); return c.querySelector('time').textContent + '|' + c.querySelector('[data-video-play]').textContent.trim() + '|' + c.querySelector('img').src; })()",
+          "equals": "Nov 4, 2026|1:23:52|https://i.ytimg.com/vi/Lr1pzc2-U8g/maxresdefault.jpg"
+        },
+        {
+          "kind": "eval",
+          "expression": "(() => { const n = getComputedStyle(document.querySelector('[data-video-grid]')).gridTemplateColumns.split(' ').length; return innerWidth >= 1080 ? n === 3 : innerWidth >= 720 ? n === 2 : n === 1; })()",
+          "equals": true
+        },
+        {
+          "kind": "eval",
+          "expression": "Array.from(document.querySelectorAll('header nav a')).map((a) => a.textContent.trim()).join('|')",
+          "equals": "Home|About|Demos|Videos|Contact"
+        },
+        {
+          "kind": "eval",
+          "expression": "document.documentElement.scrollWidth === document.documentElement.clientWidth",
+          "equals": true
+        },
+        {
+          "kind": "eval",
+          "expression": "matchMedia('(prefers-reduced-motion: reduce)').matches",
+          "equals": true
+        }
+      ],
+      "actions": [
+        { "action": "focus", "selector": "main header a" },
+        { "action": "tabs", "count": 2 },
+        { "action": "click", "selector": "[data-video-play]" },
+        { "action": "wait", "selector": "[data-video-card] iframe[src^='https://www.youtube-nocookie.com/embed/Lr1pzc2-U8g?autoplay=1&rel=0']" }
+      ]
+    }
+  ]
+}
