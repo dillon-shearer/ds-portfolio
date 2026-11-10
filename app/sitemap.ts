@@ -12,7 +12,6 @@ const routes = [
   '/demos/reddit-pipeline',
   '/links',
   '/work/gym-tracker',
-  '/rss',
 ]
 
 export default function sitemap(): MetadataRoute.Sitemap {

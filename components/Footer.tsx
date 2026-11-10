@@ -84,10 +84,6 @@ export function Footer() {
             View source
           </a>
           <span aria-hidden="true">/</span>
-          <Link href="/rss" className={styles.metaLink}>
-            RSS
-          </Link>
-          <span aria-hidden="true">/</span>
           <span>Built with Next.js</span>
           {buildSha ? (
             <>

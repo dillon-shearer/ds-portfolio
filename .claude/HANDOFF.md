@@ -84,8 +84,6 @@ All 22 plan tasks executed. The site is fully scaffolded and builds clean. Route
 | `/` | Home — hero, capabilities cards, Currently |
 | `/about` | Bio, 2 resume cards, certifications |
 | `/contact` | Server Action form + Elsewhere widgets |
-| `/rss` | Human-readable RSS page (not in nav) |
-| `/rss/feed` | RSS 2.0 XML feed |
 | `/*` | 404 |
 
 ### Key deviations from the plan
@@ -107,7 +105,7 @@ All 22 plan tasks executed. The site is fully scaffolded and builds clean. Route
 
 5. **RSS routing fix** — `/rss` is now the human-readable page (`app/rss/page.tsx`). XML feed moved to `/rss/feed` (`app/rss/feed/route.ts`). Eliminated the issue of the nav link serving raw XML.
 
-6. **RSS removed from nav** — RSS tab removed from Header, MobileDrawer, and Footer. `/rss` and `/rss/feed` still exist and are reachable by direct URL.
+6. **RSS removed from nav** — RSS tab removed from Header, MobileDrawer, and Footer. `/rss` and `/rss/feed` were later removed entirely.
 
 ### Current nav (3 items)
 
