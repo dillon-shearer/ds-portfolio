@@ -8,7 +8,7 @@ import { dashboardUiState, GYM_STATS_FIXTURE } from './ui-fixtures'
 export const metadata: Metadata = {
   title: 'Demos',
   description:
-    "Projects by Dillon Shearer: a gym tracker, a variant report tool, and a Reddit video pipeline.",
+    "Projects by Dillon Shearer: a gym tracker and a variant report tool.",
 }
 
 export const revalidate = 3600

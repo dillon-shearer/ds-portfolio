@@ -6,8 +6,7 @@ import { Header } from './Header'
 import { Footer } from './Footer'
 import styles from './SiteChrome.module.css'
 
-// /links is a public link-in-bio page: no Header or Footer, but still indexable.
-const NAKED_PATHS: string[] = ['/links']
+const NAKED_PATHS: string[] = []
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? ''

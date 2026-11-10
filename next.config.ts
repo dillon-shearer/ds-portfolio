@@ -16,6 +16,8 @@ const nextConfig: NextConfig = {
         destination: '/demos/coming-soon',
         permanent: true,
       },
+      { source: '/demos/reddit-pipeline', destination: '/demos', permanent: true },
+      { source: '/links', destination: '/demos', permanent: true },
     ]
   },
 }
