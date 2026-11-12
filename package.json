@@ -12,6 +12,7 @@
     "test:gym-day-view": "node --experimental-strip-types --test scripts/test-gym-day-view.mjs",
     "test:videos": "node --experimental-strip-types --test scripts/test-videos.mjs",
     "check:ascii": "node scripts/check-ascii.mjs",
+    "check:kb": "node scripts/check-kb.mjs",
     "format": "prettier --write .",
     "resume:pdf": "node scripts/resume-pdf.cjs"
   },
