@@ -28,7 +28,7 @@
 
 - Screenshot at 360px and 1440px for every page touched
 - Confirm all colors, fonts, and spacing reference `var(--*)` (no hardcoded values)
-- Confirm no `border-radius` > 2px, no `box-shadow`, no gradient backgrounds
+- Confirm no `border-radius` > 2px, no `box-shadow`, no gradient backgrounds (outside the chat widget and `/demos/chatbot` chat, see "Chat exception" in `.claude/STYLE.md`)
 
 ## UI evidence (required for UI changes)
 

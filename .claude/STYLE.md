@@ -12,6 +12,7 @@ and primitives before creating anything new.
   variants, or layout primitives without updating this document first.
 - No border-radius above 2px, box shadows, gradients, emoji, centered body text,
   card grids where an index list will work, or scroll-triggered animation.
+  The one exception is the chat, see "Chat exception" below.
 - Use CSS variables from `styles/tokens.css`; component files do not introduce
   raw color values or font families. The documented Three.js and SVG sync sites
   are the exception.
@@ -150,6 +151,18 @@ primitives are listed after them and are not exported from that barrel.
 - Dark chart tooltips use `--color-ink` background and `--color-paper` text.
 - Three.js and SVG cannot read CSS variables. `NA_COLOR` and `gl.setClearColor` in
   `app/dashboards/gym/panels/BodyDiagram.tsx` must match `--color-rule-soft`.
+
+## Chat exception
+
+Applies only inside the site chat widget and the chat on `/demos/chatbot`. It applies
+nowhere else on the site, including other dashboards, forms, and cards.
+
+- Message bubbles and the chat panel may use `--radius-chat` (`12px`).
+- The chat input may use `--radius-pill` (`999px`).
+- The floating chat panel may use one shadow, `--shadow-chat`, value
+  `0 8px 24px rgba(17, 17, 16, 0.12)` (`--color-ink` at 12%). No other chat element gets a shadow.
+- The widget ticket adds these three tokens to `styles/tokens.css`. Use the tokens, not raw values.
+- Colors stay the existing tokens. No new colors, gradients, or fonts.
 
 ## CSS precedence in Next.js 15
 

@@ -58,7 +58,7 @@ styles/          tokens.css only - all other styles are CSS Modules co-located w
 - **Hidden-route pattern:** noindex via per-route `export const metadata = { robots: { index: false, follow: false } }` PLUS an `X-Robots-Tag: noindex, nofollow` entry in `next.config.ts` `headers()`. Deliberately NO `app/robots.ts` entry - listing the path there would advertise it. Add the route to `NAKED_PATHS` in `components/SiteChrome.tsx` to suppress Header and Footer for full-bleed pages. Do not add the route to nav, footer, or dashboards list.
 - **Root `app/layout.tsx` does NOT render `<Header />` or `<Footer />` directly** - they live inside `components/SiteChrome.tsx`, which conditionally renders them based on pathname (`NAKED_PATHS` array). Don't move them back into the root layout; that re-introduces the chrome on any future naked routes.
 - **CSS precedence:** page-level CSS modules load before the root bundle in Next.js 15 - page-level overrides silently lose to component rules. Use component props or inline styles instead. See `.claude/STYLE.md`.
-- No `border-radius` > 2px, no `box-shadow`, no gradients - see `.claude/STYLE.md`
+- No `border-radius` > 2px, no `box-shadow`, no gradients - see `.claude/STYLE.md`. The only exception is the chat widget and the `/demos/chatbot` chat ("Chat exception" in `.claude/STYLE.md`)
 - No em dashes or en dashes anywhere in copy
 - **R3F Canvas height:** `height: 100%` on a Canvas requires the parent to have explicit `height:`, not just `min-height:` - with only `min-height` the canvas renders at 0px
 - **R3F rotation:** never use both a `useFrame` spin group AND `OrbitControls autoRotate` - they conflict and visually cancel; use only OrbitControls
