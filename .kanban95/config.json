@@ -1,4 +1,4 @@
 {
-  "worktree_setup": "node -e \"require('fs').existsSync('package.json')&&require('child_process').execSync('npm ci',{stdio:'inherit'})\"",
+  "worktree_setup": "node -e \"const fs=require('fs');fs.existsSync('package.json')&&require('child_process').execSync(fs.existsSync('scripts/worktree-setup.mjs')?'node scripts/worktree-setup.mjs':'npm ci',{stdio:'inherit'})\"",
   "test": "node -e \"require('fs').existsSync('package.json')&&require('child_process').execSync('npm run lint && npm run test:gym && npm run test:gym-day-view && npm run test:gym-chat-catalog',{stdio:'inherit'})\""
 }
