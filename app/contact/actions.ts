@@ -2,6 +2,7 @@
 
 import { headers } from 'next/headers'
 import { checkRateLimit } from '@/lib/rate-limit'
+import { isAllowedOrigin } from '@/lib/origin'
 
 const RATE_LIMIT_MAX = 5
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000
@@ -13,18 +14,6 @@ const escapeHtml = (s: string) =>
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;')
-
-function isAllowedOrigin(origin: string | null) {
-  if (!origin) return false
-  const allowed = [
-    process.env.NEXT_PUBLIC_SITE_URL,
-    'https://datawithdillon.com',
-    'https://www.datawithdillon.com',
-    'http://localhost:3000',
-    'http://localhost:3001',
-  ].filter(Boolean) as string[]
-  return allowed.some((base) => origin.startsWith(base))
-}
 
 function getClientIp(headerList: Headers): string {
   const forwarded = headerList.get('x-forwarded-for')
